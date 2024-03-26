@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.8)
 include(FetchContent)
 
-project("hive_engine")
-set(BUILD_SHARED_LIBS OFF)
+project("hive_engine" CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
-add_executable(${PROJECT_NAME} "src/main.cpp")
+add_library(${PROJECT_NAME} SHARED .)
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_DIR}/cmake")
 
@@ -14,18 +13,18 @@ set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_DIR}/cmake")
 target_link_libraries(${PROJECT_NAME})
 add_subdirectory("src/hive/pieces")
 
-target_link_libraries(${PROJECT_NAME} Pieces)
+target_link_libraries(${PROJECT_NAME} PRIVATE Pieces)
 
 
-# FetchContent_Declare(
-# gtest
-# GIT_REPOSITORY "https://github.com/google/googletest.git"
-# GIT_TAG        "release-1.11.0"
-# )
+FetchContent_Declare(
+gtest
+GIT_REPOSITORY "https://github.com/google/googletest.git"
+GIT_TAG        "release-1.11.0"
+)
 
-# FetchContent_MakeAvailable(Gtest)
+FetchContent_MakeAvailable(Gtest)
 
-# # testing
-# add_executable(tests "test/test.cpp")
+# testing
+add_executable(tests "test/test.cpp")
 
-# target_link_libraries(tests gtest Pieces)
+target_link_libraries(tests gtest gtest_main Pieces)
