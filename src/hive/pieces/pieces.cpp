@@ -1,6 +1,7 @@
 #include <hive/pieces.hpp>
 
 
-void field() {
-    int x = 0;
+Piece::Piece(const int &x, const int &y) {
+    this->x = x;
+    this->y = y;
 }
