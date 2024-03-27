@@ -1,7 +1,7 @@
 
 class Piece{
 public:
-    int x;
-    int y;
-    Piece(const int &x, const int &y);
+    int _x;
+    int _y;
+    Piece(const int &x, const int &y):_x(x), _y(y){};
 };
