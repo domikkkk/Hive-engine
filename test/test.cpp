@@ -4,8 +4,8 @@
 
 TEST(pieces, piece) {
     Piece p(0, 0);
-    EXPECT_EQ(p._x, 0);
-    EXPECT_EQ(p._y, 0);
+    EXPECT_EQ(p.get_x(), 0);
+    EXPECT_EQ(p.get_y(), 0);
 };
 
 
