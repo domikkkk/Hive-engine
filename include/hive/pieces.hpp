@@ -2,11 +2,10 @@
 class Piece{
 public:
     Piece(const int &x, const int &y):_x(x), _y(y), _z(0){};
-    Piece(const int &x, const int &y, const int &z):_x(x), _y(y), _z(z){};
     int get_x() const;
     int get_y() const;
     int get_z() const;
-    void move(const int &x, const int &y, const int &z);
+    virtual void move(const int &x, const int &y);
 protected:
     int _x;
     int _y;
@@ -24,7 +23,7 @@ class Ant : public Piece {
 };
 
 class Beetle : public Piece {
-
+    void move(const int &x, const int &y, const int &z);
 };
 
 class Grasshopper : public Piece {

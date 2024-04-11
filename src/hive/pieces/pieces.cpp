@@ -1,10 +1,9 @@
 #include <hive/pieces.hpp>
 
 
-void Piece::move(const int &x, const int &y, const int &z) {
+void Piece::move(const int &x, const int &y) {
     this->_x += x;
     this->_y += y;
-    this->_z += z;
 }
 
 
@@ -20,4 +19,11 @@ int Piece::get_y() const {
 
 int Piece::get_z() const {
     return this->_z;
+}
+
+
+void Beetle::move(const int &x, const int &y, const int &z) {
+    this->_x += x;
+    this->_y += y;
+    this->_z += z;
 }
