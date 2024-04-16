@@ -1,3 +1,7 @@
+#ifndef PIECES_HPP
+#define PIECES_HPP
+#pragma once
+
 
 class Piece{
 public:
@@ -33,3 +37,6 @@ class Grasshopper : public Piece {
 class Spider : public Piece {
 
 };
+
+
+#endif

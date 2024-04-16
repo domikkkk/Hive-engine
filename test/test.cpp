@@ -1,5 +1,5 @@
-#include <hive/pieces.hpp>
 #include <gtest/gtest.h>
+#include <Hive>
 
 
 TEST(pieces, piece) {

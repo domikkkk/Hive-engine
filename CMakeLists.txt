@@ -10,10 +10,12 @@ add_library(${PROJECT_NAME} SHARED .)
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_DIR}/cmake")
 
 
+# add hive/files
 target_link_libraries(${PROJECT_NAME})
 add_subdirectory("src/hive/pieces")
+add_subdirectory("src/hive/board")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Pieces)
+target_link_libraries(${PROJECT_NAME} PRIVATE Pieces Board)
 
 
 FetchContent_Declare(
@@ -27,4 +29,4 @@ FetchContent_MakeAvailable(Gtest)
 # testing
 add_executable(tests "test/test.cpp")
 
-target_link_libraries(tests gtest gtest_main Pieces)
+target_link_libraries(tests gtest gtest_main Pieces Board)
