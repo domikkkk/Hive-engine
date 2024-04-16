@@ -5,7 +5,7 @@ project("hive_engine" CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 
-add_library(${PROJECT_NAME} SHARED .)
+add_executable(${PROJECT_NAME} src/main.cpp)
 
 set (CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_DIR}/cmake")
 
