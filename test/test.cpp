@@ -4,13 +4,13 @@
 
 
 TEST(pieces, piece) {
-    Piece p(0, 0);
+    hive::Piece p(0, 0);
     EXPECT_EQ(p.get_x(), 0);
     EXPECT_EQ(p.get_y(), 0);
 };
 
 
 int main() {
-    ::testing::InitGoogleTest();
+    testing::InitGoogleTest();
     return RUN_ALL_TESTS();
 }

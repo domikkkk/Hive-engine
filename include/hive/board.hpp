@@ -2,16 +2,18 @@
 #define BOARD_HPP
 #pragma once
 #include <vector>
+#include <memory>
 #include <hive/pieces.hpp>
 
 
-class Board {
-public:
-    Board();
-    ~Board();
-private:
-    
-};
-
+namespace hive {
+    class Board {
+    public:
+        Board();
+        ~Board() = default;
+    private:
+        std::vector<std::unique_ptr<hive::Piece>> pieces;
+    };
+}
 
 #endif
