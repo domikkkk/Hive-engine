@@ -1,12 +1,13 @@
 #!/bin/bash
 
-if [! -d "build"]; then
+if [ ! -d "build" ]; then
     mkdir build
-    cd build
-    cmake ..
-    cd ..
 fi
 
 cd build
 
+cmake ..
 cmake --build .
+
+mv hive_engine ..
+mv tests ..
