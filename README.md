@@ -33,12 +33,16 @@ to run test:
 ├── build.sh
 ├── include
 │   ├── Hive
+│   ├── HiveEngine
 │   ├── engine
 │   │   └── alfabeta.hpp
 │   └── hive
 │       ├── board.hpp
 │       └── pieces.hpp
 ├── src
+│   ├── engine
+│   │   ├── CMakeLists.txt
+│   │   └── alfabeta.cpp
 │   ├── hive
 │   │   ├── CMakeLists.txt
 │   │   ├── board.cpp
