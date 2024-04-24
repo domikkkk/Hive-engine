@@ -1,5 +1,5 @@
 #include <Hive>
-#include <engine/alfabeta.hpp>
+#include <HiveEngine>
 
 
 int main(int argc, char **argv) {
