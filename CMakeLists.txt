@@ -11,8 +11,9 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 # add hive/files
 target_link_libraries(${PROJECT_NAME})
 add_subdirectory("src/hive")
+add_subdirectory("src/engine")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE Hive)
+target_link_libraries(${PROJECT_NAME} PRIVATE Hive AlfaBeta)
 
 
 FetchContent_Declare(
