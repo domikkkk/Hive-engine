@@ -40,12 +40,9 @@ to run test:
 │       └── pieces.hpp
 ├── src
 │   ├── hive
-│   │   ├── board
-│   │   │   ├── CMakeLists.txt
-│   │   │   └── board.cpp
-│   │   └── pieces
-│   │       ├── CMakeLists.txt
-│   │       └── pieces.cpp
+│   │   ├── CMakeLists.txt
+│   │   ├── board.cpp
+│   │   └── pieces.cpp
 │   └── main.cpp
 └── test
     └── test.cpp

@@ -1,4 +1,4 @@
-build/*
+build*
 .vscode
 hive_engine*
 tests*
