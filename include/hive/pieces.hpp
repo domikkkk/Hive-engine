@@ -23,15 +23,16 @@ namespace hive {
     class Board;  // forward declaration
     class Piece{
     public:
-        Piece(Board *b, const Coords &c, const int &color);
+        Piece(const Coords &c, const int &color):_c(c), color(color) {};
         ~Piece() = default;
         int get_x() const;
         int get_y() const;
         int get_z() const;
         int get_color() const;
         virtual void move(const int &x, const int &y);
+        void set_board(const Board *b);
     protected:
-        Board *board;
+        const Board *board;
         Coords _c;
         int color;
         bool can_move = false;
