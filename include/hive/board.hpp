@@ -7,12 +7,15 @@
 
 
 namespace hive {
+    class Piece;  // forward declaration
     class Board {
     public:
-        Board();
+        Board() {};
         ~Board() = default;
+        void add_piece(Piece *p);
+        bool is_empty() const;
     private:
-        std::vector<std::unique_ptr<hive::Piece>> pieces;
+        std::vector<std::unique_ptr<Piece>> pieces;
     };
 }
 
