@@ -8,18 +8,19 @@ void hive::Piece::move(const int &x, const int &y) {
 }
 
 
-int hive::Piece::get_x() const {
-    return this->_c.x;
+Coords hive::Piece::get_location() const {
+    return this->_c;
 }
 
 
-int hive::Piece::get_y() const {
-    return this->_c.y;
+Coords Coords::operator+(const Coords &c) const {
+    return {this->x + c.x, this->y + c.y};
 }
 
 
-int hive::Piece::get_z() const {
-    return this->_c.z;
+bool Coords::operator==(const Coords &c) const {
+    if (this->x == c.x && this->y == c.y) return true;
+    return false;
 }
 
 
@@ -30,6 +31,11 @@ int hive::Piece::get_color() const {
 
 void hive::Piece::set_board(const hive::Board *b) {
     this->board = b;
+}
+
+
+std::string hive::Piece::get_name() const {
+    return this->name;
 }
 
 
