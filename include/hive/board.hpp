@@ -1,27 +1,22 @@
 #ifndef BOARD_HPP
 #define BOARD_HPP
 #pragma once
-#include <vector>
-#include <memory>
+
+#include <unordered_map>
 #include <hive/pieces.hpp>
 
 
-struct Coords;  // forward declaration
 namespace hive {
-    class Piece;  // forward declaration
     class Board {
     public:
-        Board() {this->pieces.reserve(22);};
+        Board() = default;
         ~Board() = default;
-        void add_piece(Piece *p);
+        void add_piece(const Piece &p);
         bool is_empty() const;
     private:
-        std::vector<std::unique_ptr<Piece>> pieces;
+        std::unordered_map<Coords, Piece, HashFn> pieces;
     };
 }
 
-
-std::vector<Coords> get_surrounding_locations(const Coords &c);
-Coords movements(int i);
 
 #endif
