@@ -46,6 +46,19 @@ TEST(pieces, Spider) {
 };
 
 
+TEST(pieces, operatorEqual) {
+    hive::Ant ant({0, 0}, WHITE);
+    hive::Ant ant1({0, 0}, BLACK);
+    EXPECT_NE(ant, ant1);
+    ant = hive::Ant({0, 1}, BLACK);
+    EXPECT_NE(ant, ant1);
+    ant = hive::Ant({0, 0});
+    EXPECT_NE(ant, ant1);
+    ant = hive::Ant({0, 0}, BLACK);
+    EXPECT_EQ(ant, ant1);
+};
+
+
 TEST(Board, empty) {
     hive::Board board;
     EXPECT_TRUE(board.is_empty());
@@ -66,6 +79,39 @@ TEST(Board, locations) {
     for (size_t i = 0; i < expected.size(); ++i) {
         ASSERT_EQ(expected[i], result[i]);
     }
+}
+
+
+TEST(Board, pieces) {
+    hive::Board board;
+    hive::Bee bee({0, 0}, WHITE);
+    hive::Ant ant({1, 1}, BLACK);
+    board.add_piece(bee);
+    board.add_piece(ant);
+    hive::Bee retreviedBee = board.get_piece({0, 0});
+    hive::Ant retreviedAnt = board.get_piece({0, 1});
+    ASSERT_EQ(retreviedBee, bee);
+    ASSERT_NE(retreviedAnt, ant);
+    retreviedAnt = board.get_piece({0, 1});
+    ASSERT_NE(retreviedAnt, ant);  // still shoudn't be here
+}
+
+
+TEST(Board, move) {
+    hive::Board board;
+    hive::Bee bee({1, 1}, WHITE);
+    Coords c = {1, 1};
+    board.add_piece(bee);
+    ASSERT_EQ(bee.get_location(), c);
+    // move piece to another place
+    board.move({1, 1}, {2, 2});
+
+    bee = board.get_piece(c);
+    ASSERT_FALSE(bee.is_exist());  // after move check if bee still exists in that place 
+
+    c = {2, 2};
+    bee = board.get_piece(c);
+    ASSERT_EQ(bee.get_location(), c);
 }
 
 

@@ -36,30 +36,31 @@ public:
 namespace hive {
     class Piece{
     public:
-        Piece() {this->_real = false;};
-        Piece(const Coords &c):_c(c) {};
+        Piece() {this->_exist = false;};
+        Piece(const Coords &c):_c(c) {this->color = DEFAULT;};
         Piece(const Coords &c, const int &color):_c(c), color(color) {};
         ~Piece() = default;
         Coords get_location() const;
         virtual int get_color() const;
-        virtual void move(const int &x, const int &y);
+        virtual void move(const Coords &c);
         virtual std::string get_name() const;
         virtual std::vector<Coords> get_surrounding_locations();
         virtual bool can_move() const;
-        virtual bool is_real() const;
+        virtual bool is_exist() const;
         virtual bool operator==(const Piece &p) const;
     protected:
+        Coords _c;
         int color;
         bool _move = false;
-        bool _real = true;
-        Coords _c;
-        std::string name;
+        bool _exist = true;
+        std::string name = "";
     };
 
 
     class Bee : public Piece {
     public:
         using Piece::Piece;
+        Bee(const Piece& piece) : Piece(piece) {};
     private:
         std::string name = "Bee";
     };
@@ -67,6 +68,7 @@ namespace hive {
     class Ant : public Piece {
     public:
         using Piece::Piece;
+        Ant(const Piece& piece) : Piece(piece) {};
     private:
         std::string name = "Ant";
     };
@@ -74,7 +76,7 @@ namespace hive {
     class Beetle : public Piece {
     public:
         using Piece::Piece;
-        void move(const int &x, const int &y, const int &z);
+        Beetle(const Piece& piece) : Piece(piece) {};
     private:
         std::string name = "Beetle";
     };
@@ -82,6 +84,7 @@ namespace hive {
     class Grasshopper : public Piece {
     public:
         using Piece::Piece;
+        Grasshopper(const Piece& piece) : Piece(piece) {};
     private:
         std::string name = "Grasshopper";
     };
@@ -89,6 +92,7 @@ namespace hive {
     class Spider : public Piece {
     public:
         using Piece::Piece;
+        Spider(const Piece& piece) : Piece(piece) {};
     private:
         std::string name = "Spider";
     };

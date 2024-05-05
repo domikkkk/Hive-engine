@@ -1,9 +1,10 @@
 #include <hive/pieces.hpp>
 
 
-void hive::Piece::move(const int &x, const int &y) {
-    this->_c.x = x;
-    this->_c.y = y;
+void hive::Piece::move(const Coords &c) {
+    this->_c.x = c.x;
+    this->_c.y = c.y;
+    this->_c.z = c.z;
 }
 
 
@@ -33,12 +34,12 @@ bool Coords::operator==(const Coords &c) const {
 
 
 bool hive::Piece::operator==(const Piece &p) const {
-    return this->_c == p._c && this->color == p.color && this->name == p.name;
+    return p.get_color() != DEFAULT && this->_c == p._c && this->color == p.color && this->name == p.name;
 }
 
 
 size_t HashFn::operator()(const Coords &c) const {
-#ifndef DEBUG
+#ifdef DEBUG
     return c.x + 23 * (c.y + 47 * c.z);
 #endif
     size_t hash = (c.x + 22) << 16;
@@ -63,14 +64,8 @@ bool hive::Piece::can_move() const {
 }
 
 
-bool hive::Piece::is_real() const {
-    return this->_real;
-}
-
-
-void hive::Beetle::move(const int &x, const int &y, const int &z) {
-    Piece::move(x, y);
-    this->_c.z = z;
+bool hive::Piece::is_exist() const {
+    return this->_exist;
 }
 
 
