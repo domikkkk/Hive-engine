@@ -36,7 +36,7 @@ public:
 namespace hive {
     class Piece{
     public:
-    Piece() {this->_real = false;};
+        Piece() {this->_real = false;};
         Piece(const Coords &c):_c(c) {};
         Piece(const Coords &c, const int &color):_c(c), color(color) {};
         ~Piece() = default;
@@ -47,6 +47,7 @@ namespace hive {
         virtual std::vector<Coords> get_surrounding_locations();
         virtual bool can_move() const;
         virtual bool is_real() const;
+        virtual bool operator==(const Piece &p) const;
     protected:
         int color;
         bool _move = false;

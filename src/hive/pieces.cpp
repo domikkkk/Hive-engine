@@ -32,6 +32,11 @@ bool Coords::operator==(const Coords &c) const {
 }
 
 
+bool hive::Piece::operator==(const Piece &p) const {
+    return this->_c == p._c && this->color == p.color && this->name == p.name;
+}
+
+
 size_t HashFn::operator()(const Coords &c) const {
 #ifndef DEBUG
     return c.x + 23 * (c.y + 47 * c.z);
