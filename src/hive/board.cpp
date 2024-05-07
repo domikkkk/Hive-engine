@@ -1,7 +1,7 @@
 #include <hive/board.hpp>
 
 
-void hive::Board::add_piece(const hive::Piece &p) {
+void hive::Board::add_piece(const hive::Insect &p) {
     pieces[p.get_location()] = p;
 }
 
@@ -11,7 +11,7 @@ bool hive::Board::is_empty() const {
 }
 
 
-hive::Piece hive::Board::get_piece(const Coords &c) {
+hive::Insect &hive::Board::get_piece(const Coords &c) {
     auto piece = this->pieces[c];
     return piece;
 }

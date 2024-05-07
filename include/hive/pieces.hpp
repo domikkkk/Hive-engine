@@ -34,12 +34,12 @@ public:
 
 
 namespace hive {
-    class Piece{
+    class Insect{
     public:
-        Piece() {this->_exist = false;};
-        Piece(const Coords &c):_c(c) {this->color = DEFAULT;};
-        Piece(const Coords &c, const int &color):_c(c), color(color) {};
-        ~Piece() = default;
+        Insect() {this->_exist = false;};
+        Insect(const Coords &c):_c(c) {this->color = DEFAULT;};
+        Insect(const Coords &c, const int &color):_c(c), color(color) {};
+        ~Insect() = default;
         Coords get_location() const;
         virtual int get_color() const;
         virtual void move(const Coords &c);
@@ -47,7 +47,7 @@ namespace hive {
         virtual std::vector<Coords> get_surrounding_locations();
         virtual bool can_move() const;
         virtual bool is_exist() const;
-        virtual bool operator==(const Piece &p) const;
+        virtual bool operator==(const Insect &p) const;
     protected:
         Coords _c;
         int color;
@@ -57,42 +57,42 @@ namespace hive {
     };
 
 
-    class Bee : public Piece {
+    class Bee : public Insect {
     public:
-        using Piece::Piece;
-        Bee(const Piece& piece) : Piece(piece) {};
+        using Insect::Insect;
+        Bee(const Insect& piece) : Insect(piece) {};
     private:
         std::string name = "Bee";
     };
 
-    class Ant : public Piece {
+    class Ant : public Insect {
     public:
-        using Piece::Piece;
-        Ant(const Piece& piece) : Piece(piece) {};
+        using Insect::Insect;
+        Ant(const Insect& piece) : Insect(piece) {};
     private:
         std::string name = "Ant";
     };
 
-    class Beetle : public Piece {
+    class Beetle : public Insect {
     public:
-        using Piece::Piece;
-        Beetle(const Piece& piece) : Piece(piece) {};
+        using Insect::Insect;
+        Beetle(const Insect& piece) : Insect(piece) {};
     private:
         std::string name = "Beetle";
     };
 
-    class Grasshopper : public Piece {
+    class Grasshopper : public Insect {
     public:
-        using Piece::Piece;
-        Grasshopper(const Piece& piece) : Piece(piece) {};
+        using Insect::Insect;
+        Grasshopper(const Insect& piece) : Insect(piece) {};
     private:
         std::string name = "Grasshopper";
     };
 
-    class Spider : public Piece {
+    class Spider : public Insect {
     public:
-        using Piece::Piece;
-        Spider(const Piece& piece) : Piece(piece) {};
+        using Insect::Insect;
+        Spider(const Insect& piece) : Insect(piece) {};
     private:
         std::string name = "Spider";
     };

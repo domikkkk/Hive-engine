@@ -1,14 +1,14 @@
 #include <hive/pieces.hpp>
 
 
-void hive::Piece::move(const Coords &c) {
+void hive::Insect::move(const Coords &c) {
     this->_c.x = c.x;
     this->_c.y = c.y;
     this->_c.z = c.z;
 }
 
 
-Coords hive::Piece::get_location() const {
+Coords hive::Insect::get_location() const {
     return this->_c;
 }
 
@@ -18,7 +18,7 @@ Coords Coords::operator+(const Coords &c) const {
 }
 
 
-std::vector<Coords> hive::Piece::get_surrounding_locations() {
+std::vector<Coords> hive::Insect::get_surrounding_locations() {
     std::vector<Coords> neighbors;
     neighbors.reserve(6);
     for (int i = 0; i < 6; ++i) {
@@ -33,7 +33,7 @@ bool Coords::operator==(const Coords &c) const {
 }
 
 
-bool hive::Piece::operator==(const Piece &p) const {
+bool hive::Insect::operator==(const Insect &p) const {
     return p.get_color() != DEFAULT && this->_c == p._c && this->color == p.color && this->name == p.name;
 }
 
@@ -49,22 +49,22 @@ size_t HashFn::operator()(const Coords &c) const {
 }
 
 
-int hive::Piece::get_color() const {
+int hive::Insect::get_color() const {
     return this->color;
 }
 
 
-std::string hive::Piece::get_name() const {
+std::string hive::Insect::get_name() const {
     return this->name;
 }
 
 
-bool hive::Piece::can_move() const {
+bool hive::Insect::can_move() const {
     return this->_move;
 }
 
 
-bool hive::Piece::is_exist() const {
+bool hive::Insect::is_exist() const {
     return this->_exist;
 }
 
