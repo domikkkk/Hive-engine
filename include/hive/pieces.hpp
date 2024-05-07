@@ -82,31 +82,31 @@ namespace hive {
     class Bee : public Insect {
     public:
         Bee(const Coords &c, const int &color);
-        Bee(const Insect& piece) : Insect(piece) {};
+        Bee(const Insect& piece) : Insect(piece) {this->type = InsectType::BEE;};
     };
 
     class Ant : public Insect {
     public:
         Ant(const Coords &c, const int &color);
-        Ant(const Insect& piece) : Insect(piece) {};
+        Ant(const Insect& piece) : Insect(piece) {this->type = InsectType::ANT;};
     };
 
     class Beetle : public Insect {
     public:
         Beetle(const Coords &c, const int &color);
-        Beetle(const Insect& piece) : Insect(piece) {};
+        Beetle(const Insect& piece) : Insect(piece) {this->type = InsectType::BEETLE;};
     };
 
     class Grasshopper : public Insect {
     public:
         Grasshopper(const Coords &c, const int &color);
-        Grasshopper(const Insect& piece) : Insect(piece) {};
+        Grasshopper(const Insect& piece) : Insect(piece) {this->type = InsectType::GRASSHOPPER;};
     };
 
     class Spider : public Insect {
     public:
         Spider(const Coords &c, const int &color);
-        Spider(const Insect& piece) : Insect(piece) {};
+        Spider(const Insect& piece) : Insect(piece) {this->type = InsectType::SPIDER;};
     };
 }
 
