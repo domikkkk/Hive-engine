@@ -71,7 +71,7 @@ namespace hive {
         virtual bool operator==(const Insect &p) const;
     protected:
         Coords _c;
-        int color;
+        int color = DEFAULT;
         bool _move = false;
         bool _exist = true;
         bool _jump = false;
@@ -82,31 +82,31 @@ namespace hive {
     class Bee : public Insect {
     public:
         Bee(const Coords &c, const int &color);
-        Bee(const Insect& piece) : Insect(piece) {this->type = InsectType::BEE;};
+        Bee(const Insect& insect);
     };
 
     class Ant : public Insect {
     public:
         Ant(const Coords &c, const int &color);
-        Ant(const Insect& piece) : Insect(piece) {this->type = InsectType::ANT;};
+        Ant(const Insect& insect);
     };
 
     class Beetle : public Insect {
     public:
         Beetle(const Coords &c, const int &color);
-        Beetle(const Insect& piece) : Insect(piece) {this->type = InsectType::BEETLE;};
+        Beetle(const Insect& insect);
     };
 
     class Grasshopper : public Insect {
     public:
         Grasshopper(const Coords &c, const int &color);
-        Grasshopper(const Insect& piece) : Insect(piece) {this->type = InsectType::GRASSHOPPER;};
+        Grasshopper(const Insect& insect);
     };
 
     class Spider : public Insect {
     public:
         Spider(const Coords &c, const int &color);
-        Spider(const Insect& piece) : Insect(piece) {this->type = InsectType::SPIDER;};
+        Spider(const Insect& insect);
     };
 }
 
