@@ -11,7 +11,7 @@ bool hive::Board::is_empty() const {
 }
 
 
-hive::Insect &hive::Board::get_piece(const Coords &c) {
+hive::Insect hive::Board::get_piece(const Coords &c) {
     auto piece = this->pieces[c];
     return piece;
 }
@@ -21,13 +21,13 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     if (from == to) return;
 
     auto piece_from = this->pieces.find(from);
-    if (piece_from == this->pieces.end()) return;
+    if (piece_from == this->pieces.end()) return; // zrobić wyjątek
 
     auto piece_to = this->pieces.find(to);
-    if (piece_to != this->pieces.end()) return;
+    if (piece_to != this->pieces.end()) return; // zrobić wyjątek
 
-    auto p = piece_from->second;
-    p.move(to);
-    this->pieces[to] = p;
+    hive::Insect &insect = piece_from->second;
+    insect.move(to);
+    this->pieces[to] = insect;
     this->pieces.erase(piece_from);
 }

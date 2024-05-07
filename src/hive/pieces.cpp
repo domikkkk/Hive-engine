@@ -1,6 +1,41 @@
 #include <hive/pieces.hpp>
 
 
+hive::Bee::Bee(const Coords &c, const int &color) {
+    this->_c = c;
+    this->color = color;
+    this->type = InsectType::BEE;
+}
+
+
+hive::Ant::Ant(const Coords &c, const int &color) {
+    this->_c = c;
+    this->color = color;
+    this->type = InsectType::ANT;
+}
+
+
+hive::Beetle::Beetle(const Coords &c, const int &color) {
+    this->_c = c;
+    this->color = color;
+    this->type = InsectType::BEETLE;
+}
+
+
+hive::Grasshopper::Grasshopper(const Coords &c, const int &color) {
+    this->_c = c;
+    this->color = color;
+    this->type = InsectType::GRASSHOPPER;
+}
+
+
+hive::Spider::Spider(const Coords &c, const int &color) {
+    this->_c = c;
+    this->color = color;
+    this->type = InsectType::SPIDER;
+}
+
+
 void hive::Insect::move(const Coords &c) {
     this->_c.x = c.x;
     this->_c.y = c.y;
@@ -34,7 +69,7 @@ bool Coords::operator==(const Coords &c) const {
 
 
 bool hive::Insect::operator==(const Insect &p) const {
-    return p.get_color() != DEFAULT && this->_c == p._c && this->color == p.color && this->name == p.name;
+    return p.get_color() != DEFAULT && this->_c == p._c && this->color == p.color && this->type == p.type;
 }
 
 
@@ -54,8 +89,8 @@ int hive::Insect::get_color() const {
 }
 
 
-std::string hive::Insect::get_name() const {
-    return this->name;
+InsectType hive::Insect::get_type() const {
+    return this->type;
 }
 
 

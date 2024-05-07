@@ -33,6 +33,15 @@ public:
 };
 
 
+enum class InsectType {
+    ANT,
+    BEETLE,
+    GRASSHOPPER,
+    SPIDER,
+    BEE
+};
+
+
 namespace hive {
     class Insect{
     public:
@@ -43,7 +52,7 @@ namespace hive {
         Coords get_location() const;
         virtual int get_color() const;
         virtual void move(const Coords &c);
-        virtual std::string get_name() const;
+        virtual InsectType get_type() const;
         virtual std::vector<Coords> get_surrounding_locations();
         virtual bool can_move() const;
         virtual bool is_exist() const;
@@ -53,48 +62,38 @@ namespace hive {
         int color;
         bool _move = false;
         bool _exist = true;
-        std::string name = "";
+        InsectType type;
     };
 
 
     class Bee : public Insect {
     public:
-        using Insect::Insect;
+        Bee(const Coords &c, const int &color);
         Bee(const Insect& piece) : Insect(piece) {};
-    private:
-        std::string name = "Bee";
     };
 
     class Ant : public Insect {
     public:
-        using Insect::Insect;
+        Ant(const Coords &c, const int &color);
         Ant(const Insect& piece) : Insect(piece) {};
-    private:
-        std::string name = "Ant";
     };
 
     class Beetle : public Insect {
     public:
-        using Insect::Insect;
+        Beetle(const Coords &c, const int &color);
         Beetle(const Insect& piece) : Insect(piece) {};
-    private:
-        std::string name = "Beetle";
     };
 
     class Grasshopper : public Insect {
     public:
-        using Insect::Insect;
+        Grasshopper(const Coords &c, const int &color);
         Grasshopper(const Insect& piece) : Insect(piece) {};
-    private:
-        std::string name = "Grasshopper";
     };
 
     class Spider : public Insect {
     public:
-        using Insect::Insect;
+        Spider(const Coords &c, const int &color);
         Spider(const Insect& piece) : Insect(piece) {};
-    private:
-        std::string name = "Spider";
     };
 }
 
