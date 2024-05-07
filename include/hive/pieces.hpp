@@ -13,6 +13,26 @@ enum Color {
 };
 
 
+enum class InsectType {
+    ANT,
+    BEETLE,
+    GRASSHOPPER,
+    SPIDER,
+    BEE,
+    NONTYPE
+};
+
+
+enum class Directions {
+    N,
+    NE,
+    SE,
+    S,
+    SW,
+    NW
+};
+
+
 struct Coords {
     int x;
     int y;
@@ -24,21 +44,12 @@ struct Coords {
 };
 
 
-Coords movements(int i);
+Coords movements(const Directions &direction);
 
 
 class HashFn {
 public:
     size_t operator()(const Coords &c) const;
-};
-
-
-enum class InsectType {
-    ANT,
-    BEETLE,
-    GRASSHOPPER,
-    SPIDER,
-    BEE
 };
 
 
@@ -49,20 +60,22 @@ namespace hive {
         Insect(const Coords &c):_c(c) {this->color = DEFAULT;};
         Insect(const Coords &c, const int &color):_c(c), color(color) {};
         ~Insect() = default;
-        Coords get_location() const;
+        virtual Coords get_location() const;
         virtual int get_color() const;
         virtual void move(const Coords &c);
         virtual InsectType get_type() const;
         virtual std::vector<Coords> get_surrounding_locations();
         virtual bool can_move() const;
         virtual bool is_exist() const;
+        virtual bool can_jump() const;
         virtual bool operator==(const Insect &p) const;
     protected:
         Coords _c;
         int color;
         bool _move = false;
         bool _exist = true;
-        InsectType type;
+        bool _jump = false;
+        InsectType type = InsectType::NONTYPE;
     };
 
 

@@ -26,6 +26,7 @@ hive::Grasshopper::Grasshopper(const Coords &c, const int &color) {
     this->_c = c;
     this->color = color;
     this->type = InsectType::GRASSHOPPER;
+    this->_jump = true;
 }
 
 
@@ -56,8 +57,9 @@ Coords Coords::operator+(const Coords &c) const {
 std::vector<Coords> hive::Insect::get_surrounding_locations() {
     std::vector<Coords> neighbors;
     neighbors.reserve(6);
-    for (int i = 0; i < 6; ++i) {
-        neighbors.push_back(this->_c + movements(i));
+    for (int i = static_cast<int>(Directions::N); i <= static_cast<int>(Directions::NW); ++i) {
+        Directions dir = static_cast<Directions>(i);
+        neighbors.push_back(this->_c + movements(dir));
     }
     return neighbors;
 }
@@ -104,20 +106,25 @@ bool hive::Insect::is_exist() const {
 }
 
 
-Coords movements(int i) {
-    switch (i)
+bool hive::Insect::can_jump() const {
+    return this->_jump;
+}
+
+
+Coords movements(const Directions &direction) {
+    switch (direction)
     {
-    case 0:  // N
+    case Directions::N:  // N
         return {0, 2};
-    case 1:  // NE
+    case Directions::NE:  // NE
         return {1, 1};
-    case 2:  // SE
+    case Directions::SE:  // SE
         return {1, -1};
-    case 3:  // S
+    case Directions::S:  // S
         return {0, -2};
-    case 4:  // SW
+    case Directions::SW:  // SW
         return {-1, -1};
-    case 5:  // NW
+    case Directions::NW:  // NW
         return {-1, 1};
     default:
         return {200, 200};  // unexpected error

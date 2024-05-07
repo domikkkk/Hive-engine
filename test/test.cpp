@@ -107,7 +107,7 @@ TEST(Board, move) {
     board.move({1, 1}, {2, 2});
 
     hive::Insect insect = board.get_piece(c);
-    ASSERT_FALSE(insect.is_exist());  // after move check if bee still exists in that place 
+    ASSERT_FALSE(insect.is_exist());  // after move check if bee still exists in that place
 
     c = {2, 2};
     insect = board.get_piece(c);
