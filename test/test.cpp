@@ -4,49 +4,49 @@
 #define DEBUG
 
 
-TEST(pieces, piece) {
+TEST(insects, piece) {
     hive::Insect p({0, 0});
     EXPECT_EQ(p.get_location().x, 0);
     EXPECT_EQ(p.get_location().y, 0);
 };
 
 
-TEST(pieces, Bee) {
+TEST(insects, Bee) {
     hive::Bee b({1, 0}, WHITE);
     EXPECT_EQ(b.get_location().x, 1);
     EXPECT_EQ(b.get_location().y, 0);
 };
 
 
-TEST(pieces, Ant) {
+TEST(insects, Ant) {
     hive::Ant a({1, 1}, WHITE);
     EXPECT_EQ(a.get_location().x, 1);
     EXPECT_EQ(a.get_location().y, 1);
 };
 
 
-TEST(pieces, Beetle) {
+TEST(insects, Beetle) {
     hive::Beetle b({3, 0}, WHITE);
     EXPECT_EQ(b.get_location().x, 3);
     EXPECT_EQ(b.get_location().y, 0);
 };
 
 
-TEST(pieces, Grasshopper) {
+TEST(insects, Grasshopper) {
     hive::Grasshopper g({0, -3}, WHITE);
     EXPECT_EQ(g.get_location().x, 0);
     EXPECT_EQ(g.get_location().y, -3);
 };
 
 
-TEST(pieces, Spider) {
+TEST(insects, Spider) {
     hive::Spider s({2, 4}, WHITE);
     EXPECT_EQ(s.get_location().x, 2);
     EXPECT_EQ(s.get_location().y, 4);
 };
 
 
-TEST(pieces, operatorEqual) {
+TEST(insects, operatorEqual) {
     hive::Ant ant({0, 0}, WHITE);
     hive::Ant ant1({0, 0}, BLACK);
     EXPECT_NE(ant, ant1);
@@ -82,7 +82,7 @@ TEST(Board, locations) {
 }
 
 
-TEST(Board, pieces) {
+TEST(Board, insects) {
     hive::Board board;
     hive::Bee bee({0, 0}, WHITE);
     hive::Ant ant({1, 1}, BLACK);
