@@ -1,9 +1,7 @@
 #include <hive/pieces.hpp>
 
 
-hive::Bee::Bee(const Coords &c, const int &color) {
-    this->_c = c;
-    this->color = color;
+hive::Bee::Bee(const Coords &c, const int &color) : Insect(c, color) {
     this->type = InsectType::BEE;
 }
 
@@ -13,9 +11,7 @@ hive::Bee::Bee(const Insect &insect) : Insect(insect) {
 }
 
 
-hive::Ant::Ant(const Coords &c, const int &color) {
-    this->_c = c;
-    this->color = color;
+hive::Ant::Ant(const Coords &c, const int &color) : Insect(c, color) {
     this->type = InsectType::ANT;
 }
 
@@ -25,9 +21,7 @@ hive::Ant::Ant(const Insect &insect) : Insect(insect) {
 }
 
 
-hive::Beetle::Beetle(const Coords &c, const int &color) {
-    this->_c = c;
-    this->color = color;
+hive::Beetle::Beetle(const Coords &c, const int &color) : Insect(c, color) {
     this->type = InsectType::BEETLE;
 }
 
@@ -37,9 +31,7 @@ hive::Beetle::Beetle(const Insect &insect) : Insect(insect) {
 }
 
 
-hive::Grasshopper::Grasshopper(const Coords &c, const int &color) {
-    this->_c = c;
-    this->color = color;
+hive::Grasshopper::Grasshopper(const Coords &c, const int &color) : Insect(c, color) {
     this->type = InsectType::GRASSHOPPER;
     this->_jump = true;
 }
@@ -51,9 +43,7 @@ hive::Grasshopper::Grasshopper(const Insect &insect) : Insect(insect) {
 }
 
 
-hive::Spider::Spider(const Coords &c, const int &color) {
-    this->_c = c;
-    this->color = color;
+hive::Spider::Spider(const Coords &c, const int &color) : Insect(c, color) {
     this->type = InsectType::SPIDER;
 }
 
