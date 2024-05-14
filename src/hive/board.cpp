@@ -1,8 +1,11 @@
 #include <hive/board.hpp>
 
 
-void hive::Board::add_piece(const hive::Insect &p) {
-    insects[p.get_location()] = p;
+void hive::Board::add_piece(hive::Insect *p) {
+    const auto& location = p->get_location();
+    hive::Insect *i = this->insects[location];
+    if (i != nullptr && i->is_exist()) return;  // Can't add. TODO make expection
+    this->insects[location] = p;
 }
 
 
@@ -11,7 +14,9 @@ bool hive::Board::is_empty() const {
 }
 
 
-hive::Insect &hive::Board::get_piece(const Coords &c) {
+hive::Insect *hive::Board::get_piece_at(const Coords &c) {
+    hive::Insect *i = this->insects[c];
+    if (i == nullptr || !i->is_exist()) return nullptr;
     return this->insects[c];
 }
 
@@ -25,8 +30,9 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     auto insect_to = this->insects.find(to);
     if (insect_to != this->insects.end()) return; // zrobić wyjątek
 
-    hive::Insect &insect = this->insects[from];
-    insect.move(to);
-    this->insects[to] = insect;
+    // hive::Insect *insect = this->insects[from];
+    // insect->move(to);
+    this->insects[to] = this->insects[from];
     this->insects.erase(insect_from);
+    this->insects[to]->move(to);
 }

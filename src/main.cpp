@@ -4,16 +4,16 @@
 
 
 int main(int argc, char **argv) {
-    hive::Bee bee({1, 1}, WHITE);
+    hive::Bee *bee = new hive::Bee({1, 1}, WHITE);
     hive::Board board;
     board.add_piece(bee);
-    hive::Insect *i = &board.get_piece({1, 1});
-    printf("%d\n", i->can_move());
-    i->set_move(true);
-    const void *j = &board.get_piece({1, 1});
-    printf("%d\n", static_cast<const hive::Insect*>(j)->can_move());
-    i = nullptr;
-    const void* x = j;
-    printf("%d\n", static_cast<const int>(static_cast<const hive::Insect*>(x)->get_type()));
+    Coords c = bee->get_location();
+    hive::Insect *i = board.get_piece_at({1, 1});
+    printf("%d %d %d\n", c.x, c.y, i->is_exist());
+    board.move({1, 1}, {2, 2});
+    c = bee->get_location();
+    i = board.get_piece_at({1, 1});
+    if (i == nullptr) printf("XD\n");
+    printf("%d %d\n", c.x, c.y);
     return 0;
 }

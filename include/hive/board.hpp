@@ -11,12 +11,12 @@ namespace hive {
     public:
         Board() = default;
         ~Board() = default;
-        void add_piece(const Insect &p);
+        void add_piece(Insect *p);
         bool is_empty() const;
         void move(const Coords &from, const Coords &to);
-        Insect &get_piece(const Coords &c);
+        Insect *get_piece_at(const Coords &c);
     private:
-        std::unordered_map<Coords, Insect, HashFn> insects;
+        std::unordered_map<Coords, Insect*, HashFn> insects;
     };
 }
 
