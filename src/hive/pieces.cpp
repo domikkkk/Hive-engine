@@ -60,6 +60,11 @@ void hive::Insect::move(const Coords &c) {
 }
 
 
+void hive::Insect::set_move(const bool &m) {
+    this->_move = m;
+}
+
+
 Coords hive::Insect::get_location() const {
     return this->_c;
 }

@@ -65,6 +65,7 @@ namespace hive {
         virtual void move(const Coords &c);
         virtual InsectType get_type() const;
         virtual std::vector<Coords> get_surrounding_locations();
+        virtual void set_move(const bool &m);
         virtual bool can_move() const;
         virtual bool is_exist() const;
         virtual bool can_jump() const;

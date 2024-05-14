@@ -14,7 +14,7 @@ namespace hive {
         void add_piece(const Insect &p);
         bool is_empty() const;
         void move(const Coords &from, const Coords &to);
-        Insect get_piece(const Coords &c);
+        Insect &get_piece(const Coords &c);
     private:
         std::unordered_map<Coords, Insect, HashFn> insects;
     };
