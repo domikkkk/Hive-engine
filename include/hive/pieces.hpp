@@ -59,7 +59,7 @@ namespace hive {
         Insect() {this->_exist = false;};
         Insect(const Coords &c):_c(c) {this->color = DEFAULT;};
         Insect(const Coords &c, const int &color):_c(c), color(color) {};
-        ~Insect() = default;
+        virtual ~Insect() {};
         virtual Coords get_location() const;
         virtual int get_color() const;
         virtual void move(const Coords &c);
@@ -84,30 +84,35 @@ namespace hive {
     public:
         Bee(const Coords &c, const int &color);
         Bee(const Insect& insect);
+        virtual ~Bee() {};
     };
 
     class Ant : public Insect {
     public:
         Ant(const Coords &c, const int &color);
         Ant(const Insect& insect);
+        virtual ~Ant() {};
     };
 
     class Beetle : public Insect {
     public:
         Beetle(const Coords &c, const int &color);
         Beetle(const Insect& insect);
+        virtual ~Beetle() {};
     };
 
     class Grasshopper : public Insect {
     public:
         Grasshopper(const Coords &c, const int &color);
         Grasshopper(const Insect& insect);
+        virtual ~Grasshopper() {};
     };
 
     class Spider : public Insect {
     public:
         Spider(const Coords &c, const int &color);
         Spider(const Insect& insect);
+        virtual ~Spider() {};
     };
 }
 

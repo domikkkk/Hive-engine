@@ -1,11 +1,36 @@
 #include <hive/board.hpp>
 
 
-void hive::Board::add_piece(hive::Insect *p) {
-    const auto& location = p->get_location();
-    hive::Insect *i = this->insects[location];
-    if (i != nullptr && i->is_exist()) return;  // Can't add. TODO make expection
-    this->insects[location] = p;
+hive::Board::~Board() {
+    for (auto it = this->insects.begin(); it != this->insects.end(); ++it) {
+        if (it->second != nullptr) {
+            delete it->second;
+            it->second = nullptr;
+        }
+    }
+    this->insects.clear();
+}
+
+
+void hive::Board::add_piece(hive::Insect *i) {
+    const auto& location = i->get_location();
+    auto it = this->insects.find(location);
+    if (it != this->insects.end()) return;  // Can't add. TODO make expection
+    this->insects[location] = i;
+}
+
+
+void hive::Board::remove_piece(const Coords &c) {
+    auto it = this->insects.find(c);
+    if (it != this->insects.end()) {
+        delete it->second;
+        this->insects.erase(it);
+    }
+}
+
+
+void hive::Board::remove_piece(hive::Insect *i) {
+    this->remove_piece(i->get_location());
 }
 
 
@@ -15,9 +40,9 @@ bool hive::Board::is_empty() const {
 
 
 hive::Insect *hive::Board::get_piece_at(const Coords &c) {
-    hive::Insect *i = this->insects[c];
-    if (i == nullptr || !i->is_exist()) return nullptr;
-    return this->insects[c];
+    auto it = this->insects.find(c);
+    if (it == this->insects.end()) return nullptr;
+    return it->second;
 }
 
 

@@ -10,8 +10,10 @@ namespace hive {
     class Board {
     public:
         Board() = default;
-        ~Board() = default;
-        void add_piece(Insect *p);
+        ~Board();
+        void add_piece(Insect *i);
+        void remove_piece(const Coords &c);
+        void remove_piece(Insect *i);
         bool is_empty() const;
         void move(const Coords &from, const Coords &to);
         Insect *get_piece_at(const Coords &c);
