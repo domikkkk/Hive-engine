@@ -16,7 +16,7 @@ namespace hive {
         void remove_piece(Insect *i);
         bool is_empty() const;
         void move(const Coords &from, const Coords &to);
-        Insect *get_piece_at(const Coords &c);
+        template <class T> T *get_piece_at(const Coords &c);
     private:
         std::unordered_map<Coords, Insect*, HashFn> insects;
     };

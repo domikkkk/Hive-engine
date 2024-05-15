@@ -1,2 +1,3 @@
 #include "hive/board.hpp"
 #include "hive/pieces.hpp"
+#include "src/hive/board.tpp"

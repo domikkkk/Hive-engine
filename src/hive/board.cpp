@@ -1,4 +1,5 @@
 #include <hive/board.hpp>
+#include "board.tpp"
 
 
 hive::Board::~Board() {
@@ -39,12 +40,6 @@ bool hive::Board::is_empty() const {
 }
 
 
-hive::Insect *hive::Board::get_piece_at(const Coords &c) {
-    auto it = this->insects.find(c);
-    if (it == this->insects.end()) return nullptr;
-    return it->second;
-}
-
 
 void hive::Board::move(const Coords &from, const Coords &to) {
     if (from == to) return;
@@ -55,8 +50,6 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     auto insect_to = this->insects.find(to);
     if (insect_to != this->insects.end()) return; // zrobić wyjątek
 
-    // hive::Insect *insect = this->insects[from];
-    // insect->move(to);
     this->insects[to] = this->insects[from];
     this->insects.erase(insect_from);
     this->insects[to]->move(to);
