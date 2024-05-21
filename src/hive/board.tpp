@@ -1,9 +1,12 @@
+#pragma once
+
 #include <hive/board.hpp>
 
 
 template <class T>
-T *hive::Board::get_piece_at(const Coords &c) {
+std::shared_ptr<T> hive::Board::get_piece_at(const Coords &c) {
     auto it = this->insects.find(c);
     if (it == this->insects.end()) return nullptr;
-    return static_cast<T*>(it->second);
+    return std::dynamic_pointer_cast<T>(it->second);
+    // return std::shared_ptr<T>(static_cast<T*>(it->second.get()));
 }

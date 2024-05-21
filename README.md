@@ -1,32 +1,43 @@
 # Needed
+
 - Cmake installed with:
+
 ```bash
 sudo apt update
 sudo apt install cmake
 ```
 
-# How to build?
+## How to build?
+
 Just run:
+
 ```bash
 sh build.sh
 ```
+
 or
+
 ```bash
 ./build.sh
 ```
 
-# How to run?
+## How to run?
+
 to run program:
+
 ```bash
 ./hive_engine
 ```
+
 to run test:
+
 ```bash
 ./tests
 ```
 
-# File structure
-```
+## File structure
+
+```md
 <project root>
 ├── CMakeLists.txt
 ├── README.md

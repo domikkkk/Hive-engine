@@ -3,17 +3,18 @@
 
 
 hive::Board::~Board() {
-    for (auto it = this->insects.begin(); it != this->insects.end(); ++it) {
-        if (it->second != nullptr) {
-            delete it->second;
-            it->second = nullptr;
-        }
-    }
+    // because shared_ptr
+    // for (auto it = this->insects.begin(); it != this->insects.end(); ++it) {
+    //     if (it->second != nullptr) {
+    //         delete it->second;
+    //         it->second = nullptr;
+    //     }
+    // }
     this->insects.clear();
 }
 
 
-void hive::Board::add_piece(hive::Insect *i) {
+void hive::Board::add_piece(std::shared_ptr<hive::Insect> i) {
     const auto& location = i->get_location();
     auto it = this->insects.find(location);
     if (it != this->insects.end()) return;  // Can't add. TODO make expection
@@ -24,13 +25,13 @@ void hive::Board::add_piece(hive::Insect *i) {
 void hive::Board::remove_piece(const Coords &c) {
     auto it = this->insects.find(c);
     if (it != this->insects.end()) {
-        delete it->second;
+        // delete it->second;  // because shared_ptr
         this->insects.erase(it);
     }
 }
 
 
-void hive::Board::remove_piece(hive::Insect *i) {
+void hive::Board::remove_piece(std::shared_ptr<hive::Insect> i) {
     this->remove_piece(i->get_location());
 }
 
