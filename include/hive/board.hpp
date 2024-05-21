@@ -12,14 +12,14 @@ namespace hive {
     public:
         Board() = default;
         ~Board();
-        void add_piece(std::shared_ptr<hive::Insect> i);
+        void add_piece(std::unique_ptr<hive::Insect> i);
         void remove_piece(const Coords &c);
-        void remove_piece(std::shared_ptr<hive::Insect> i);
+        void remove_piece(std::unique_ptr<hive::Insect> i);
         bool is_empty() const;
         void move(const Coords &from, const Coords &to);
-        template <class T> std::shared_ptr<T> get_piece_at(const Coords &c);
+        template <class T> std::unique_ptr<T> get_piece_at(const Coords &c);
     private:
-        std::unordered_map<Coords, std::shared_ptr<Insect>, HashFn> insects;  // TODO shared_pointers
+        std::unordered_map<Coords, std::unique_ptr<Insect>, HashFn> insects;  // TODO shared_pointers
     };
 }
 
