@@ -2,8 +2,9 @@
 #define PIECES_HPP
 #pragma once
 
-#include <string>
+
 #include <vector>
+#include <hive/coordinates.hpp>
 
 
 enum Color {
@@ -23,36 +24,6 @@ enum class InsectType {
 };
 
 
-enum class Directions {
-    N,
-    NE,
-    SE,
-    S,
-    SW,
-    NW
-};
-
-
-struct Coords {
-    int x;
-    int y;
-    int z;
-    Coords() = default;
-    Coords(const int &x, const int &y):x(x), y(y), z(0) {};
-    Coords operator+(const Coords &c) const;
-    bool operator==(const Coords &c) const;
-};
-
-
-Coords movements(const Directions &direction);
-
-
-class HashFn {
-public:
-    size_t operator()(const Coords &c) const;
-};
-
-
 namespace hive {
     class Insect{
     public:
@@ -60,15 +31,15 @@ namespace hive {
         Insect(const Coords &c):_c(c) {this->color = DEFAULT;};
         Insect(const Coords &c, const int &color):_c(c), color(color) {};
         virtual ~Insect() {};
-        virtual Coords get_location() const;
-        virtual int get_color() const;
+        virtual const Coords &get_location() const;
+        virtual const int &get_color() const;
         virtual void move(const Coords &c);
-        virtual InsectType get_type() const;
+        virtual const InsectType &get_type() const;
         virtual std::vector<Coords> get_surrounding_locations();
         virtual void set_move(const bool &m);
-        virtual bool can_move() const;
-        virtual bool is_exist() const;
-        virtual bool can_jump() const;
+        virtual const bool &can_move() const;
+        virtual const bool &is_exist() const;
+        virtual const bool &can_jump() const;
         virtual bool operator==(const Insect &p) const;
     protected:
         Coords _c;
@@ -115,5 +86,6 @@ namespace hive {
         virtual ~Spider() {};
     };
 }
+
 
 #endif

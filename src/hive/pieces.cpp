@@ -65,7 +65,7 @@ void hive::Insect::set_move(const bool &m) {
 }
 
 
-Coords hive::Insect::get_location() const {
+const Coords &hive::Insect::get_location() const {
     return this->_c;
 }
 
@@ -96,58 +96,26 @@ bool hive::Insect::operator==(const Insect &p) const {
 }
 
 
-size_t HashFn::operator()(const Coords &c) const {
-#ifdef DEBUG
-    return c.x + 23 * (c.y + 47 * c.z);
-#endif
-    size_t hash = (c.x + 22) << 16;
-    hash ^= (c.y + 44) << 8;
-    hash ^= c.z;
-    return hash;
-}
-
-
-int hive::Insect::get_color() const {
+const int &hive::Insect::get_color() const {
     return this->color;
 }
 
 
-InsectType hive::Insect::get_type() const {
+const InsectType &hive::Insect::get_type() const {
     return this->type;
 }
 
 
-bool hive::Insect::can_move() const {
+const bool &hive::Insect::can_move() const {
     return this->_move;
 }
 
 
-bool hive::Insect::is_exist() const {
+const bool &hive::Insect::is_exist() const {
     return this->_exist;
 }
 
 
-bool hive::Insect::can_jump() const {
+const bool &hive::Insect::can_jump() const {
     return this->_jump;
-}
-
-
-Coords movements(const Directions &direction) {
-    switch (direction)
-    {
-    case Directions::N:  // N
-        return {0, 2};
-    case Directions::NE:  // NE
-        return {1, 1};
-    case Directions::SE:  // SE
-        return {1, -1};
-    case Directions::S:  // S
-        return {0, -2};
-    case Directions::SW:  // SW
-        return {-1, -1};
-    case Directions::NW:  // NW
-        return {-1, 1};
-    default:
-        return {200, 200};  // unexpected error
-    }
 }

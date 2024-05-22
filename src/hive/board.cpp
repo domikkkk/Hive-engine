@@ -54,4 +54,12 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     insect_from->second->move(to);
     this->insects[to] = std::move(insect_from->second);
     this->insects.erase(insect_from);
+    this->moves.all.push_back({from, to});
+}
+
+
+Move hive::Board::unmove() {
+    const Move m = this->moves.all.back();
+    this->moves.all.pop_back();
+    return m;
 }
