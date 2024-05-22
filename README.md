@@ -44,11 +44,13 @@ to run test:
 ├── build.sh
 ├── include
 │   ├── Hive
-│   ├── HiveEngine
+│   ├── HiveAI
 │   ├── engine
 │   │   └── alfabeta.hpp
 │   └── hive
 │       ├── board.hpp
+│       ├── coordinates.hpp
+│       ├── moves.hpp
 │       └── pieces.hpp
 ├── src
 │   ├── engine
@@ -57,6 +59,9 @@ to run test:
 │   ├── hive
 │   │   ├── CMakeLists.txt
 │   │   ├── board.cpp
+│   │   ├── board.tpp
+│   │   ├── coordinates.cpp
+│   │   ├── moves.cpp
 │   │   └── pieces.cpp
 │   └── main.cpp
 └── test
