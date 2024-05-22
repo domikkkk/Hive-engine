@@ -41,6 +41,13 @@ bool hive::Board::is_empty() const {
 }
 
 
+void hive::Board::swap(const Coords &from, const Coords &to) {
+    auto insect_from = this->insects.find(from);
+    insect_from->second->move(to);
+    this->insects[to] = std::move(insect_from->second);
+    this->insects.erase(insect_from);
+}
+
 
 void hive::Board::move(const Coords &from, const Coords &to) {
     if (from == to) return;
@@ -51,9 +58,7 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     auto insect_to = this->insects.find(to);
     if (insect_to != this->insects.end()) return; // zrobić wyjątek
 
-    insect_from->second->move(to);
-    this->insects[to] = std::move(insect_from->second);
-    this->insects.erase(insect_from);
+    this->swap(from, to);
     this->moves.all.push_back({from, to});
 }
 
@@ -61,5 +66,7 @@ void hive::Board::move(const Coords &from, const Coords &to) {
 Move hive::Board::unmove() {
     const Move m = this->moves.all.back();
     this->moves.all.pop_back();
+    
+    this->swap(m.to, m.from);
     return m;
 }

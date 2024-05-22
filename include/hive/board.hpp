@@ -17,6 +17,7 @@ namespace hive {
         void remove_piece(const Coords &c);
         void remove_piece(std::unique_ptr<hive::Insect> i);
         bool is_empty() const;
+        void swap(const Coords &from, const Coords &to);
         void move(const Coords &from, const Coords &to);
         Move unmove();
         template <class T> std::unique_ptr<T> get_piece_at(const Coords &c);
