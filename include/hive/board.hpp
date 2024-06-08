@@ -14,13 +14,13 @@ namespace hive {
         Board() = default;
         ~Board();
         void add_piece(std::unique_ptr<hive::Insect> i);
-        void remove_piece(const Coords &c);
-        void remove_piece(std::unique_ptr<hive::Insect> i);
-        bool is_empty() const;
-        void swap(const Coords &from, const Coords &to);
+        void remove_piece(const Coords &c) noexcept;
+        void remove_piece(std::unique_ptr<hive::Insect> i) noexcept;
+        bool is_empty() const noexcept;
+        void swap(const Coords &from, const Coords &to) noexcept;
         void move(const Coords &from, const Coords &to);
-        Move unmove();
-        template <class T> std::unique_ptr<T> get_piece_at(const Coords &c);
+        const Move unmove() noexcept;
+        template <class T> T *get_piece_at(const Coords &c) noexcept;
     private:
         std::unordered_map<Coords, std::unique_ptr<Insect>, HashFn> insects;  // TODO shared_pointers
         Moves moves;
@@ -28,4 +28,5 @@ namespace hive {
 }
 
 
+#include "src/hive/board.tpp"
 #endif

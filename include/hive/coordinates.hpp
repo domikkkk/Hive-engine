@@ -20,19 +20,19 @@ struct Coords {
     int x;
     int y;
     int z;
-    Coords() = default;
-    Coords(const int &x, const int &y):x(x), y(y), z(0) {};
-    Coords operator+(const Coords &c) const;
-    bool operator==(const Coords &c) const;
+    Coords() noexcept = default;
+    Coords(const int &x, const int &y) noexcept:x(x), y(y), z(0) {};
+    Coords operator+(const Coords &c) const noexcept;
+    bool operator==(const Coords &c) const noexcept;
 };
 
 
-Coords movements(const Directions &direction);
+Coords movements(const Directions &direction) noexcept;
 
 
 class HashFn {
 public:
-    size_t operator()(const Coords &c) const;
+    size_t operator()(const Coords &c) const noexcept;
 };
 
 

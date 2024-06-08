@@ -22,7 +22,7 @@ void hive::Board::add_piece(std::unique_ptr<hive::Insect> i) {
 }
 
 
-void hive::Board::remove_piece(const Coords &c) {
+void hive::Board::remove_piece(const Coords &c) noexcept {
     auto it = this->insects.find(c);
     if (it != this->insects.end()) {
         // delete it->second;  // because unique_ptr
@@ -31,17 +31,17 @@ void hive::Board::remove_piece(const Coords &c) {
 }
 
 
-void hive::Board::remove_piece(std::unique_ptr<hive::Insect> i) {
+void hive::Board::remove_piece(std::unique_ptr<hive::Insect> i) noexcept {
     this->remove_piece(i->get_location());
 }
 
 
-bool hive::Board::is_empty() const {
+bool hive::Board::is_empty() const noexcept {
     return insects.empty();
 }
 
 
-void hive::Board::swap(const Coords &from, const Coords &to) {
+void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
     auto insect_from = this->insects.find(from);
     insect_from->second->move(to);
     this->insects[to] = std::move(insect_from->second);
@@ -63,7 +63,7 @@ void hive::Board::move(const Coords &from, const Coords &to) {
 }
 
 
-Move hive::Board::unmove() {
+const Move hive::Board::unmove() noexcept {
     const Move m = this->moves.all.back();
     this->moves.all.pop_back();
     

@@ -1,7 +1,7 @@
 #include <hive/coordinates.hpp>
 
 
-Coords movements(const Directions &direction) {
+Coords movements(const Directions &direction) noexcept {
     switch (direction)
     {
     case Directions::N:  // N
@@ -22,7 +22,17 @@ Coords movements(const Directions &direction) {
 }
 
 
-size_t HashFn::operator()(const Coords &c) const {
+bool Coords::operator==(const Coords &c) const noexcept {
+    return this->x == c.x && this->y == c.y && this->z == c.z;
+}
+
+
+Coords Coords::operator+(const Coords &c) const noexcept {
+    return {this->x + c.x, this->y + c.y};
+}
+
+
+size_t HashFn::operator()(const Coords &c) const noexcept {
 #ifdef DEBUG
     return c.x + 23 * (c.y + 47 * c.z);
 #endif
