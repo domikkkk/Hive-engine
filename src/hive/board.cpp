@@ -22,19 +22,20 @@ void hive::Board::add_piece(std::unique_ptr<hive::Insect> i) {
     auto it = this->insects.find(location);
     if (it != this->insects.end()) return;  // Can't add. TODO make expection
     this->insects[location] = std::move(i);
+    this->moves.all.push_back(Move{location});
 }
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
     auto it = this->insects.find(c);
     if (it != this->insects.end()) {
-        // delete it->second;  // because unique_ptr
+        // it->second.reset();  // because unique_ptr
         this->insects.erase(it);
     }
 }
 
 
-void hive::Board::remove_piece(std::unique_ptr<hive::Insect> i) noexcept {
+void hive::Board::remove_piece(hive::Insect *i) noexcept {
     this->remove_piece(i->get_location());
 }
 
@@ -62,7 +63,7 @@ void hive::Board::move(const Coords &from, const Coords &to) {
     if (insect_to != this->insects.end()) return; // zrobić wyjątek
 
     this->swap(from, to);
-    this->moves.all.push_back({from, to});
+    this->moves.all.push_back(Move{from, to});
 }
 
 
@@ -70,7 +71,11 @@ const Move hive::Board::unmove() noexcept {
     const Move m = this->moves.all.back();
     this->moves.all.pop_back();
     
-    this->swap(m.to, m.from);
+    if (!m.added) {
+        this->swap(m.to, m.from);
+    } else {
+        this->remove_piece(m.to);
+    }
     return m;
 }
 

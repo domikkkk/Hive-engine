@@ -15,7 +15,7 @@ namespace hive {
         ~Board();
         void add_piece(std::unique_ptr<hive::Insect> i);
         void remove_piece(const Coords &c) noexcept;
-        void remove_piece(std::unique_ptr<hive::Insect> i) noexcept;
+        void remove_piece(hive::Insect *i) noexcept;
         bool is_empty() const noexcept;
         bool is_connected() const noexcept;
         void swap(const Coords &from, const Coords &to) noexcept;
