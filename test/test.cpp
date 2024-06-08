@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <Hive>
 
-#define DEBUG
-
 
 TEST(insects, piece) {
     hive::Insect p({0, 0});

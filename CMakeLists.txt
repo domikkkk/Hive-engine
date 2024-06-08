@@ -5,6 +5,10 @@ project("hive_engine" CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic")
 
+if(${DEBUG})
+    add_compile_definitions(DEBUG)
+endif()
+
 # add hive/files
 add_subdirectory("src/hive")
 add_subdirectory("src/engine")

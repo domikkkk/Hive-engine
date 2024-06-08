@@ -1,5 +1,8 @@
 #include <hive/board.hpp>
 #include <queue>
+#ifdef DEBUG
+#include <iostream>
+#endif
 
 
 hive::Board::~Board() {
@@ -81,19 +84,22 @@ bool hive::Board::is_connected() const noexcept {
     visited[c] = true;
     q.push(c);
     std::size_t count_visits = 1;
+#ifdef DEBUG
+        std::cout << "\nNew check\n";
+#endif
     do {
         c = q.front(); q.pop();
-    #ifdef DEBUG
+#ifdef DEBUG
         std::cout << "visited " << c.x << ' ' << c.y << '\n';
-    #endif
+#endif
         auto neighbors = c.get_surrounding_locations();
         for (Coords neighbor: neighbors) {
             if (!visited[neighbor]) {
                 visited[neighbor] = true;
                 if (this->get_piece_at<hive::Insect>(neighbor) != nullptr) {
-    #ifdef DEBUG
+#ifdef DEBUG
                     std::cout << "\tAdded " << neighbor.x << ' ' << neighbor.y << '\n';
-    #endif
+#endif
                     q.push(neighbor);
                     ++count_visits;
                 }

@@ -33,10 +33,7 @@ Coords Coords::operator+(const Coords &c) const noexcept {
 
 
 size_t HashFn::operator()(const Coords &c) const noexcept {
-#ifdef DEBUG
-    return c.x + 23 * (c.y + 47 * c.z);
-#endif
-    size_t hash = (c.x + 23) << 16;
+    std::size_t hash = (c.x + 23) << 16;
     hash ^= (c.y + 47) << 8;
     hash ^= c.z;
     return hash;
