@@ -35,7 +35,7 @@ namespace hive {
         virtual const int &get_color() const noexcept;
         virtual void move(const Coords &c) noexcept;
         virtual const InsectType &get_type() const noexcept;
-        virtual std::vector<Coords> get_surrounding_locations() noexcept;
+        virtual std::vector<Coords> get_surrounding_locations() const noexcept;
         virtual void set_move(const bool &m) noexcept;
         virtual const bool &can_move() const noexcept;
         virtual const bool &is_exist() const noexcept;

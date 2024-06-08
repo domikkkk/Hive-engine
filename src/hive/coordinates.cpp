@@ -36,8 +36,19 @@ size_t HashFn::operator()(const Coords &c) const noexcept {
 #ifdef DEBUG
     return c.x + 23 * (c.y + 47 * c.z);
 #endif
-    size_t hash = (c.x + 22) << 16;
-    hash ^= (c.y + 44) << 8;
+    size_t hash = (c.x + 23) << 16;
+    hash ^= (c.y + 47) << 8;
     hash ^= c.z;
     return hash;
+}
+
+
+std::vector<Coords> Coords::get_surrounding_locations() const noexcept {
+    std::vector<Coords> neighbors;
+    neighbors.reserve(6);
+    for (int i = static_cast<int>(Directions::N); i <= static_cast<int>(Directions::NW); ++i) {
+        Directions dir = static_cast<Directions>(i);
+        neighbors.push_back(Coords{this->x, this->y} + movements(dir));
+    }
+    return neighbors;
 }

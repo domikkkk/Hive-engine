@@ -70,14 +70,8 @@ const Coords &hive::Insect::get_location() const noexcept {
 }
 
 
-std::vector<Coords> hive::Insect::get_surrounding_locations() noexcept {
-    std::vector<Coords> neighbors;
-    neighbors.reserve(6);
-    for (int i = static_cast<int>(Directions::N); i <= static_cast<int>(Directions::NW); ++i) {
-        Directions dir = static_cast<Directions>(i);
-        neighbors.push_back(this->_c + movements(dir));
-    }
-    return neighbors;
+std::vector<Coords> hive::Insect::get_surrounding_locations() const noexcept {
+    return this->_c.get_surrounding_locations();;
 }
 
 

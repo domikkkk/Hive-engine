@@ -4,6 +4,7 @@
 
 
 #include <stddef.h>
+#include <vector>
 
 
 enum class Directions {
@@ -21,9 +22,10 @@ struct Coords {
     int y;
     int z;
     Coords() noexcept = default;
-    Coords(const int &x, const int &y) noexcept:x(x), y(y), z(0) {};
+    Coords(const int &x, const int &y) noexcept: x(x), y(y), z(0) {};
     Coords operator+(const Coords &c) const noexcept;
     bool operator==(const Coords &c) const noexcept;
+    std::vector<Coords> get_surrounding_locations() const noexcept;
 };
 
 

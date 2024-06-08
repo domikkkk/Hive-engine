@@ -1,5 +1,5 @@
 #include <hive/board.hpp>
-#include "board.tpp"
+#include <queue>
 
 
 hive::Board::~Board() {
@@ -69,4 +69,36 @@ const Move hive::Board::unmove() noexcept {
     
     this->swap(m.to, m.from);
     return m;
+}
+
+
+bool hive::Board::is_connected() const noexcept {
+    std::queue<Coords> q;
+    std::unordered_map<Coords, bool, HashFn> visited;
+    auto i = this->insects.begin()->second.get();
+    if (!i) return true;
+    Coords c = i->get_location();
+    visited[c] = true;
+    q.push(c);
+    std::size_t count_visits = 1;
+    do {
+        c = q.front(); q.pop();
+    #ifdef DEBUG
+        std::cout << "visited " << c.x << ' ' << c.y << '\n';
+    #endif
+        auto neighbors = c.get_surrounding_locations();
+        for (Coords neighbor: neighbors) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                if (this->get_piece_at<hive::Insect>(neighbor) != nullptr) {
+    #ifdef DEBUG
+                    std::cout << "\tAdded " << neighbor.x << ' ' << neighbor.y << '\n';
+    #endif
+                    q.push(neighbor);
+                    ++count_visits;
+                }
+            }
+        }
+    } while (!q.empty());
+    return count_visits == this->insects.size();
 }

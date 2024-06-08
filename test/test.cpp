@@ -117,6 +117,26 @@ TEST(Board, move) {
 }
 
 
+TEST(Board, unmove) {
+
+}
+
+
+TEST(Board, validConnection) {
+    hive::Board board;
+    board.add_piece(std::make_unique<hive::Spider>(Coords{0, 0}, WHITE));
+    board.add_piece(std::make_unique<hive::Bee>(Coords{0, 2}, BLACK));
+    board.add_piece(std::make_unique<hive::Ant>(Coords{-1, -1}, WHITE));
+    board.add_piece(std::make_unique<hive::Grasshopper>(Coords{1, 3}, BLACK));
+    board.add_piece(std::make_unique<hive::Bee>(Coords{1, -1}, WHITE));
+    ASSERT_TRUE(board.is_connected());
+    board.add_piece(std::make_unique<hive::Grasshopper>(Coords{-2, 4}, BLACK));
+    ASSERT_FALSE(board.is_connected());
+    board.move({-2, 4}, {-1, 3});
+    ASSERT_TRUE(board.is_connected());
+}
+
+
 int main() {
     testing::InitGoogleTest();
     return RUN_ALL_TESTS();
