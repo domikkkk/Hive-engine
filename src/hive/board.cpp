@@ -82,7 +82,7 @@ const Move hive::Board::unmove() noexcept {
 
 bool hive::Board::is_connected() const noexcept {
     std::queue<Coords> q;
-    std::unordered_map<Coords, bool, HashFn> visited;
+    std::unordered_map<Coords, bool, HashFn> visited(false);
     auto i = this->insects.begin()->second.get();
     if (!i) return true;
     Coords c = i->get_location();
