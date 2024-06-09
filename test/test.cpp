@@ -116,7 +116,21 @@ TEST(Board, move) {
 
 
 TEST(Board, unmove) {
-
+    hive::Board board;
+    board.add_piece(std::make_unique<hive::Spider>(Coords{-1, -1}, WHITE));
+    auto i = board.get_piece_at<hive::Insect>(Coords{-1, -1});
+    Coords c1 = {-2, 2}, c2 = {-1, -1};
+    board.move(c2, c1);
+    ASSERT_EQ(i->get_type(), InsectType::SPIDER);
+    ASSERT_EQ(i->get_location(), c1);
+    Move past_move = board.unmove();
+    ASSERT_FALSE(past_move.added);
+    ASSERT_EQ(past_move.to, c1); ASSERT_EQ(past_move.from, c2);
+    ASSERT_FALSE(board.is_empty());
+    past_move = board.unmove();
+    ASSERT_TRUE(past_move.added);
+    ASSERT_EQ(past_move.to, c2);
+    ASSERT_TRUE(board.is_empty());
 }
 
 
