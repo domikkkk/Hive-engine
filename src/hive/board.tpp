@@ -1,4 +1,7 @@
-#pragma once
+#ifndef BOARD_TPP
+#define BOARD_TPP
+
+#include <hive/board.hpp>
 
 
 template <class T>
@@ -7,3 +10,6 @@ T* hive::Board::get_piece_at(const Coords &c) const noexcept {
     if (it == this->insects.end()) return nullptr;
     return dynamic_cast<T*>(it->second.get());
 }
+
+
+#endif

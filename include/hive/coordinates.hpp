@@ -33,7 +33,7 @@ Coords movements(const Directions &direction) noexcept;
 
 class HashFn {
 public:
-    size_t operator()(const Coords &c) const noexcept;
+    std::size_t operator()(const Coords &c) const noexcept;
 };
 
 

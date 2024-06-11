@@ -13,8 +13,8 @@ namespace hive {
     public:
         Insect() noexcept {this->_exist = false;};
         explicit Insect(const Coords &c) noexcept:_c(c) {this->color = DEFAULT;};
-        Insect(const Coords &c, const int &color) noexcept:_c(c), color(color) {};
-        Insect(const Coords &c, const int &color, const InsectType &type) noexcept;
+        Insect(const Coords &c, const Color &color) noexcept:_c(c), color(color) {};
+        Insect(const Coords &c, const Color &color, const InsectType &type) noexcept;
         virtual ~Insect() noexcept {};
         virtual const Coords &get_location() const noexcept;
         virtual const int &get_color() const noexcept;
@@ -28,7 +28,7 @@ namespace hive {
         virtual bool operator==(const Insect &p) const noexcept;
     protected:
         Coords _c;
-        int color = DEFAULT;
+        Color color = DEFAULT;
         bool _move = false;
         bool _exist = true;
         bool _jump = false;
@@ -38,51 +38,51 @@ namespace hive {
 
     class Bee : public Insect {
     public:
-        Bee(const Coords &c, const int &color) noexcept;
+        Bee(const Coords &c, const Color &color) noexcept;
         virtual ~Bee() noexcept {};
     };
 
     class Ant : public Insect {
     public:
-        Ant(const Coords &c, const int &color) noexcept;
+        Ant(const Coords &c, const Color &color) noexcept;
         virtual ~Ant() noexcept {};
     };
 
     class Beetle : public Insect {
     public:
-        Beetle(const Coords &c, const int &color) noexcept;
+        Beetle(const Coords &c, const Color &color) noexcept;
         virtual ~Beetle() noexcept {};
     };
 
     class Grasshopper : public Insect {
     public:
-        Grasshopper(const Coords &c, const int &color) noexcept;
+        Grasshopper(const Coords &c, const Color &color) noexcept;
         virtual ~Grasshopper() noexcept {};
     };
 
     class Spider : public Insect {
     public:
-        Spider(const Coords &c, const int &color) noexcept;
+        Spider(const Coords &c, const Color &color) noexcept;
         virtual ~Spider() noexcept {};
     };
 
     #ifdef LADYBUG_E
     class LadyBug : public Insect {
-        LadyBug(const Coords &c, const int &color) noexcept;
+        LadyBug(const Coords &c, const Color &color) noexcept;
         virtual ~LadyBug() noexcept {};
     };
     #endif
 
     #ifdef MOSQUITO_E
     class Mosquito : public Insect {
-        Mosquito(const Coords &c, const int &color) noexcept;
+        Mosquito(const Coords &c, const Color &color) noexcept;
         virtual ~Mosquito() noexcept {};
     };
     #endif
 
     #ifdef PILLBUG_E
     class PillBug : public Insect {
-        PillBug(const Coords &c, const int &color) noexcept;
+        PillBug(const Coords &c, const Color &color) noexcept;
         virtual ~PillBug() noexcept {};
     };
     #endif

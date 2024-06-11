@@ -1,42 +1,42 @@
 #include <hive/pieces.hpp>
 
 
-hive::Insect::Insect(const Coords &c, const int &color, const InsectType &type) noexcept:
+hive::Insect::Insect(const Coords &c, const Color &color, const InsectType &type) noexcept:
     Insect(c, color) {
     this->type = type;
 }
 
 
-hive::Bee::Bee(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::BEE) {}
+hive::Bee::Bee(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::BEE) {}
 
 
-hive::Ant::Ant(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::ANT) {}
+hive::Ant::Ant(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::ANT) {}
 
 
-hive::Beetle::Beetle(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::BEETLE) {}
+hive::Beetle::Beetle(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::BEETLE) {}
 
 
 
-hive::Grasshopper::Grasshopper(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::GRASSHOPPER) {
+hive::Grasshopper::Grasshopper(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::GRASSHOPPER) {
     this->_jump = true;
 }
 
 
-hive::Spider::Spider(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::SPIDER) {}
+hive::Spider::Spider(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::SPIDER) {}
 
 
 #ifdef LADYBUG_E
-hive::LadyBug::LadyBug(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::LADYBUG) {}
+hive::LadyBug::LadyBug(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::LADYBUG) {}
 #endif
 
 
 #ifdef MOSQUITO_E
-hive::Mosquito::Mosquito(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::MOSQUITO) {}
+hive::Mosquito::Mosquito(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::MOSQUITO) {}
 #endif
 
 
 #ifdef PILLBUG_E
-hive::PillBug::PillBug(const Coords &c, const int &color) noexcept : Insect(c, color, InsectType::PILLBUG) {}
+hive::PillBug::PillBug(const Coords &c, const Color &color) noexcept : Insect(c, color, InsectType::PILLBUG) {}
 #endif
 
 
