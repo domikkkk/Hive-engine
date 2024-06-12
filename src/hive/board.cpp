@@ -6,13 +6,6 @@
 
 
 hive::Board::~Board() {
-    // because shared_ptr
-    // for (auto it = this->insects.begin(); it != this->insects.end(); ++it) {
-    //     if (it->second != nullptr) {
-    //         delete it->second;
-    //         it->second = nullptr;
-    //     }
-    // }
     this->insects.clear();
 }
 
@@ -112,4 +105,9 @@ bool hive::Board::is_connected() const noexcept {
         }
     } while (!q.empty());
     return count_visits == this->insects.size();
+}
+
+
+hive::Insect *hive::Board::operator[](const Coords &c) const noexcept {
+    return this->get_piece_at<hive::Insect>(c);
 }

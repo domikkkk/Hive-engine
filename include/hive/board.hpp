@@ -22,6 +22,7 @@ namespace hive {
         void move(const Coords &from, const Coords &to);
         const Move unmove() noexcept;
         template <class T> T *get_piece_at(const Coords &c) const noexcept;
+        Insect *operator[](const Coords &c) const noexcept;
     private:
         std::unordered_map<Coords, std::unique_ptr<Insect>, HashFn> insects;  // TODO shared_pointers
         Moves moves;
