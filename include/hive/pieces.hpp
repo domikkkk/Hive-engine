@@ -68,6 +68,7 @@ namespace hive {
 
     #ifdef LADYBUG_E
     class LadyBug : public Insect {
+    public:
         LadyBug(const Coords &c, const Color &color) noexcept;
         virtual ~LadyBug() noexcept {};
     };
@@ -75,6 +76,7 @@ namespace hive {
 
     #ifdef MOSQUITO_E
     class Mosquito : public Insect {
+    public:
         Mosquito(const Coords &c, const Color &color) noexcept;
         virtual ~Mosquito() noexcept {};
     };
@@ -82,6 +84,7 @@ namespace hive {
 
     #ifdef PILLBUG_E
     class PillBug : public Insect {
+    public:
         PillBug(const Coords &c, const Color &color) noexcept;
         virtual ~PillBug() noexcept {};
     };

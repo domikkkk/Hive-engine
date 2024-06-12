@@ -6,6 +6,7 @@ TEST(insects, piece) {
     hive::Insect p({0, 0});
     EXPECT_EQ(p.get_location().x, 0);
     EXPECT_EQ(p.get_location().y, 0);
+    EXPECT_EQ(p.get_type(), InsectType::NONTYPE);
 };
 
 
@@ -13,6 +14,7 @@ TEST(insects, Bee) {
     hive::Bee b({1, 0}, WHITE);
     EXPECT_EQ(b.get_location().x, 1);
     EXPECT_EQ(b.get_location().y, 0);
+    EXPECT_EQ(b.get_type(), InsectType::BEE);
 };
 
 
@@ -20,6 +22,7 @@ TEST(insects, Ant) {
     hive::Ant a({1, 1}, WHITE);
     EXPECT_EQ(a.get_location().x, 1);
     EXPECT_EQ(a.get_location().y, 1);
+    EXPECT_EQ(a.get_type(), InsectType::ANT);
 };
 
 
@@ -27,6 +30,7 @@ TEST(insects, Beetle) {
     hive::Beetle b({3, 0}, WHITE);
     EXPECT_EQ(b.get_location().x, 3);
     EXPECT_EQ(b.get_location().y, 0);
+    EXPECT_EQ(b.get_type(), InsectType::BEETLE);
 };
 
 
@@ -34,6 +38,7 @@ TEST(insects, Grasshopper) {
     hive::Grasshopper g({0, -3}, WHITE);
     EXPECT_EQ(g.get_location().x, 0);
     EXPECT_EQ(g.get_location().y, -3);
+    EXPECT_EQ(g.get_type(), InsectType::GRASSHOPPER);
 };
 
 
@@ -41,7 +46,38 @@ TEST(insects, Spider) {
     hive::Spider s({2, 4}, WHITE);
     EXPECT_EQ(s.get_location().x, 2);
     EXPECT_EQ(s.get_location().y, 4);
+    EXPECT_EQ(s.get_type(), InsectType::SPIDER);
 };
+
+
+#ifdef MOSQUITO_E
+TEST(insects, mosquito) {
+    hive::Mosquito m({3, 4}, WHITE);
+    EXPECT_EQ(m.get_location().x, 3);
+    EXPECT_EQ(m.get_location().y, 4);
+    EXPECT_EQ(m.get_type(), InsectType::MOSQUITO);
+};
+#endif
+
+
+#ifdef LADYBUG_E
+TEST(insects, ladybug) {
+    hive::LadyBug l({0, 4}, BLACK);
+    EXPECT_EQ(l.get_location().x, 0);
+    EXPECT_EQ(l.get_location().y, 4);
+    EXPECT_EQ(l.get_type(), InsectType::LADYBUG);
+};
+#endif
+
+
+#ifdef PILLBUG_E
+TEST(insects, pillbug) {
+    hive::PillBug p({2, 4}, WHITE);
+    EXPECT_EQ(p.get_location().x, 2);
+    EXPECT_EQ(p.get_location().y, 4);
+    EXPECT_EQ(p.get_type(), InsectType::PILLBUG);
+};
+#endif
 
 
 TEST(insects, operatorEqual) {
