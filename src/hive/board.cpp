@@ -10,11 +10,12 @@ hive::Board::~Board() {
 }
 
 
-void hive::Board::add_piece(std::unique_ptr<hive::Insect> i) {
-    const auto& location = i->get_location();
+void hive::Board::add_piece(const hive::Insect &i) {
+    const auto& location = i.get_location();
     auto it = this->insects.find(location);
     if (it != this->insects.end()) return;  // Can't add. TODO make expection
-    this->insects[location] = std::move(i);
+    auto j = std::make_unique<hive::Insect>(i);
+    this->insects[location] = std::move(j);
     this->moves.all.push_back(Move{location});
 }
 

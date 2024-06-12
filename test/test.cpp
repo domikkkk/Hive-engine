@@ -101,7 +101,7 @@ TEST(Board, empty) {
 
 TEST(Board, not_empty) {
     hive::Board board;
-    board.add_piece(std::make_unique<hive::Bee>(Coords{0, 0}, WHITE));
+    board.add_piece(hive::Bee{Coords{0, 0}, WHITE});
     EXPECT_FALSE(board.is_empty());
 };
 
@@ -118,24 +118,19 @@ TEST(Board, locations) {
 
 TEST(Board, insects) {
     hive::Board board;
-    auto bee = std::make_unique<hive::Bee>(Coords{0, 0}, WHITE);
-    auto bee_raw = bee.get();
-    auto ant = std::make_unique<hive::Ant>(Coords{1, 1}, BLACK);
-    board.add_piece(std::move(bee));
-    board.add_piece(std::move(ant));
-
+    board.add_piece(hive::Bee{Coords{0, 0}, WHITE});
+    board.add_piece(hive::Ant{Coords{1, 1}, BLACK});
     auto retreviedBee = board.get_piece_at<hive::Bee>({0, 0});
     auto retreviedAnt = board.get_piece_at<hive::Ant>({0, 1});
-    ASSERT_EQ(retreviedBee, bee_raw);
-    ASSERT_EQ(*retreviedBee, *bee_raw);
-    ASSERT_EQ(retreviedAnt, nullptr);// still shoudn't be here
+    ASSERT_EQ(retreviedBee->get_type(), InsectType::BEE);
+    ASSERT_EQ(retreviedAnt, nullptr);//  shoudn't be here
 }
 
 
 TEST(Board, operator) {
     hive::Board board;
-    board.add_piece(std::make_unique<hive::Spider>(Coords{0, 0}, WHITE));
-    board.add_piece(std::make_unique<hive::Bee>(Coords{0, 2}, BLACK));
+    board.add_piece(hive::Spider{Coords{0, 0}, WHITE});
+    board.add_piece(hive::Bee{Coords{0, 2}, BLACK});
     auto i = board[Coords{0, 0}];
     ASSERT_NE(i, nullptr);
     i = board[Coords{0, 3}];
@@ -148,9 +143,8 @@ TEST(Board, operator) {
 
 TEST(Board, move) {
     hive::Board board;
-    auto bee = std::make_unique<hive::Bee>(Coords{1, 1}, WHITE);
     Coords c = {1, 1};
-    board.add_piece(std::move(bee));
+    board.add_piece(hive::Bee{Coords{1, 1}, WHITE});
     auto j = board.get_piece_at<hive::Insect>({1, 1});
     ASSERT_EQ(j->get_location(), c);
     // move piece to another place
@@ -167,7 +161,7 @@ TEST(Board, move) {
 
 TEST(Board, unmove) {
     hive::Board board;
-    board.add_piece(std::make_unique<hive::Spider>(Coords{-1, -1}, WHITE));
+    board.add_piece(hive::Spider{Coords{-1, -1}, WHITE});
     auto i = board.get_piece_at<hive::Insect>(Coords{-1, -1});
     Coords c1 = {-2, 2}, c2 = {-1, -1};
     board.move(c2, c1);
@@ -186,13 +180,13 @@ TEST(Board, unmove) {
 
 TEST(Board, validConnection) {
     hive::Board board;
-    board.add_piece(std::make_unique<hive::Spider>(Coords{0, 0}, WHITE));
-    board.add_piece(std::make_unique<hive::Bee>(Coords{0, 2}, BLACK));
-    board.add_piece(std::make_unique<hive::Ant>(Coords{-1, -1}, WHITE));
-    board.add_piece(std::make_unique<hive::Grasshopper>(Coords{1, 3}, BLACK));
-    board.add_piece(std::make_unique<hive::Bee>(Coords{1, -1}, WHITE));
+    board.add_piece(hive::Spider{Coords{0, 0}, WHITE});
+    board.add_piece(hive::Bee{Coords{0, 2}, BLACK});
+    board.add_piece(hive::Ant{Coords{-1, -1}, WHITE});
+    board.add_piece(hive::Grasshopper{Coords{1, 3}, BLACK});
+    board.add_piece(hive::Bee{Coords{1, -1}, WHITE});
     ASSERT_TRUE(board.is_connected());
-    board.add_piece(std::make_unique<hive::Grasshopper>(Coords{-2, 4}, BLACK));
+    board.add_piece(hive::Grasshopper{Coords{-2, 4}, BLACK});
     ASSERT_FALSE(board.is_connected());
     board.move({-2, 4}, {-1, 3});
     ASSERT_TRUE(board.is_connected());

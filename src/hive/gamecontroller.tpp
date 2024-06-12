@@ -10,10 +10,17 @@ Controller<T, U>::Controller(const T &board): board(board) {}
 
 template <class T, class U>
 void Controller<T, U>::switch_turn() noexcept {
-    if (this->whos_turn == WHITE) {
+    switch (this->whos_turn)
+    {
+    case WHITE:
         this->whos_turn = BLACK;
-    } else {
+        break;
+    case BLACK:
         this->whos_turn = WHITE;
+        break;
+    default:
+        this->whos_turn = WHITE;
+        break;
     }
 }
 
@@ -26,7 +33,8 @@ const Color &Controller<T, U>::get_player() const noexcept {
 
 template <class T, class U>
 void Controller<T, U>::add_piece(const std::string &name, const U &where) noexcept {
-    this->insects[name] = where;
+    auto c = std::make_unique<U>(where);
+    this->insects[name] = std::move(c);
 }
 
 #endif

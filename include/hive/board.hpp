@@ -13,7 +13,7 @@ namespace hive {
     public:
         Board() = default;
         ~Board();
-        void add_piece(std::unique_ptr<hive::Insect> i);
+        void add_piece(const hive::Insect &i);
         void remove_piece(const Coords &c) noexcept;
         void remove_piece(hive::Insect *i) noexcept;
         bool is_empty() const noexcept;
