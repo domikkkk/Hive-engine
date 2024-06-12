@@ -10,7 +10,7 @@ template <class T, class U>
 class Controller {
 public:
     Controller() = default;
-    Controller(const T &board);
+    explicit Controller(const T &board);
     void switch_turn() noexcept;
     const Color &get_player() const noexcept;
     void add_piece(const std::string &name, const U &where) noexcept;
