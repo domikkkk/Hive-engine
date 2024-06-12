@@ -17,7 +17,7 @@ namespace hive {
         Insect(const Coords &c, const Color &color, const InsectType &type) noexcept;
         virtual ~Insect() noexcept {};
         virtual const Coords &get_location() const noexcept;
-        virtual const int &get_color() const noexcept;
+        virtual const Color &get_color() const noexcept;
         virtual void move(const Coords &c) noexcept;
         virtual const InsectType &get_type() const noexcept;
         virtual std::vector<Coords> get_surrounding_locations() const noexcept;

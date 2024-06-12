@@ -67,7 +67,7 @@ bool hive::Insect::operator==(const Insect &p) const noexcept {
 }
 
 
-const int &hive::Insect::get_color() const noexcept {
+const Color &hive::Insect::get_color() const noexcept {
     return this->color;
 }
 
