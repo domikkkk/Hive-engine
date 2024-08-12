@@ -19,6 +19,7 @@ public:
 private:
     Color whos_turn = WHITE;
     T board;
+    int moves_counter;
     std::unordered_map<std::string, std::unique_ptr<U>> insects;
 };
 

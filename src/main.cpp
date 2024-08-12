@@ -10,5 +10,6 @@ int main(int argc, char **argv) {
     std::cout << controller.get_player() << '\n';
     controller.switch_turn();
     controller.add_piece("ws1", Coords{0, 0});
+    std::cout << sizeof(Insect::ant) << '\n';
     return 0;
 }

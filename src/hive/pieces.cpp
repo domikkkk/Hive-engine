@@ -63,7 +63,7 @@ std::vector<Coords> hive::Insect::get_surrounding_locations() const noexcept {
 
 
 bool hive::Insect::operator==(const Insect &p) const noexcept {
-    return p.get_color() != DEFAULT && this->_c == p._c && this->color == p.color && this->type == p.type;
+    return p.get_color() != NONCOLOR && this->_c == p._c && this->color == p.color && this->type == p.type;
 }
 
 
