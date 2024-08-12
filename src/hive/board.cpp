@@ -1,61 +1,34 @@
 #include <hive/board.hpp>
 #include <queue>
+#include <hive/namespaces.hpp>
 #ifdef DEBUG
 #include <iostream>
 #endif
 
 
-hive::Board::~Board() {
-    this->insects.clear();
-}
-
-
-void hive::Board::add_piece(const hive::Insect &i) {
-    const auto& location = i.get_location();
-    auto it = this->insects.find(location);
-    if (it != this->insects.end()) return;  // Can't add. TODO make expection
-    auto j = std::make_unique<hive::Insect>(i);
-    this->insects[location] = std::move(j);
-    this->moves.all.push_back(Move{location});
+void hive::Board::add_piece(const char &insect, const Coords &where) {
+    this->fields[where.x + hive::X/2][where.y + hive::Y/2] = insect;
+    this->moves.all.push_back(Move{where});
+    ++this->insects;
 }
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
-    auto it = this->insects.find(c);
-    if (it != this->insects.end()) {
-        // it->second.reset();  // because unique_ptr
-        this->insects.erase(it);
-    }
-}
-
-
-void hive::Board::remove_piece(hive::Insect *i) noexcept {
-    this->remove_piece(i->get_location());
-}
-
-
-bool hive::Board::is_empty() const noexcept {
-    return insects.empty();
+    (*this)(c.x, c.y) = Insect::empty;
+    --this->insects;
 }
 
 
 void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
-    auto insect_from = this->insects.find(from);
-    insect_from->second->move(to);
-    this->insects[to] = std::move(insect_from->second);
-    this->insects.erase(insect_from);
+    (*this)(to.x, to.y) = (*this)(from.x, from.y);
+    (*this)(from.x, from.y) = Insect::empty;
 }
 
 
-void hive::Board::move(const Coords &from, const Coords &to) {
+void hive::Board::move(const Coords &from, const Coords &to) noexcept {
     if (from == to) return;
-
-    auto insect_from = this->insects.find(from);
-    if (insect_from == this->insects.end()) return; // zrobić wyjątek
-
-    auto insect_to = this->insects.find(to);
-    if (insect_to != this->insects.end()) return; // zrobić wyjątek
-
+    if ((*this)(to.x, to.y) == Insect::empty) return;
+    if ((*this)(from.x, from.y) != Insect::empty) return;
     this->swap(from, to);
     this->moves.all.push_back(Move{from, to});
 }
@@ -74,13 +47,13 @@ const Move hive::Board::unmove() noexcept {
 }
 
 
-bool hive::Board::is_connected() const noexcept {
+bool hive::Board::is_connected() noexcept {
     std::queue<Coords> q;
-    std::unordered_map<Coords, bool, HashFn> visited(false);
-    auto i = this->insects.begin()->second.get();
-    if (!i) return true;
-    Coords c = i->get_location();
-    visited[c] = true;
+    bool visited[X][Y] = {false};
+    // auto i = 0;
+    // if (!i) return true;
+    Coords c = {0, 1};
+    visited[c.x + X/2][c.y + Y/2] = true;
     q.push(c);
     std::size_t count_visits = 1;
 #ifdef DEBUG
@@ -89,13 +62,13 @@ bool hive::Board::is_connected() const noexcept {
     do {
         c = q.front(); q.pop();
 #ifdef DEBUG
-        std::cout << "visited " << c.x << ' ' << c.y << '\n';
+        std::cout << "Visited " << c.x << ' ' << c.y << '\n';
 #endif
         auto neighbors = c.get_surrounding_locations();
         for (Coords neighbor: neighbors) {
-            if (!visited[neighbor]) {
-                visited[neighbor] = true;
-                if (this->get_piece_at<hive::Insect>(neighbor) != nullptr) {
+            if (!visited[neighbor.x + X/2][neighbor.y + Y/2]) {
+                visited[neighbor.x + X/2][neighbor.y + Y/2] = true;
+                if ((*this)[neighbor] != Insect::notexists) {
 #ifdef DEBUG
                     std::cout << "\tAdded " << neighbor.x << ' ' << neighbor.y << '\n';
 #endif
@@ -105,10 +78,19 @@ bool hive::Board::is_connected() const noexcept {
             }
         }
     } while (!q.empty());
-    return count_visits == this->insects.size();
+    return count_visits == this->insects;
 }
 
 
-hive::Insect *hive::Board::operator[](const Coords &c) const noexcept {
-    return this->get_piece_at<hive::Insect>(c);
+char &hive::Board::operator()(const std::size_t &x, const std::size_t &y) noexcept {
+    return this->fields[x + X/2][y + Y/2];
 }
+
+
+char &hive::Board::operator[](const Coords &c) noexcept {
+    return (*this)(c.x, c.y);
+}
+
+
+const Coords hive::Board::first_location = {0, 1};
+const Coords hive::Board::second_location = {0, -1};

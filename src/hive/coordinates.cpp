@@ -2,7 +2,7 @@
 
 
 bool Coords::operator==(const Coords &c) const noexcept {
-    return this->x == c.x && this->y == c.y && this->z == c.z;
+    return this->x == c.x && this->y == c.y;
 }
 
 
@@ -29,14 +29,6 @@ const Coords Coords::get_neighbor(const Directions &direction) const noexcept {
     default:
         return {200, 200};  // unexpected error
     }
-}
-
-
-std::size_t HashFn::operator()(const Coords &c) const noexcept {
-    std::size_t hash = (c.x + 23) << 16;
-    hash ^= (c.y + 47) << 8;
-    hash ^= c.z;
-    return hash;
 }
 
 

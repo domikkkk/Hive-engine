@@ -3,8 +3,8 @@
 #pragma once
 
 
-#define MOSQUITO_E
-#define LADYBUG_E
+// #define MOSQUITO_E
+// #define LADYBUG_E
 
 #define PLAYERS 2
 
@@ -49,6 +49,7 @@ namespace GameState {
 
 
 namespace Insect {
+    // Big letter for white and small for black...
     static const char bee = 'Q';
     static const char beetle = 'B';
     static const char ant = 'A';
@@ -57,6 +58,8 @@ namespace Insect {
     static const char ladybug = 'L';
     static const char mosquito = 'M';
     static const char pillbug = 'P';
+    static const char notexists = '\0';
+    static const char empty = 'E';
 };
 
 

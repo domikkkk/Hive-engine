@@ -2,33 +2,32 @@
 #define BOARD_HPP
 #pragma once
 
-#include <unordered_map>
-#include <hive/pieces.hpp>
 #include <memory>
 #include <hive/moves.hpp>
 
 
 namespace hive {
+    static const int &X = 53;
+    static const int &Y = 106;
     class Board {
     public:
+        static const Coords first_location;
+        static const Coords second_location;
         Board() = default;
-        ~Board();
-        void add_piece(const hive::Insect &i);
+        void add_piece(const char &insect, const Coords &where);
         void remove_piece(const Coords &c) noexcept;
-        void remove_piece(hive::Insect *i) noexcept;
-        bool is_empty() const noexcept;
-        bool is_connected() const noexcept;
+        bool is_connected() noexcept;
         void swap(const Coords &from, const Coords &to) noexcept;
-        void move(const Coords &from, const Coords &to);
+        void move(const Coords &from, const Coords &to) noexcept;
         const Move unmove() noexcept;
-        template <class T> T *get_piece_at(const Coords &c) const noexcept;
-        Insect *operator[](const Coords &c) const noexcept;
+        char &operator()(const std::size_t &x, const std::size_t &y) noexcept;
+        char &operator[](const Coords &c) noexcept;
     private:
-        std::unordered_map<Coords, std::unique_ptr<Insect>, HashFn> insects;  // TODO shared_pointers
+        char fields[X][Y] = {0};
         Moves moves;
+        std::size_t insects = 0;
     };
 }
 
 
-#include "src/hive/board.tpp"
 #endif
