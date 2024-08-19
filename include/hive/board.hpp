@@ -4,11 +4,10 @@
 
 #include <memory>
 #include <hive/moves.hpp>
+#include <hive/namespaces.hpp>
 
 
 namespace hive {
-    static const int &X = 53;
-    static const int &Y = 106;
     class Board {
     public:
         static const Coords first_location;
@@ -20,10 +19,10 @@ namespace hive {
         void swap(const Coords &from, const Coords &to) noexcept;
         void move(const Coords &from, const Coords &to) noexcept;
         const Move unmove() noexcept;
-        char &operator()(const std::size_t &x, const std::size_t &y) noexcept;
+        char &operator()(const std::size_t &x, const std::size_t &y, const std::size_t &z=0) noexcept;
         char &operator[](const Coords &c) noexcept;
     private:
-        char fields[X][Y] = {0};
+        char fields[Z][X][Y] = {0};
         Moves moves;
         std::size_t insects = 0;
     };

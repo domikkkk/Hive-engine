@@ -1,8 +1,9 @@
 #include <hive/coordinates.hpp>
+#include <hive/namespaces.hpp>
 
 
 bool Coords::operator==(const Coords &c) const noexcept {
-    return this->x == c.x && this->y == c.y;
+    return this->x == c.x && this->y == c.y && this->z == c.z;
 }
 
 
@@ -41,3 +42,15 @@ std::vector<Coords> Coords::get_surrounding_locations() const noexcept {
     }
     return neighbors;
 }
+
+
+std::vector<Coords> Coords::get_in_Z() const noexcept {
+    std::vector<Coords> Z;
+    if (this->z > 0) {
+        Z.push_back({this->x, this->y, this->z - 1});
+    }
+    if (this->z < hive::Z) {
+        Z.push_back({this->x, this->y, this->z + 1});
+    }
+    return Z;
+};

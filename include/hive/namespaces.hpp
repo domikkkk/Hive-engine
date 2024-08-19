@@ -59,8 +59,16 @@ namespace Insect {
     static const char mosquito = 'M';
     static const char pillbug = 'P';
     static const char notexists = '\0';
-    static const char empty = 'E';
 };
 
+
+namespace hive {
+    static const int &X = 53;
+    static const int &Y = 106;
+    static const int &Z = 8;
+};
+
+
+static const int infinity = __INT_MAX__;
 
 #endif

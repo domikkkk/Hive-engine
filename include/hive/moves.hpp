@@ -31,4 +31,16 @@ private:
 };
 
 
+namespace hive {
+    class Ability {
+    public:
+        Ability() = default;
+        Ability(const char &type);
+        int how_far = 0;
+        bool can_hop = false;
+        bool can_crawl = false;
+    };
+};
+
+
 #endif
