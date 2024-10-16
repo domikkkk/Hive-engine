@@ -32,14 +32,15 @@ private:
 
 
 namespace hive {
-    class Ability {
-    public:
+    struct Ability {
         Ability() = default;
-        Ability(const char &type);
+        Ability(const int &how_far, const bool &can_hop, const bool &can_crawl): how_far(how_far), can_hop(can_hop), can_crawl(can_crawl) {};
         int how_far = 0;
         bool can_hop = false;
         bool can_crawl = false;
     };
+
+    struct Ability gen_possibility(const char &type);
 };
 
 

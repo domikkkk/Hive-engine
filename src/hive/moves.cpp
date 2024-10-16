@@ -13,41 +13,48 @@ Moves::~Moves() {
 }
 
 
-hive::Ability::Ability(const char &type) {
+struct hive::Ability hive::gen_possibility(const char &type) {
     switch (type)
     {
-    case Insect::beetle:
-        this->can_crawl = true;
-        this->how_far = 1;
-        break;
-    case Insect::bee:
-        this->how_far = 1;
-        break;
-    case Insect::ant:
-        this->how_far = infinity;
-        break;
-    case Insect::grasshopper:
-        this->can_hop = true;
-        break;
-    case Insect::spider:
-        this->how_far = 3;
-        break;
+    case Insect::white_beetle:
+        return Ability(1, false, true);
+    case Insect::black_beetle:
+        return Ability(1, false, true);
+    case Insect::white_bee:
+        return Ability(1, false, false);
+    case Insect::black_bee:
+        return Ability(1, false, false);
+    case Insect::white_ant:
+        return Ability(possible_infinity, false, false);
+    case Insect::black_ant:
+        return Ability(possible_infinity, false, false);
+    case Insect::white_grasshopper:
+        return Ability(0, true, false);
+    case Insect::black_grasshopper:
+        return Ability(0, true, false);
+    case Insect::white_spider:
+        return Ability(3, false, false);
+    case Insect::black_spider:
+        return Ability(3, false, false);
     #ifdef MOSQUITO_E
-    case Insect::mosquito:
+    case Insect::white_mosquito:
+        break;
+    case Insect::black_mosquito:
         break;
     #endif
     #ifdef LADYBUG_E
-    case Insect::ladybug:
-        this->how_far = 3;
-        this->can_crawl = true;
-        break;
+    case Insect::white_ladybug:
+        return Ability(3, false, true);
+    case Insect::black_ladybug:
+        return Ability(3, false, true);
     #endif
     #ifdef PILLBUG_E
-    case Insect::pillbug:
-        this->how_far = 1;
-        break;
+    case Insect::white_pillbug:
+        return Ability(1, false, false);
+    case Insect::black_pillbug:
+        return Ability(1, false, false);
     #endif
     default:
-        break;
+        return Ability();
     }
 }

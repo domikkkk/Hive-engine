@@ -50,25 +50,33 @@ namespace GameState {
 
 namespace Insect {
     // Big letter for white and small for black...
-    static const char bee = 'Q';
-    static const char beetle = 'B';
-    static const char ant = 'A';
-    static const char grasshopper = 'G';
-    static const char spider = 'S';
-    static const char ladybug = 'L';
-    static const char mosquito = 'M';
-    static const char pillbug = 'P';
+    static const char white_bee = 'Q';
+    static const char white_beetle = 'B';
+    static const char white_ant = 'A';
+    static const char white_grasshopper = 'G';
+    static const char white_spider = 'S';
+    static const char white_ladybug = 'L';
+    static const char white_mosquito = 'M';
+    static const char white_pillbug = 'P';
+    static const char black_bee = 'q';
+    static const char black_beetle = 'b';
+    static const char black_ant = 'a';
+    static const char black_grasshopper = 'g';
+    static const char black_spider = 's';
+    static const char black_ladybug = 'l';
+    static const char black_mosquito = 'm';
+    static const char black_pillbug = 'p';
     static const char notexists = '\0';
 };
 
 
 namespace hive {
-    static const int &X = 53;
-    static const int &Y = 106;
-    static const int &Z = 8;
+    static const int X = 53;
+    static const int Y = 107;
+    static const int Z = 8;
 };
 
 
-static const int infinity = __INT_MAX__;
+static const int possible_infinity = __INT_MAX__;
 
 #endif

@@ -14,7 +14,7 @@ void hive::Board::add_piece(const char &insect, const Coords &where) {
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
-    (*this)(c.x, c.y, c.z) = Insect::empty;
+    (*this)(c.x, c.y, c.z) = Insect::notexists;
     --this->insects;
 }
 
