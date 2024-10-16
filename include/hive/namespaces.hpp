@@ -49,23 +49,14 @@ namespace GameState {
 
 
 namespace Insect {
-    // Big letter for white and small for black...
-    static const char white_bee = 'Q';
-    static const char white_beetle = 'B';
-    static const char white_ant = 'A';
-    static const char white_grasshopper = 'G';
-    static const char white_spider = 'S';
-    static const char white_ladybug = 'L';
-    static const char white_mosquito = 'M';
-    static const char white_pillbug = 'P';
-    static const char black_bee = 'q';
-    static const char black_beetle = 'b';
-    static const char black_ant = 'a';
-    static const char black_grasshopper = 'g';
-    static const char black_spider = 's';
-    static const char black_ladybug = 'l';
-    static const char black_mosquito = 'm';
-    static const char black_pillbug = 'p';
+    static const char bee = 'q';
+    static const char beetle = 'b';
+    static const char ant = 'a';
+    static const char grasshopper = 'g';
+    static const char spider = 's';
+    static const char ladybug = 'l';
+    static const char mosquito = 'm';
+    static const char pillbug = 'p';
     static const char notexists = '\0';
 };
 
