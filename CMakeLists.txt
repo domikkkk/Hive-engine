@@ -13,8 +13,10 @@ endif()
 add_subdirectory("src/hive")
 add_subdirectory("src/engine")
 
+set(DECORATORS_HPP "include/decorators.hpp")
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+
+add_executable(${PROJECT_NAME} src/main.cpp ${DECORATORS_HPP})
 target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta)
 
 

@@ -5,7 +5,6 @@
 #include <hive/namespaces.hpp>
 #include <unordered_map>
 #include <string>
-#include <memory>
 
 template <class T, class U>
 class Controller {
@@ -17,10 +16,10 @@ public:
     void add_piece(const std::string &name, const U &where) noexcept;
 
 private:
-    Color whos_turn = WHITE;
+    Color current = WHITE;
     T board;
     int moves_counter;
-    std::unordered_map<std::string, std::unique_ptr<U>> insects;
+    std::unordered_map<std::string, U> insects;
 };
 
 

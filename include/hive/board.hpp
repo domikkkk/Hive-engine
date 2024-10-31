@@ -2,7 +2,6 @@
 #define BOARD_HPP
 #pragma once
 
-#include <memory>
 #include <hive/moves.hpp>
 #include <hive/namespaces.hpp>
 
@@ -35,8 +34,7 @@ namespace hive {
     private:
         struct Piece fields[Z][X][Y] = {};
         Moves moves;
-        std::size_t insects = 0;
-        // std::vector<>
+        std::size_t count_insects = 0;
     };
 }
 

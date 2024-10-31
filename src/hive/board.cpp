@@ -14,13 +14,13 @@ bool hive::Piece::operator==(const Piece &p) noexcept {
 void hive::Board::add_piece(const Piece &insect, const Coords &where) {
     (*this)[where] = insect;
     this->moves.all.push_back(Move{where});
-    ++this->insects;
+    ++this->count_insects;
 }
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
     (*this)(c.x, c.y, c.z) = this->notExisting;
-    --this->insects;
+    --this->count_insects;
 }
 
 
@@ -55,7 +55,7 @@ const Move hive::Board::unmove() noexcept {
 bool hive::Board::is_connected() noexcept {
     std::queue<Coords> q;
     bool visited[Z][X][Y] = {false};
-    if (!this->insects) return true;
+    if (!this->count_insects) return true;
     Coords c = {0, 1};
     visited[0][c.x + X/2][c.y + Y/2] = true;
     q.push(c);
@@ -84,7 +84,7 @@ bool hive::Board::is_connected() noexcept {
             }
         }
     } while (!q.empty());
-    return count_visits == this->insects;
+    return count_visits == this->count_insects;
 }
 
 
