@@ -2,10 +2,6 @@
 #include <iostream>
 #include <decorators.hpp>
 
-int nwd(const int &a, const int &b) {
-    return b? nwd(b, a%b) : a;
-}
-
 
 int main(int argc, char **argv) {
     hive::Board b;
