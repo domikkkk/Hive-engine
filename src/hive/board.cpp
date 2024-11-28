@@ -7,7 +7,7 @@
 
 
 bool hive::Piece::operator==(const Piece &p) noexcept {
-    return this->type == p.type;
+    return this->type == p.type && this->color == p.color;
 }
 
 
@@ -19,21 +19,21 @@ void hive::Board::add_piece(const Piece &insect, const Coords &where) {
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
-    (*this)(c.x, c.y, c.z) = this->notExisting;
+    (*this)[c] = {0, Insect::notexists};
     --this->count_insects;
 }
 
 
 void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
-    (*this)(to.x, to.y, to.z) = (*this)(from.x, from.y, from.z);
-    (*this)(from.x, from.y, from.z) = this->notExisting;
+    (*this)[to] = (*this)[from];
+    (*this)[from] = {0, Insect::notexists};
 }
 
 
 void hive::Board::move(const Coords &from, const Coords &to) noexcept {
     if (from == to) return;
-    if ((*this)(to.x, to.y, to.z).type != Insect::notexists) return;
-    if ((*this)(from.x, from.y, from.z) == this->notExisting) return;
+    if ((*this)[to].type != Insect::notexists) return;
+    if ((*this)[from].type == Insect::notexists) return;
     this->swap(from, to);
     this->moves.all.push_back(Move{from, to});
 }
@@ -56,7 +56,7 @@ bool hive::Board::is_connected() noexcept {
     std::queue<Coords> q;
     bool visited[Z][X][Y] = {false};
     if (!this->count_insects) return true;
-    Coords c = {0, 1};
+    Coords c = {0, 0};
     visited[0][c.x + X/2][c.y + Y/2] = true;
     q.push(c);
     std::size_t count_visits = 1;
@@ -88,16 +88,18 @@ bool hive::Board::is_connected() noexcept {
 }
 
 
-hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y, const std::size_t &z) noexcept {
-    return this->fields[z][x + X/2][y + Y/2];
+hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y) noexcept {
+    return this->fields[x + X/2][y + Y/2];
 }
 
 
 hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
-    return (*this)(c.x, c.y, c.z);
+    if (c.z > 0) {
+        return this->z_fields[c];
+    }
+    return this->fields[c.x + X/2][c.y + Y/2];
 }
 
 
-const Coords hive::Board::first_location = {0, 1};
-const Coords hive::Board::second_location = {0, -1};
-const struct hive::Piece hive::Board::notExisting = {0, Insect::notexists};
+const Coords hive::Board::first_location = {0, 0};
+const Coords hive::Board::second_location = {0, 1};

@@ -62,8 +62,8 @@ namespace Insect {
 
 
 namespace hive {
-    static const int X = 53;
-    static const int Y = 107;
+    static const int X = 100;
+    static const int Y = 100;
     static const int Z = 8;
 };
 

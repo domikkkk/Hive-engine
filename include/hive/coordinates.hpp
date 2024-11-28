@@ -9,10 +9,10 @@
 enum class Directions {
     N,
     NE,
-    SE,
+    E,
     S,
     SW,
-    NW
+    W
 };
 
 
@@ -28,6 +28,12 @@ struct Coords {
     bool operator==(const Coords &c) const noexcept;
     std::vector<Coords> get_surrounding_locations() const noexcept;
     std::vector<Coords> get_in_Z() const noexcept;
+};
+
+
+class HashFn {
+public:
+    std::size_t operator()(const Coords &c) const noexcept;
 };
 
 
