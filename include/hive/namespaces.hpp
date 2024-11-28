@@ -82,6 +82,18 @@ namespace Insect {
 };
 
 
+namespace Insects {
+    static const int bee = 1;
+    static const int ant = 3;
+    static const int beetle = 2;
+    static const int grasshopper = 3;
+    static const int spider = 2;
+    static const int ladybug = 1;
+    static const int mosquito = 1;
+    static const int pillbug = 1;
+};
+
+
 namespace hive {
     static const int X = 100;
     static const int Y = 100;

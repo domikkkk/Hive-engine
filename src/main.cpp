@@ -4,6 +4,8 @@
 
 
 int main(int argc, char **argv) {
+    Controller ccc;
+    ccc.prepare_pieces();
     hive::Board b;
     b.add_piece({0, Insect::bee, Color::WHITE}, {0, 0});
     b.add_piece({1, Insect::ant, Color::BLACK}, {0, 1});

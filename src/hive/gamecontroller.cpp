@@ -55,4 +55,32 @@ void Controller::move(const std::string &piece, const Coords &to) noexcept {
 }
 
 
+void Controller::prepare_pieces() {
+    std::unordered_map<char, int> quantity = {
+        {Insect::bee, Insects::bee},
+        {Insect::ant, Insects::ant},
+        {Insect::beetle, Insects::beetle},
+        {Insect::grasshopper, Insects::grasshopper},
+        {Insect::spider, Insects::spider}
+    };
+    for (auto pair : quantity) {
+        std::string piece(1, pair.first);
+        if (pair.second == 1) {
+            this->add_piece("w"+piece, {});
+            this->add_piece("b"+piece, {});
+            continue;
+        }
+        for (int i = 0; i < pair.second; ++i) {
+            this->add_piece("w"+piece+std::to_string(i+1), {});
+            this->add_piece("b"+piece+std::to_string(i+1), {});
+        }
+    }
+}
+
+
+std::unordered_map<std::string, Coords> &Controller::get_map() {
+    return this->insects;
+}
+
+
 #endif

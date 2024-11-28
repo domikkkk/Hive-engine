@@ -15,6 +15,8 @@ public:
     void add_piece(const std::string &piece, const Coords &where) noexcept;
     bool is_finished(const Color &color) noexcept;
     void move(const std::string &piece, const Coords &c) noexcept;
+    void prepare_pieces();
+    std::unordered_map<std::string, Coords> &get_map();
 
 private:
     Color current = WHITE;
