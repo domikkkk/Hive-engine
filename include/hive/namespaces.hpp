@@ -19,6 +19,13 @@ enum Color {
 };
 
 
+const std::string colorToString[] = {
+    "w",
+    "b",
+    "n"
+};
+
+
 enum class InsectType {
     ANT,
     BEETLE,
@@ -39,6 +46,15 @@ namespace Instrucions {
 };
 
 
+enum class State {
+    INPROGRESS,
+    NOTSTARTED,
+    DRAW,
+    WHITEWINS,
+    BLACKWINS
+};
+
+
 namespace GameState {
     static const std::string inprogress = "InProgress";
     static const std::string notstarted = "NotStarted";
@@ -48,15 +64,20 @@ namespace GameState {
 };
 
 
+namespace Errors {
+    static const std::string invalid_move = "invalid move";
+};
+
+
 namespace Insect {
-    static const char bee = 'q';
-    static const char beetle = 'b';
-    static const char ant = 'a';
-    static const char grasshopper = 'g';
-    static const char spider = 's';
-    static const char ladybug = 'l';
-    static const char mosquito = 'm';
-    static const char pillbug = 'p';
+    static const char bee = 'Q';
+    static const char beetle = 'B';
+    static const char ant = 'A';
+    static const char grasshopper = 'G';
+    static const char spider = 'S';
+    static const char ladybug = 'L';
+    static const char mosquito = 'M';
+    static const char pillbug = 'P';
     static const char notexists = '\0';
 };
 

@@ -11,6 +11,12 @@ bool hive::Piece::operator==(const Piece &p) noexcept {
 }
 
 
+std::string hive::Piece::to_str() {
+    std::string Id = this->id == 0 ? "" : std::to_string(this->id);
+    return colorToString[this->color] + this->type + Id;
+}
+
+
 void hive::Board::add_piece(const Piece &insect, const Coords &where) {
     (*this)[where] = insect;
     this->moves.all.push_back(Move{where});
@@ -30,12 +36,13 @@ void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
 }
 
 
-void hive::Board::move(const Coords &from, const Coords &to) noexcept {
-    if (from == to) return;
-    if ((*this)[to].type != Insect::notexists) return;
-    if ((*this)[from].type == Insect::notexists) return;
+bool hive::Board::move(const Coords &from, const Coords &to) noexcept {
+    if (from == to) return false;
+    if ((*this)[to].type != Insect::notexists) return false;
+    if ((*this)[from].type == Insect::notexists) return false;
     this->swap(from, to);
     this->moves.all.push_back(Move{from, to});
+    return true;
 }
 
 
@@ -52,19 +59,22 @@ const Move hive::Board::unmove() noexcept {
 }
 
 
-bool hive::Board::is_connected() noexcept {
+bool hive::Board::is_connected(const Coords &from, const Coords &without) noexcept {
+    if (!this->count_insects) return true;
     std::queue<Coords> q;
     bool visited[Z][X][Y] = {false};
-    if (!this->count_insects) return true;
-    Coords c = {0, 0};
-    visited[0][c.x + X/2][c.y + Y/2] = true;
-    q.push(c);
     std::size_t count_visits = 1;
+    if (without != Coords{-1, -1, -1} && without != from) {
+        visited[without.z][without.x + X/2][without.y + Y/2] = true;
+        ++count_visits;
+    }
+    visited[0][from.x + X/2][from.y + Y/2] = true;
+    q.push(from);
 #ifdef DEBUG
         std::cout << "\nNew check\n";
 #endif
     do {
-        c = q.front(); q.pop();
+        Coords c = q.front(); q.pop();
 #ifdef DEBUG
         std::cout << "Visited " << c.x << ' ' << c.y << ' ' << c.z << '\n';
 #endif
@@ -94,10 +104,7 @@ hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y)
 
 
 hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
-    if (c.z > 0) {
-        return this->z_fields[c];
-    }
-    return this->fields[c.x + X/2][c.y + Y/2];
+    return c.z? this->z_fields[c] : this->fields[c.x + X/2][c.y + Y/2];
 }
 
 

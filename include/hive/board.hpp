@@ -5,6 +5,7 @@
 #include <hive/moves.hpp>
 #include <hive/namespaces.hpp>
 #include <unordered_map>
+#include <string>
 
 
 namespace hive {
@@ -17,6 +18,7 @@ namespace hive {
         Color color = Color::NONCOLOR;
         bool inPlay = false;
         bool operator==(const Piece &p) noexcept;
+        std::string to_str();
     };
     class Board {
     public:
@@ -26,9 +28,9 @@ namespace hive {
         Board() = default;
         void add_piece(const Piece &insect, const Coords &where);
         void remove_piece(const Coords &c) noexcept;
-        bool is_connected() noexcept;
+        bool is_connected(const Coords &from, const Coords &without={}) noexcept;
         void swap(const Coords &from, const Coords &to) noexcept;
-        void move(const Coords &from, const Coords &to) noexcept;
+        bool move(const Coords &from, const Coords &to) noexcept;
         const Move unmove() noexcept;
         Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept;
         Piece &operator[](const Coords &c) noexcept;

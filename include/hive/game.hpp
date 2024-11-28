@@ -3,7 +3,7 @@
 #pragma once
 
 #include <hive/gamecontroller.hpp>
-#include <hive/board.hpp>
+#include <hive/namespaces.hpp>
 
 class Game {
 public:
@@ -11,8 +11,8 @@ public:
 
 
 private:
-    Controller<hive::Board, Coords> controller;
-    hive::Board board;
+    Controller controller;
+    State state = State::NOTSTARTED;
 };
 
 

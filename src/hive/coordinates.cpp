@@ -6,6 +6,10 @@ bool Coords::operator==(const Coords &c) const noexcept {
     return this->x == c.x && this->y == c.y && this->z == c.z;
 }
 
+bool Coords::operator!=(const Coords &c) const noexcept {
+    return this->x != c.x || this->y != c.y || this->z != c.z;
+}
+
 
 Coords Coords::operator+(const Coords &c) const noexcept {
     return {this->x + c.x, this->y + c.y};

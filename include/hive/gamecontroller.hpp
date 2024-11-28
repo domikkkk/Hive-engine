@@ -3,26 +3,25 @@
 #pragma once
 
 #include <hive/namespaces.hpp>
-#include <unordered_map>
+#include <hive/board.hpp>
 #include <string>
 
-template <class T, class U>
 class Controller {
 public:
     Controller() = default;
-    explicit Controller(const T &board);
+    explicit Controller(const hive::Board &board): board(board) {};
     void switch_turn() noexcept;
     const Color &get_player() const noexcept;
-    void add_piece(const std::string &name, const U &where) noexcept;
+    void add_piece(const std::string &piece, const Coords &where) noexcept;
+    bool is_finished(const Color &color) noexcept;
+    void move(const std::string &piece, const Coords &c) noexcept;
 
 private:
     Color current = WHITE;
-    T board;
-    int moves_counter;
-    std::unordered_map<std::string, U> insects;
+    hive::Board board;
+    int moves_counter = 0;
+    std::unordered_map<std::string, Coords> insects;
 };
 
-
-#include "src/hive/gamecontroller.tpp"
 
 #endif
