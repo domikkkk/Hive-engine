@@ -17,9 +17,10 @@ namespace hive {
         char type = 0;
         Color color = Color::NONCOLOR;
         bool inPlay = false;
-        bool operator==(const Piece &p) noexcept;
-        std::string to_str();
+        bool operator==(const Piece &p) const noexcept;
+        const std::string to_str() const noexcept;
     };
+
     class Board {
     public:
         static const Coords first_location;
@@ -41,6 +42,9 @@ namespace hive {
         std::size_t count_insects = 0;
     };
 }
+
+
+hive::Piece create_piece(const std::string &piece) noexcept;
 
 
 #endif

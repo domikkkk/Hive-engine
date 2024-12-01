@@ -7,14 +7,14 @@
 void Controller::switch_turn() noexcept {
     switch (this->current)
     {
-    case WHITE:
-        this->current = BLACK;
+    case Color::WHITE:
+        this->current = Color::BLACK;
         break;
-    case BLACK:
-        this->current = WHITE;
+    case Color::BLACK:
+        this->current = Color::WHITE;
         break;
     default:
-        this->current = WHITE;
+        this->current = Color::WHITE;
         break;
     }
 }
@@ -42,20 +42,25 @@ bool Controller::is_finished(const Color &c) noexcept {
 }
 
 
-void Controller::move(const std::string &piece, const Coords &to) noexcept {
+void Controller::move(const std::string &piece, const Coords &to) {
     auto insect = this->insects.find(piece);
     if (insect == this->insects.end()) {
-        return;     // can't find piece
+        throw PieceNotExisting();     // Nie ma takiej figury
     }
     Coords &from = insect->second;
-    if (!this->board.move(from, to)) {
-        return;  // invalid move
+    if (from == Coords{-1, -1, -1}) { // nie istnieje jeszcze na planszy, więc trzeba dodać
+        hive::Piece p = create_piece(piece);
+        p.inPlay = true;
+        this->board.add_piece(p, to);
+    } else if (!this->board.move(from, to)) {
+        throw InvalidMove();  // invalid move
     }
     this->insects[piece] = to;
+    this->switch_turn();
 }
 
 
-void Controller::prepare_pieces() {
+void Controller::prepare_pieces() noexcept {
     std::unordered_map<char, int> quantity = {
         {Insect::bee, Insects::bee},
         {Insect::ant, Insects::ant},

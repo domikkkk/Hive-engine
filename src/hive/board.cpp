@@ -6,12 +6,12 @@
 #endif
 
 
-bool hive::Piece::operator==(const Piece &p) noexcept {
+bool hive::Piece::operator==(const Piece &p) const noexcept {
     return this->type == p.type && this->color == p.color;
 }
 
 
-std::string hive::Piece::to_str() {
+const std::string hive::Piece::to_str() const noexcept {
     std::string Id = this->id == 0 ? "" : std::to_string(this->id);
     return colorToString[this->color] + this->type + Id;
 }
@@ -105,6 +105,14 @@ hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y)
 
 hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
     return c.z? this->z_fields[c] : this->fields[c.x + X/2][c.y + Y/2];
+}
+
+
+hive::Piece create_piece(const std::string &piece) noexcept {
+    Color color = piece[0] == 'w' ? Color::WHITE : piece[0] == 'b' ? Color::BLACK : Color::NONCOLOR;
+    char type = piece[1];
+    int id = piece.length() > 2 ? piece[2] : 0;
+    return hive::Piece(id, type, color);
 }
 
 

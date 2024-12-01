@@ -6,11 +6,6 @@
 #include <hive/coordinates.hpp>
 
 
-namespace hive {
-    class Board;  // forward declaration
-};
-
-
 struct Move {
     Coords from;
     Coords to;
@@ -25,9 +20,10 @@ class Moves {
 public:
     Moves() = default;
     ~Moves();
+
+    const std::size_t get_move_counts() const noexcept;
 private:
     std::vector<Move> all = {};
-    friend class hive::Board;
 };
 
 
