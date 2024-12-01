@@ -19,7 +19,7 @@ const std::string hive::Piece::to_str() const noexcept {
 
 void hive::Board::add_piece(const Piece &insect, const Coords &where) {
     (*this)[where] = insect;
-    this->moves.all.push_back(Move{where});
+    this->moves.push_back(Move{where});
     ++this->count_insects;
 }
 
@@ -41,14 +41,14 @@ bool hive::Board::move(const Coords &from, const Coords &to) noexcept {
     if ((*this)[to].type != Insect::notexists) return false;
     if ((*this)[from].type == Insect::notexists) return false;
     this->swap(from, to);
-    this->moves.all.push_back(Move{from, to});
+    this->moves.push_back(Move{from, to});
     return true;
 }
 
 
 const Move hive::Board::unmove() noexcept {
-    const Move m = this->moves.all.back();
-    this->moves.all.pop_back();
+    const Move m = this->moves.back();
+    this->moves.pop_back();
     
     if (!m.added) {
         this->swap(m.to, m.from);

@@ -44,6 +44,21 @@ struct hive::Ability hive::gen_possibility(const char &type) {
 }
 
 
+void Moves::push_back(const Move &move) noexcept {
+    this->all.push_back(move);
+}
+
+
+void Moves::pop_back() noexcept {
+    this->all.pop_back();
+}
+
+
+const Move &Moves::back() const noexcept {
+    return this->all.back();
+}
+
+
 const std::size_t Moves::get_move_counts() const noexcept {
     return this->all.size() / 2 + 1;
 }
