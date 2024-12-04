@@ -25,14 +25,14 @@ void hive::Board::add_piece(const Piece &insect, const Coords &where) {
 
 
 void hive::Board::remove_piece(const Coords &c) noexcept {
-    (*this)[c] = {0, Insect::notexists};
+    (*this)[c] = {};
     --this->count_insects;
 }
 
 
 void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
     (*this)[to] = (*this)[from];
-    (*this)[from] = {0, Insect::notexists};
+    (*this)[from] = {};
 }
 
 
@@ -49,7 +49,7 @@ bool hive::Board::move(const Coords &from, const Coords &to) noexcept {
 const Move hive::Board::unmove() noexcept {
     const Move m = this->moves.back();
     this->moves.pop_back();
-    
+
     if (!m.added) {
         this->swap(m.to, m.from);
     } else {
@@ -98,6 +98,20 @@ bool hive::Board::is_connected(const Coords &from, const Coords &without) noexce
 }
 
 
+std::size_t hive::Board::get_turns() const noexcept {
+    return this->moves.get_move_counts();
+}
+
+
+Coords hive::Board::get_upper(Coords c) noexcept {
+    if ((*this)[c].type != Insect::notexists) return c;
+    do {
+        c = c.get_neighbor(Directions::UP);
+    } while((*this)[c].type != Insect::notexists);
+    return c.get_neighbor(Directions::DOWN);
+}
+
+
 hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y) noexcept {
     return this->fields[x + X/2][y + Y/2];
 }
@@ -111,7 +125,7 @@ hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
 hive::Piece create_piece(const std::string &piece) noexcept {
     Color color = piece[0] == 'w' ? Color::WHITE : piece[0] == 'b' ? Color::BLACK : Color::NONCOLOR;
     char type = piece[1];
-    int id = piece.length() > 2 ? piece[2] : 0;
+    int id = piece.length() > 2 ? piece[2]-'0' : 0;
     return hive::Piece(id, type, color);
 }
 

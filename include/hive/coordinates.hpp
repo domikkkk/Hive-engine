@@ -12,7 +12,9 @@ enum class Directions {
     E,
     S,
     SW,
-    W
+    W,
+    UP,
+    DOWN
 };
 
 

@@ -21,7 +21,7 @@ public:
     Moves() = default;
     ~Moves();
 
-    const std::size_t get_move_counts() const noexcept;
+    std::size_t get_move_counts() const noexcept;
     void push_back(const Move &move) noexcept;
     void pop_back() noexcept;
     const Move &back() const noexcept;

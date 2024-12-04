@@ -59,6 +59,6 @@ const Move &Moves::back() const noexcept {
 }
 
 
-const std::size_t Moves::get_move_counts() const noexcept {
+std::size_t Moves::get_move_counts() const noexcept {
     return this->all.size() / 2 + 1;
 }

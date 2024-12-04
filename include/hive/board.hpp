@@ -33,7 +33,9 @@ namespace hive {
         void swap(const Coords &from, const Coords &to) noexcept;
         bool move(const Coords &from, const Coords &to) noexcept;
         const Move unmove() noexcept;
-        Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept;
+        std::size_t get_turns() const noexcept;
+        Coords get_upper(Coords c) noexcept;
+        Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept; // do zmiany
         Piece &operator[](const Coords &c) noexcept;
     private:
         struct Piece fields[X][Y] = {};

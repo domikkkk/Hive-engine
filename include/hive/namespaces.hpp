@@ -98,6 +98,7 @@ namespace hive {
     static const int X = 100;
     static const int Y = 100;
     static const int Z = 8;
+    static const int turns = 4;
 };
 
 

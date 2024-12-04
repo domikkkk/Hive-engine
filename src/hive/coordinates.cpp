@@ -31,6 +31,10 @@ const Coords Coords::get_neighbor(const Directions &direction) const noexcept {
         return {this->x - 1, this->y - 1};
     case Directions::W:  // NW
         return {this->x - 1, this->y};
+    case Directions::UP:
+        return {this->x, this->y, this->z + 1};
+    case Directions::DOWN:
+        return {this->x, this->y, this->z - 1};
     default:
         return {200, 200};  // unexpected error
     }
@@ -61,8 +65,8 @@ std::vector<Coords> Coords::get_in_Z() const noexcept {
 
 
 std::size_t HashFn::operator()(const Coords &c) const noexcept {
-    std::size_t hash = (c.x + 23) << 16;
-    hash ^= (c.y + 47) << 8;
+    std::size_t hash = (c.x + hive::X) << 16;
+    hash ^= (c.y + hive::Y) << 8;
     hash ^= c.z;
     return hash;
 }
