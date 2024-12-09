@@ -104,11 +104,12 @@ std::size_t hive::Board::get_turns() const noexcept {
 
 
 Coords hive::Board::get_upper(Coords c) noexcept {
-    if ((*this)[c].type != Insect::notexists) return c;
-    do {
-        c = c.get_neighbor(Directions::UP);
-    } while((*this)[c].type != Insect::notexists);
-    return c.get_neighbor(Directions::DOWN);
+    Coords cc = c.get_neighbor(Directions::UP);
+    while ((*this)[cc].type != Insect::notexists) {
+        ++c.z;
+        ++cc.z;
+    }
+    return c;
 }
 
 

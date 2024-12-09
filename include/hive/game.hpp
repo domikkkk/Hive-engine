@@ -8,10 +8,13 @@
 class Game {
 public:
     Game() noexcept = default;
-
+    void change_state(const State &state) noexcept;
+    const std::string get_gamestring() const noexcept;
+    void move(bool player = true);
 
 private:
     Controller controller;
+    std::string gameType = GameType::base;
     State state = State::NOTSTARTED;
 };
 

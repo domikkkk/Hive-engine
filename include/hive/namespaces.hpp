@@ -40,9 +40,13 @@ enum class InsectType {
 
 
 namespace Instrucions {
-    static const std::string start = "newgame";
-    static const std::string info = "Info";
+    static const std::string newgame = "newgame";
+    static const std::string info = "info";
     static const std::string play = "play";
+    static const std::string validmoves = "validmoves";
+    static const std::string bestmove = "bestmove";
+    static const std::string help = "help";
+    static const std::string options = "options";
 };
 
 
@@ -61,6 +65,11 @@ namespace GameState {
     static const std::string draw = "Draw";
     static const std::string whitewins = "WhiteWins";
     static const std::string blackwins = "BlackWins";
+};
+
+
+namespace GameType {
+    static const std::string base = "Base";
 };
 
 
@@ -95,8 +104,8 @@ namespace Insects {
 
 
 namespace hive {
-    static const int X = 100;
-    static const int Y = 100;
+    static const int X = 40;
+    static const int Y = 40;
     static const int Z = 8;
     static const int turns = 4;
 };
