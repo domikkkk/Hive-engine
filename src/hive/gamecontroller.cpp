@@ -69,16 +69,7 @@ std::vector<Coords> Controller::legal_piece_placement() noexcept {
             if (this->board[location].type != Insect::notexists) continue;  // jeśli jest figura to nie położymy więc pomijamy dalsze
             if (visited[location.x + hive::X/2][location.y + hive::Y/2]) continue;  // jeśli juz sprawdzaliśmy dane pole to nie ma co ponownie
             visited[location.x + hive::X/2][location.y + hive::Y/2] = true;  // zapisujemy że sprawdzaliśmy
-            bool hasEnemyNeighbor = false;
-            for (const Coords neigbor_location: location.get_surrounding_locations()) {
-                if (this->board[neigbor_location].type == Insect::notexists) continue; // jeśli koło potencjalnego pola jest inne puste to nie ma co
-                const Coords upper = this->board.get_upper(neigbor_location); // bierzemy wierzchnią figure by sprawdzić kolor
-                if (this->board[upper].color != this->current) {     // jeśli kolor jest przeciwnika to wykluczamy location jako potencjalne pole na dołożenie nowej figury
-                    hasEnemyNeighbor = true;
-                    break;
-                }
-            }
-            if (!hasEnemyNeighbor) {
+            if (!this->check_destination(location)) {
                 legal_places.push_back(location);
             }
         }
@@ -89,16 +80,17 @@ std::vector<Coords> Controller::legal_piece_placement() noexcept {
 
 void Controller::move(const std::string &piece, const Coords &to) {
     auto pair = this->insects_off.find(piece);
-    if (pair == this->insects_off.end()) throw PieceNotExisting();
-    if (color_from_piece(piece[0]) != this->current) throw InvalidMove(); // czy na pewno ruch odpowiednią figurą (żeby nie pomylić kolorów)
+    if (pair == this->insects_off.end()) throw PieceNotExisting(piece);
+    if (color_from_piece(piece[0]) != this->current) throw InvalidMove("Can't move using opponent piece"); // czy na pewno ruch odpowiednią figurą (żeby nie pomylić kolorów)
     if (pair->second) { // nie istnieje jeszcze na planszy, więc trzeba dodać
+        if (this->board.get_turns() > 2 && this->check_destination(to)) throw InvalidMove("Can't put new piece on the board next to the opponent"); // jeśli jest zły sąsiad to trzeba odrzucić
         hive::Piece p = create_piece(piece);
         p.inPlay = true;
         pair->second = false;
         this->board.add_piece(p, to);
     } else {
         auto exist = this->insects[piece];
-        if (!this->board.move(exist, to)) throw InvalidMove();  // invalid move
+        if (!this->board.move(exist, to)) throw InvalidMove("Destination file is occupied");  // invalid move
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -125,6 +117,25 @@ void Controller::prepare_pieces() {
             this->insects_off["b"+piece+std::to_string(i+1)] = true;
         }
     }
+}
+
+
+Coords Controller::find_destination(const std::string &piece, Directions direction) const {
+    if (this->board.get_turns() == 0) return this->board.first_location;
+    if (this->insects_off.find(piece) == this->insects_off.end()) throw PieceNotExisting(piece);
+    return this->insects.find(piece)->second.get_neighbor(direction);
+}
+
+
+bool Controller::check_destination(const Coords &destination) {
+    for (const Coords neigbor_location: destination.get_surrounding_locations()) {
+        if (this->board[neigbor_location].type == Insect::notexists) continue; // jeśli koło potencjalnego pola jest inne puste to nie ma co
+        const Coords upper = this->board.get_upper(neigbor_location); // bierzemy wierzchnią figure by sprawdzić kolor
+        if (this->board[upper].color != this->current) {     // jeśli kolor jest przeciwnika to wykluczamy location jako potencjalne pole na dołożenie nowej figury
+            return true;
+        }
+    }
+    return false;
 }
 
 

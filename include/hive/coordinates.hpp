@@ -14,7 +14,8 @@ enum class Directions {
     SW,
     W,
     UP,
-    DOWN
+    DOWN,
+    DEFAULT,  // not existing -> error
 };
 
 
@@ -27,6 +28,7 @@ struct Coords {
     Coords(const int &x, const int &y, const int &z) noexcept: x(x), y(y), z(z) {};
     Coords operator+(const Coords &c) const noexcept;
     const Coords get_neighbor(const Directions &direction) const noexcept;
+    const Coords get_ground() const noexcept;
     bool operator==(const Coords &c) const noexcept;
     bool operator!=(const Coords &c) const noexcept;
     std::vector<Coords> get_surrounding_locations() const noexcept;

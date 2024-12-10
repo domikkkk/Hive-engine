@@ -6,6 +6,11 @@ void Game::change_state(const State &state) noexcept {
 }
 
 
+void Game::update() noexcept {
+    if (this->moves.size() > 0) this->state = State::INPROGRESS;
+}
+
+
 const std::string Game::get_gamestring() const noexcept {
     std::string gamestring = this->gameType + ";";
     switch (this->state)
@@ -39,11 +44,16 @@ const std::string Game::get_gamestring() const noexcept {
     default:
         break;
     }
-    gamestring += std::to_string(this->controller.get_turns()) + "]\n";
+    gamestring += std::to_string(this->controller.get_turns()) + "]";
+    for (auto str: this->moves) {
+        gamestring += ';' + str;
+    }
     return gamestring;
 }
 
 
-void Game::move(bool player) {
-    
+void Game::player_move(const struct Move_parameters &move) {
+    Coords c = this->controller.find_destination(move.next_to_piece, move.direction);
+    this->controller.move(move.what_piece, c);
+    this->moves.push_back(move.str);
 }

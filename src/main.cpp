@@ -35,7 +35,9 @@ int main(int argc, char **argv) {
     // }
     Game game;
     Command c;
-    std::cin >> c;
-    c.execute(game);
+    while(true) {
+        std::cin >> c;
+        c.execute(game);
+    }
     return 0;
 }

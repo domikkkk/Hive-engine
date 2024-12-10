@@ -9,7 +9,7 @@
 
 class Controller {
 public:
-    Controller() = default;
+    Controller() {this->prepare_pieces();};
     explicit Controller(const hive::Board &board): board(board) {};
     void switch_turn() noexcept;
     const Color &get_player() const noexcept;
@@ -18,12 +18,14 @@ public:
     bool validateQueens() const noexcept;
     bool can_move_on_board() const noexcept;
     std::vector<Coords> legal_piece_placement() noexcept;
-    void move(const std::string &piece, const Coords &c);
+    void move(const std::string &piece, const Coords &to);
     void prepare_pieces();
+    bool check_destination(const Coords &destination);
     std::unordered_map<std::string, Coords> &get_pieces() noexcept;
     hive::Board &get_board() noexcept;
     std::size_t get_turns() const noexcept;
     const Color &get_current() const noexcept;
+    Coords find_destination(const std::string &piece, Directions direction) const;
     
 private:
     Color current = WHITE;
@@ -40,17 +42,31 @@ int get_id_from_piece(const std::string &piece) noexcept;
 
 class InvalidMove : public std::exception {
 public:
-    const char* what() const noexcept override {
-        return "Invalid move";
+    explicit InvalidMove(const std::string &mess) {
+        this->message = "Invalid move: " + mess;
     }
+
+    const char* what() const noexcept override {
+        return this->message.c_str();
+    }
+
+private:
+    std::string message;
 };
 
 
 class PieceNotExisting : public std::exception {
 public:
-    const char* what() const noexcept override {
-        return "This piece does not exist";
+    explicit PieceNotExisting(const std::string& piece) {
+        this->message = "Piece " + piece + " does not exist or it's not on the board";
     }
+
+    const char* what() const noexcept override {
+        return this->message.c_str();
+    }
+
+private:
+    std::string message;     // Przechowuje gotowy komunikat błędu
 };
 
 

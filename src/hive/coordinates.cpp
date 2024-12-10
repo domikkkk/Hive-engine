@@ -41,6 +41,11 @@ const Coords Coords::get_neighbor(const Directions &direction) const noexcept {
 }
 
 
+const Coords Coords::get_ground() const noexcept {
+    return {this->x, this->y, 0};
+}
+
+
 std::vector<Coords> Coords::get_surrounding_locations() const noexcept {
     std::vector<Coords> neighbors;
     neighbors.reserve(6);

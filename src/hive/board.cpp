@@ -132,4 +132,4 @@ hive::Piece create_piece(const std::string &piece) noexcept {
 
 
 const Coords hive::Board::first_location = {0, 0};
-const Coords hive::Board::second_location = {0, 1};
+const Coords hive::Board::second_location = {1, 0};

@@ -8,9 +8,6 @@
 #include <hive/game.hpp>
 
 
-void analize_command(const std::string &command);
-
-
 typedef struct Command {
     std::string command_type;
     std::string parameters;
@@ -18,6 +15,8 @@ typedef struct Command {
     friend std::istream &operator>>(std::istream &is, Command &command);
 } Command;
 
+
+Move_parameters create_move(std::string &parameters);
 
 
 #endif
