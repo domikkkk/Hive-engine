@@ -36,45 +36,49 @@ void hive::Board::swap(const Coords &from, const Coords &to) noexcept {
 }
 
 
-bool hive::Board::move(const Coords &from, const Coords &to) noexcept {
-    if (from == to) return false;
-    if ((*this)[to].type != Insect::notexists) return false;
-    if ((*this)[from].type == Insect::notexists) return false;
+void hive::Board::move(const Coords &from, const Coords &to) noexcept {
     this->swap(from, to);
     this->moves.push_back(Move{from, to});
-    return true;
 }
 
 
-const Move hive::Board::unmove() noexcept {
-    const Move m = this->moves.back();
+void hive::Board::unmove() noexcept {
+    const struct Move m = this->moves.back();
     this->moves.pop_back();
-
     if (!m.added) {
         this->swap(m.to, m.from);
     } else {
         this->remove_piece(m.to);
     }
-    return m;
 }
 
 
-bool hive::Board::is_connected(const Coords &from, const Coords &without) noexcept {
-    if (!this->count_insects) return true;
+const struct Move hive::Board::back() const noexcept {
+    return this->moves.back();
+}
+
+
+bool hive::Board::is_connected(const Coords &from) noexcept {
+    if (this->count_insects < 2) return true;
+    if (from.z > 0 && (*this)[from.get_neighbor(Directions::UP)].type == Insect::notexists) return true;
     std::queue<Coords> q;
+    Coords c;
     bool visited[Z][X][Y] = {false};
-    std::size_t count_visits = 1;
-    if (without != Coords{-1, -1, -1} && without != from) {
-        visited[without.z][without.x + X/2][without.y + Y/2] = true;
-        ++count_visits;
+    for (Coords start : from.get_surrounding_locations()) {
+        if ((*this)[start].type != Insect::notexists) {
+            c = start;
+            break;
+        }
     }
+    std::size_t count_visits = 2;
     visited[0][from.x + X/2][from.y + Y/2] = true;
-    q.push(from);
+    visited[0][c.x + X/2][c.y + Y/2] = true;
+    q.push(c);
 #ifdef DEBUG
         std::cout << "\nNew check\n";
 #endif
     do {
-        Coords c = q.front(); q.pop();
+        c = q.front(); q.pop();
 #ifdef DEBUG
         std::cout << "Visited " << c.x << ' ' << c.y << ' ' << c.z << '\n';
 #endif
@@ -118,7 +122,7 @@ hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y)
 }
 
 
-hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
+inline hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
     return c.z? this->z_fields[c] : this->fields[c.x + X/2][c.y + Y/2];
 }
 

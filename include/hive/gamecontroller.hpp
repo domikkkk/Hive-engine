@@ -19,6 +19,8 @@ public:
     bool can_move_on_board() const noexcept;
     std::vector<Coords> legal_piece_placement() noexcept;
     void move(const std::string &piece, const Coords &to);
+    void engine_move(const std::string &piece, const Coords &to);
+    void undo_move() noexcept;
     void prepare_pieces();
     bool check_destination(const Coords &destination);
     std::unordered_map<std::string, Coords> &get_pieces() noexcept;
@@ -30,7 +32,6 @@ public:
 private:
     Color current = WHITE;
     hive::Board board;
-    int moves_counter = 0;
     std::unordered_map<std::string, Coords> insects;
     std::unordered_map<std::string, bool> insects_off;
 };
@@ -58,7 +59,22 @@ private:
 class PieceNotExisting : public std::exception {
 public:
     explicit PieceNotExisting(const std::string& piece) {
-        this->message = "Piece " + piece + " does not exist or it's not on the board";
+        this->message = "Piece " + piece + " does not exist.";
+    }
+
+    const char* what() const noexcept override {
+        return this->message.c_str();
+    }
+
+private:
+    std::string message;     // Przechowuje gotowy komunikat błędu
+};
+
+
+class PieceNotOnTheBoard : public std::exception {
+public:
+    explicit PieceNotOnTheBoard(const std::string& piece) {
+        this->message = "Piece " + piece + " is not on the board.";
     }
 
     const char* what() const noexcept override {

@@ -1,6 +1,3 @@
-#ifndef GAMECONTROLLER_CPP
-#define GAMECONTROLLER_CPP
-
 #include <hive/gamecontroller.hpp>
 
 
@@ -89,10 +86,41 @@ void Controller::move(const std::string &piece, const Coords &to) {
         pair->second = false;
         this->board.add_piece(p, to);
     } else {
-        auto exist = this->insects[piece];
-        if (!this->board.move(exist, to)) throw InvalidMove("Destination file is occupied");  // invalid move
+        auto from = this->insects[piece];
+        if (from == to) throw std::invalid_argument("Can't be the same destination file");
+        if (this->board[from].type == Insect::notexists) throw std::invalid_argument("Unexpected error");
+        if (this->board[to].type != Insect::notexists) throw InvalidMove("Destination file is occupied");  // invalid move
+        this->board.move(from, to);
     }
     this->insects[piece] = to;
+    this->switch_turn();
+}
+
+
+void Controller::engine_move(const std::string &piece, const Coords &to) { // zakładamy, że robi to zawsze poprawnie
+    auto pair = this->insects_off.find(piece);
+    if (pair->second) {
+        pair->second = false;
+        hive::Piece p = create_piece(piece);
+        this->board.add_piece(p, to);
+    } else {
+        auto from = this->insects[piece];
+        this->board.move(from, to);
+    }
+    this->insects[piece] = to;
+    this->switch_turn();
+}
+
+
+void Controller::undo_move() noexcept {
+    const struct Move m = this->board.back();
+    const std::string piece = this->board[m.to].to_str();
+    if (m.added) {
+        this->insects_off[piece] = true;
+        this->insects.erase(piece);
+    } else {
+        this->insects[piece] = m.from;
+    }
     this->switch_turn();
 }
 
@@ -122,7 +150,9 @@ void Controller::prepare_pieces() {
 
 Coords Controller::find_destination(const std::string &piece, Directions direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
-    if (this->insects_off.find(piece) == this->insects_off.end()) throw PieceNotExisting(piece);
+    auto a = this->insects_off.find(piece);
+    if (a == this->insects_off.end()) throw PieceNotExisting(piece);
+    if (a->second) throw PieceNotOnTheBoard(piece);
     return this->insects.find(piece)->second.get_neighbor(direction);
 }
 
@@ -174,6 +204,3 @@ Color color_from_piece(const char &c) noexcept {
 int get_id_from_piece(const std::string &piece) noexcept {
     return piece.length() > 2 ? piece[2]-'0' : 0;
 }
-
-
-#endif

@@ -29,10 +29,11 @@ namespace hive {
         Board() = default;
         void add_piece(const Piece &insect, const Coords &where);
         void remove_piece(const Coords &c) noexcept;
-        bool is_connected(const Coords &from, const Coords &without={}) noexcept;
+        bool is_connected(const Coords &from) noexcept;
         void swap(const Coords &from, const Coords &to) noexcept;
-        bool move(const Coords &from, const Coords &to) noexcept;
-        const Move unmove() noexcept;
+        void move(const Coords &from, const Coords &to) noexcept;
+        void unmove() noexcept;
+        const struct Move back() const noexcept;
         std::size_t get_turns() const noexcept;
         Coords get_upper(Coords c) noexcept;
         Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept; // do zmiany

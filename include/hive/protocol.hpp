@@ -10,7 +10,7 @@
 
 typedef struct Command {
     std::string command_type;
-    std::string parameters;
+    std::string arguments;
     void execute(Game &game);
     friend std::istream &operator>>(std::istream &is, Command &command);
 } Command;
