@@ -79,38 +79,39 @@ namespace Errors {
 
 
 namespace Insect {
-    static const char bee = 'Q';
-    static const char beetle = 'B';
-    static const char ant = 'A';
-    static const char grasshopper = 'G';
-    static const char spider = 'S';
-    static const char ladybug = 'L';
-    static const char mosquito = 'M';
-    static const char pillbug = 'P';
-    static const char notexists = '\0';
+    static constexpr char bee = 'Q';
+    static constexpr char beetle = 'B';
+    static constexpr char ant = 'A';
+    static constexpr char grasshopper = 'G';
+    static constexpr char spider = 'S';
+    static constexpr char ladybug = 'L';
+    static constexpr char mosquito = 'M';
+    static constexpr char pillbug = 'P';
+    static constexpr char notexists = '\0';
 };
 
 
 namespace Insects {
-    static const int bee = 1;
-    static const int ant = 3;
-    static const int beetle = 2;
-    static const int grasshopper = 3;
-    static const int spider = 2;
-    static const int ladybug = 1;
-    static const int mosquito = 1;
-    static const int pillbug = 1;
+    static constexpr int bee = 1;
+    static constexpr int ant = 3;
+    static constexpr int beetle = 2;
+    static constexpr int grasshopper = 3;
+    static constexpr int spider = 2;
+    static constexpr int ladybug = 1;
+    static constexpr int mosquito = 1;
+    static constexpr int pillbug = 1;
 };
 
 
 namespace hive {
-    static const int X = 40;
-    static const int Y = 40;
-    static const int Z = 8;
-    static const int turns = 4;
+    static constexpr int X = 40;
+    static constexpr int Y = 40;
+    static constexpr int Z = 8;
+    static constexpr int turns = 4;
 };
 
 
-static const int possible_infinity = __INT_MAX__;
+static constexpr int possible_infinity = __INT_MAX__;
+static constexpr int limit = 1000;
 
 #endif

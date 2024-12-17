@@ -15,19 +15,27 @@ public:
     const Color &get_player() const noexcept;
     void add_piece(const std::string &piece, const Coords &where) noexcept;
     bool is_finished() noexcept;
-    bool validateQueens() const noexcept;
+    bool validateQueen() const noexcept;
     bool can_move_on_board() const noexcept;
-    std::vector<Coords> legal_piece_placement() noexcept;
     void move(const std::string &piece, const Coords &to);
     void engine_move(const std::string &piece, const Coords &to);
     void undo_move() noexcept;
     void prepare_pieces();
     bool check_destination(const Coords &destination);
     std::unordered_map<std::string, Coords> &get_pieces() noexcept;
+    std::unordered_map<std::string, bool> &get_all_pieces() noexcept;
     hive::Board &get_board() noexcept;
     std::size_t get_turns() const noexcept;
     const Color &get_current() const noexcept;
     Coords find_destination(const std::string &piece, Directions direction) const;
+    Directions find_adjacent(const Coords &coords) noexcept;
+
+    void legal_piece_placement(std::vector<Coords> &places) noexcept;
+    void hoppable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
+    void crawlable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
+    void dropable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
+    void movable_locations(const std::string &piece, std::vector<Coords> &places, const int &distance) noexcept;
+    void movable_locations(const Coords &coords, std::vector<Coords> &places, int distance, bool (&visited)[hive::X][hive::Y]) noexcept;
     
 private:
     Color current = WHITE;
@@ -67,7 +75,7 @@ public:
     }
 
 private:
-    std::string message;     // Przechowuje gotowy komunikat błędu
+    std::string message;
 };
 
 
@@ -82,7 +90,15 @@ public:
     }
 
 private:
-    std::string message;     // Przechowuje gotowy komunikat błędu
+    std::string message;
+};
+
+
+class NotOneHive : public std::exception {
+public:
+    const char* what() const noexcept override {
+        return "Board is not connected";
+    }
 };
 
 

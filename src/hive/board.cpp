@@ -122,7 +122,7 @@ hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y)
 }
 
 
-inline hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
+hive::Piece &hive::Board::operator[](const Coords &c) noexcept {
     return c.z? this->z_fields[c] : this->fields[c.x + X/2][c.y + Y/2];
 }
 

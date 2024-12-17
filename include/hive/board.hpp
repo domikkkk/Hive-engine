@@ -16,7 +16,7 @@ namespace hive {
         int id = -1;
         char type = 0;
         Color color = Color::NONCOLOR;
-        bool inPlay = false;
+        bool ismoving = false;
         bool operator==(const Piece &p) const noexcept;
         const std::string to_str() const noexcept;
     };
@@ -38,11 +38,12 @@ namespace hive {
         Coords get_upper(Coords c) noexcept;
         Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept; // do zmiany
         Piece &operator[](const Coords &c) noexcept;
+
+        std::size_t count_insects = 0;
     private:
         struct Piece fields[X][Y] = {};
         std::unordered_map<Coords, Piece, HashFn> z_fields;  // dla z > 0 czyli tylko dla chrząszczy
         Moves moves;
-        std::size_t count_insects = 0;
     };
 }
 
