@@ -23,7 +23,8 @@ void Command::execute(Game &game) {
         game.update();
         std::cout << game.get_gamestring();
     } else if (this->command_type == Instrucions::validmoves) {
-        
+        game.set_valid_moves();
+        std::cout << game.get_valid_moves();
     } else if (this->command_type == Instrucions::bestmove) {
 
     } else if (this->command_type == Instrucions::options) {

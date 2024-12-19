@@ -6,6 +6,7 @@
 #include <hive/board.hpp>
 #include <string>
 #include <stdexcept>
+#include <unordered_set>
 
 class Controller {
 public:
@@ -23,12 +24,12 @@ public:
     void prepare_pieces();
     bool check_destination(const Coords &destination);
     std::unordered_map<std::string, Coords> &get_pieces() noexcept;
-    std::unordered_map<std::string, bool> &get_all_pieces() noexcept;
+    std::unordered_set<std::string> &get_hands() noexcept;
     hive::Board &get_board() noexcept;
     std::size_t get_turns() const noexcept;
     const Color &get_current() const noexcept;
     Coords find_destination(const std::string &piece, Directions direction) const;
-    Directions find_adjacent(const Coords &coords) noexcept;
+    std::pair<std::string, Directions> find_adjacent(const Coords &coords) noexcept;
 
     void legal_piece_placement(std::vector<Coords> &places) noexcept;
     void hoppable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
@@ -41,7 +42,7 @@ private:
     Color current = WHITE;
     hive::Board board;
     std::unordered_map<std::string, Coords> insects;
-    std::unordered_map<std::string, bool> insects_off;
+    std::unordered_set<std::string> hands;
 };
 
 

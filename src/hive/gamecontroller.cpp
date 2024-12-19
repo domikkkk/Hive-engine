@@ -39,7 +39,7 @@ bool Controller::is_finished() noexcept {
 
 
 bool Controller::validateQueen() const noexcept {
-    if (!this->insects_off.at(colorToString[this->current] + "Q")) return false;
+    if (this->hands.find(colorToString[this->current] + "Q") == this->hands.end()) return false;
     return true;
 }
 
@@ -50,6 +50,15 @@ bool Controller::can_move_on_board() const noexcept {
 
 
 void Controller::legal_piece_placement(std::vector<Coords> &legal_places) noexcept {
+    auto turns = this->board.get_turns();
+    if (turns == 0) {
+        legal_places.emplace_back(this->board.first_location); return;
+    } else if (turns == 1) {
+        for (auto c: this->board.first_location.get_surrounding_locations()) {
+            legal_places.push_back(c);
+        }
+        return;
+    }
     bool visited[hive::X][hive::Y] = {false};
     for (auto piece: this->insects) {
         if (piece.second.z > 0) continue;   // jak jest to chrząszcz to również nie ma co patrzeć
@@ -59,7 +68,7 @@ void Controller::legal_piece_placement(std::vector<Coords> &legal_places) noexce
             if (this->board[location].type != Insect::notexists) continue;  // jeśli jest figura to nie położymy więc pomijamy dalsze
             if (visited[location.x + hive::X/2][location.y + hive::Y/2]) continue;  // jeśli juz sprawdzaliśmy dane pole to nie ma co ponownie
             visited[location.x + hive::X/2][location.y + hive::Y/2] = true;  // zapisujemy że sprawdzaliśmy
-            if (!this->check_destination(location)) {
+            if (this->check_destination(location)) {
                 legal_places.push_back(location);
             }
         }
@@ -94,7 +103,7 @@ void Controller::crawlable_locations(const std::string &piece, std::vector<Coord
 
 
 void Controller::dropable_locations(const std::string &piece, std::vector<Coords> &places) noexcept {
-    auto beetle_coords = this->insects.find(piece)->second;
+    auto beetle_coords = this->insects.at(piece);
     if (beetle_coords.z == 0) return; // nie da się zejść niżej
     for (auto c: beetle_coords.get_surrounding_locations()) {
         if (this->board[c].type != Insect::notexists) continue;
@@ -107,7 +116,7 @@ void Controller::dropable_locations(const std::string &piece, std::vector<Coords
 
 
 void Controller::movable_locations(const std::string &piece, std::vector<Coords> &places, const int &distance) noexcept {
-    Coords start = this->insects.find(piece)->second;
+    Coords start = this->insects.at(piece);
     bool visited[hive::X][hive::Y] = {false};
     this->board[start].ismoving = true;
     this->movable_locations(start, places, distance, visited);
@@ -140,16 +149,17 @@ void Controller::movable_locations(const Coords &c, std::vector<Coords> &places,
 
 
 void Controller::move(const std::string &piece, const Coords &to) {  // tylko dla graczy ta funkcja
-    auto pair = this->insects_off.find(piece);
-    if (pair == this->insects_off.end()) throw PieceNotExisting(piece);
+    bool in_hands = true;
+    if (this->hands.find(piece) == this->hands.end()) in_hands = false;
     if (color_from_piece(piece[0]) != this->current) throw InvalidMove("Can't move using opponent piece"); // czy na pewno ruch odpowiednią figurą (żeby nie pomylić kolorów)
-    if (pair->second) { // nie istnieje jeszcze na planszy, więc trzeba dodać
+    if (in_hands) { // nie istnieje jeszcze na planszy, więc trzeba dodać
         if (this->board.get_turns() >= 2 && !this->check_destination(to)) throw InvalidMove("Can't put new piece on the board next to the opponent"); // jeśli jest zły sąsiad to trzeba odrzucić
         hive::Piece p = create_piece(piece);
-        pair->second = false;
         this->board.add_piece(p, to);
+        this->hands.erase(piece);
     } else {
-        auto from = this->insects[piece];
+        if (this->insects.find(piece) == this->insects.end()) throw PieceNotExisting(piece);
+        auto from = this->insects.at(piece);  // może wywalić index_out_of_range
         if (!this->board.is_connected(from)) throw NotOneHive();
         if (from == to) throw std::invalid_argument("Can't be the same destination file");
         if (this->board[from].type == Insect::notexists) throw std::invalid_argument("Unexpected error");
@@ -162,11 +172,10 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
 
 
 void Controller::engine_move(const std::string &piece, const Coords &to) { // zakładamy, że robi to zawsze poprawnie
-    auto pair = this->insects_off.find(piece);
-    if (pair->second) {
-        pair->second = false;
+    if (this->hands.find(piece) != this->hands.end()) {  // tzn że miał w ręce
         hive::Piece p = create_piece(piece);
         this->board.add_piece(p, to);
+        this->hands.erase(piece);
     } else {
         auto from = this->insects[piece];
         this->board.move(from, to);
@@ -180,7 +189,7 @@ void Controller::undo_move() noexcept {
     const struct Move m = this->board.back();
     const std::string piece = this->board[m.to].to_str();
     if (m.added) {
-        this->insects_off[piece] = true;
+        this->hands.insert(piece);
         this->insects.erase(piece);
     } else {
         this->insects[piece] = m.from;
@@ -201,13 +210,13 @@ void Controller::prepare_pieces() {
     for (auto pair : quantity) {
         std::string piece(1, pair.first);
         if (pair.second == 1) {
-            this->insects_off["w"+piece] = true;
-            this->insects_off["b"+piece] = true;
+            this->hands.insert("w"+piece);
+            this->hands.insert("b"+piece);
             continue;
         }
         for (int i = 0; i < pair.second; ++i) {
-            this->insects_off["w"+piece+std::to_string(i+1)] = true;
-            this->insects_off["b"+piece+std::to_string(i+1)] = true;
+            this->hands.insert("w"+piece+std::to_string(i+1));
+            this->hands.insert("b"+piece+std::to_string(i+1));
         }
     }
 }
@@ -215,19 +224,21 @@ void Controller::prepare_pieces() {
 
 Coords Controller::find_destination(const std::string &piece, Directions direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
-    auto a = this->insects_off.find(piece);
-    if (a == this->insects_off.end()) throw PieceNotExisting(piece);
-    if (a->second) throw PieceNotOnTheBoard(piece);
+    if (this->insects.find(piece) == this->insects.end()) {
+        if (this->hands.find(piece) == this->hands.end()) throw PieceNotExisting(piece);
+        throw PieceNotOnTheBoard(piece);
+    }
     return this->insects.find(piece)->second.get_neighbor(direction);
 }
 
 
-Directions Controller::find_adjacent(const Coords &c) noexcept {
+std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) noexcept {
     for (auto neighbor: c.get_surrounding_locations()) {
         if (this->board[neighbor].type != Insect::notexists) {
-            return neighbor.get_direction(c);
+            return {this->board[neighbor].to_str(), neighbor.get_direction(c)};
         }
     }
+    return {};
 }
 
 
@@ -248,8 +259,8 @@ std::unordered_map<std::string, Coords> &Controller::get_pieces() noexcept {
 }
 
 
-std::unordered_map<std::string, bool> &Controller::get_all_pieces() noexcept {
-    return this->insects_off;    
+std::unordered_set<std::string> &Controller::get_hands() noexcept {
+    return this->hands;    
 }
 
 

@@ -174,15 +174,6 @@ TEST(Board, connected2) {
 }
 
 
-TEST(controller, pieces) {
-    Controller c;
-
-    for (auto piece: c.get_all_pieces()) {
-        ASSERT_TRUE(piece.second);
-    }
-}
-
-
 TEST(controller, move) {
     Controller c;
 
@@ -213,18 +204,18 @@ TEST(controller, unmove) {
 
     auto piece = c.get_board()[cc];
     auto &pieces = c.get_pieces();
-    auto &all_pieces = c.get_all_pieces();
+    auto &hands = c.get_hands();
 
     ASSERT_EQ(piece.type, Insect::bee);
     ASSERT_EQ(pieces.at("bQ"), cc);
-    ASSERT_FALSE(all_pieces.at("bQ"));
+    ASSERT_EQ(hands.size(), 18);
 
     c.undo_move();
     piece = c.get_board()[cc];
 
     ASSERT_EQ(piece.type, Insect::notexists);
     ASSERT_THROW(pieces.at("bQ"), std::out_of_range);
-    ASSERT_TRUE(all_pieces.at("bQ"));
+    ASSERT_EQ(hands.size(), 19);
 }
 
 
