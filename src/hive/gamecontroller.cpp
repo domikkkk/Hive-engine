@@ -225,7 +225,7 @@ Coords Controller::find_destination(const std::string &piece, Directions directi
 Directions Controller::find_adjacent(const Coords &c) noexcept {
     for (auto neighbor: c.get_surrounding_locations()) {
         if (this->board[neighbor].type != Insect::notexists) {
-
+            return neighbor.get_direction(c);
         }
     }
 }

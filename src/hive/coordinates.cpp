@@ -16,18 +16,18 @@ Coords Coords::operator+(const Coords &c) const noexcept {
 }
 
 
-Directions Coords::get_opposite(const Coords &c) const noexcept {
-    int diff_y = this->y - c.y;
-    int diff_x = this->x - c.x;
+Directions Coords::get_direction(const Coords &c) const noexcept {
+    int diff_y = c.y - this->y;
+    int diff_x = c.x - this->x;
     if (diff_y > 0) {
-        if (diff_x > 0) return Directions::SW;
-        else if (diff_x == 0) return Directions::S; 
+        if (diff_x > 0) return Directions::NE;
+        else if (diff_x == 0) return Directions::N; 
     } else if (diff_y == 0) {
-        if (diff_x > 0) return Directions::W;
-        else if (diff_x < 0) return Directions::E;
+        if (diff_x > 0) return Directions::E;
+        else if (diff_x < 0) return Directions::W;
     } else {
-        if (diff_x == 0) return Directions::N;
-        else if (diff_x < 0) return Directions::NE;
+        if (diff_x == 0) return Directions::S;
+        else if (diff_x < 0) return Directions::SW;
     }
     return Directions::DEFAULT;
 }
@@ -65,6 +65,7 @@ const Coords Coords::get_ground() const noexcept {
 
 std::vector<Coords> Coords::get_surrounding_locations() const noexcept {
     std::vector<Coords> neighbors;
+    neighbors.reserve(6);
     neighbors.emplace_back(this->x, this->y + 1, this->z);
     neighbors.emplace_back(this->x + 1, this->y + 1, this->z);
     neighbors.emplace_back(this->x + 1, this->y, this->z);

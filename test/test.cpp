@@ -46,6 +46,40 @@ TEST(Piece, ability) {
 }
 
 
+TEST(coords, surrounding_locations) {
+    Coords c = {0, 0};
+    std::vector<Coords> ans;
+    ans.emplace_back(Coords{0, 1});
+    ans.emplace_back(Coords{1, 1});
+    ans.emplace_back(Coords{1, 0});
+    ans.emplace_back(Coords{0, -1});
+    ans.emplace_back(Coords{-1, -1});
+    ans.emplace_back(Coords{-1, 0});
+
+    int i = 0;
+    for (auto res: c.get_surrounding_locations()) {
+        ASSERT_EQ(res, ans[i++]);
+    }
+}
+
+
+TEST(coords, direction) {
+    Coords c = {0, 0};
+    std::vector<Directions> dir;
+    dir.emplace_back(Directions::N);
+    dir.emplace_back(Directions::NE);
+    dir.emplace_back(Directions::E);
+    dir.emplace_back(Directions::S);
+    dir.emplace_back(Directions::SW);
+    dir.emplace_back(Directions::W);
+
+    int i = 0;
+    for (auto neighbor : c.get_surrounding_locations()) {
+        ASSERT_EQ(c.get_direction(neighbor), dir[i++]);
+    }
+}
+
+
 TEST(Board, pieces) {
     hive::Board b;
 
@@ -120,6 +154,26 @@ TEST(Board, connected) {
 }
 
 
+TEST(Board, connected2) {
+    hive::Board b;
+
+    b.add_piece(hive::Piece(1, Insect::spider, Color::WHITE), {0, 0});
+    b.add_piece(hive::Piece(1, Insect::spider, Color::BLACK), {1, 0});
+    b.add_piece(hive::Piece(0, Insect::bee, Color::WHITE), {0, 1});
+    b.add_piece(hive::Piece(0, Insect::bee, Color::BLACK), {2, 1});
+    b.add_piece(hive::Piece(1, Insect::ant, Color::WHITE), {-1, -1});
+    b.add_piece(hive::Piece(1, Insect::ant, Color::BLACK), {2, 2});
+    b.move({-1, -1}, {1, 2});
+
+    ASSERT_TRUE(b.is_connected({0, 0}));
+    ASSERT_TRUE(b.is_connected({1, 0}));
+    ASSERT_TRUE(b.is_connected({0, 1}));
+    ASSERT_TRUE(b.is_connected({1, 2}));
+    ASSERT_TRUE(b.is_connected({2, 2}));
+    ASSERT_TRUE(b.is_connected({2, 1}));
+}
+
+
 TEST(controller, pieces) {
     Controller c;
 
@@ -144,7 +198,6 @@ TEST(controller, move) {
     c.move("bQ", {1, -1});
 
     ASSERT_THROW(c.move("wS1", {1, 2}), NotOneHive);
-
 }
 
 
@@ -172,6 +225,41 @@ TEST(controller, unmove) {
     ASSERT_EQ(piece.type, Insect::notexists);
     ASSERT_THROW(pieces.at("bQ"), std::out_of_range);
     ASSERT_TRUE(all_pieces.at("bQ"));
+}
+
+
+TEST(controller, movable) {
+    Controller c;
+
+    c.move("wS1", {0, 0});
+    c.move("bS1", {1, 0});
+    c.move("wQ", {0, 1});
+    c.move("bQ", {1, -1});
+    c.move("wA1", {-1, -1});
+    c.move("bA1", {2, 1});
+    std::vector<Coords> result;
+    c.movable_locations("wA1", result, hive::gen_possibility(Insect::ant).how_far);
+
+    std::vector<Coords> ans;
+    ans.emplace_back(Coords{-1, 0});
+    ans.emplace_back(Coords{-1, 1});
+    ans.emplace_back(Coords{0, 2});
+    ans.emplace_back(Coords{1, 2});
+    ans.emplace_back(Coords{1, 1});
+    ans.emplace_back(Coords{2, 2});
+    ans.emplace_back(Coords{3, 2});
+    ans.emplace_back(Coords{3, 1});
+    ans.emplace_back(Coords{2, 0});
+    ans.emplace_back(Coords{2, -1});
+    ans.emplace_back(Coords{1, -2});
+    ans.emplace_back(Coords{0, -2});
+    ans.emplace_back(Coords{0, -1});
+
+    ASSERT_EQ(ans.size(), result.size());
+
+    for (std::size_t i=0; i<result.size(); ++i) {
+        ASSERT_EQ(ans[i], result[i]);
+    }
 }
 
 
