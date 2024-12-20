@@ -45,14 +45,39 @@ void Game::set_valid_moves() noexcept {
 }
 
 
-const std::string Game::get_valid_moves() const noexcept {
+const std::string Game::get_valid_moves() noexcept {
     std::string to_display = "";
     for (auto move: this->valid_moves) {
-        to_display += move.first + " ";
         for (auto where: move.second) {
-            to_display += std::to_string(where.x) + " " + std::to_string(where.y) + "; ";
+            to_display += move.first + " ";
+            auto adjacent = this->controller.find_adjacent(where);
+            switch (adjacent.second)
+            {
+            case Directions::NE:
+                to_display += adjacent.first + "/";
+                break;
+            case Directions::E:
+                to_display += adjacent.first + "-";
+                break;
+            case Directions::S:
+                to_display += adjacent.first + "\\";
+                break;
+            case Directions::SW:
+                to_display += "/" + adjacent.first;
+                break;
+            case Directions::W:
+                to_display += "-" + adjacent.first;
+                break;
+            case Directions::N:
+                to_display += "\\" + adjacent.first;
+                break;
+            case Directions::DEFAULT:
+                to_display.erase(to_display.size()-1);
+            default:
+                break;
+            }
+            to_display += ";";
         }
-        to_display += "\n";
     }
     return to_display;
 }
@@ -103,4 +128,12 @@ void Game::player_move(const struct Move_parameters &move) {
     Coords c = this->controller.find_destination(move.next_to_piece, move.direction);
     this->controller.move(move.what_piece, c);
     this->moves.push_back(move.str);
+}
+
+
+void Game::undo(const int &n) noexcept {
+    for (int i = 0; i < n; ++i) {
+        this->controller.undo_move();
+        this->moves.pop_back();
+    }
 }

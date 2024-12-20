@@ -54,10 +54,7 @@ void Controller::legal_piece_placement(std::vector<Coords> &legal_places) noexce
     if (turns == 0) {
         legal_places.emplace_back(this->board.first_location); return;
     } else if (turns == 1) {
-        for (auto c: this->board.first_location.get_surrounding_locations()) {
-            legal_places.push_back(c);
-        }
-        return;
+        legal_places.emplace_back(this->board.second_location); return;
     }
     bool visited[hive::X][hive::Y] = {false};
     for (auto piece: this->insects) {
@@ -224,6 +221,7 @@ void Controller::prepare_pieces() {
 
 Coords Controller::find_destination(const std::string &piece, Directions direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
+    if (this->board.get_turns() == 1) return this->board.second_location;
     if (this->insects.find(piece) == this->insects.end()) {
         if (this->hands.find(piece) == this->hands.end()) throw PieceNotExisting(piece);
         throw PieceNotOnTheBoard(piece);
@@ -238,7 +236,7 @@ std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) no
             return {this->board[neighbor].to_str(), neighbor.get_direction(c)};
         }
     }
-    return {};
+    return {"", Directions::DEFAULT};
 }
 
 

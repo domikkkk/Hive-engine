@@ -22,6 +22,11 @@ void Command::execute(Game &game) {
         game.player_move(create_move(this->arguments));
         game.update();
         std::cout << game.get_gamestring();
+    } else if (this->command_type == Instrucions::undo) {
+        int n = 1;
+        if (this->arguments.size() > 0) n = std::stoi(this->arguments);
+        game.undo(std::max(1, n));
+        std::cout << game.get_gamestring();
     } else if (this->command_type == Instrucions::validmoves) {
         game.set_valid_moves();
         std::cout << game.get_valid_moves();

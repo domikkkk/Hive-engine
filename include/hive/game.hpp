@@ -10,8 +10,9 @@ public:
     Game() noexcept = default;
     void change_state(const State &state) noexcept;
     const std::string get_gamestring() const noexcept;
-    const std::string get_valid_moves() const noexcept;
+    const std::string get_valid_moves() noexcept;
     void player_move(const struct Move_parameters &move);
+    void undo(const int &n = 1) noexcept;
     void update() noexcept;
 
     void set_valid_moves() noexcept;
