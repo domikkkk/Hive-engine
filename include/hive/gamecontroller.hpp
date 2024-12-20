@@ -17,7 +17,7 @@ public:
     void add_piece(const std::string &piece, const Coords &where) noexcept;
     bool is_finished() noexcept;
     bool validateQueen() const noexcept;
-    bool can_move_on_board() const noexcept;
+    bool can_move_on_board(const std::string &piece) noexcept;
     void move(const std::string &piece, const Coords &to);
     void engine_move(const std::string &piece, const Coords &to);
     void undo_move() noexcept;
@@ -33,8 +33,7 @@ public:
 
     void legal_piece_placement(std::vector<Coords> &places) noexcept;
     void hoppable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
-    void crawlable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
-    void dropable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
+    void beetle_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
     void movable_locations(const std::string &piece, std::vector<Coords> &places, const int &distance) noexcept;
     void movable_locations(const Coords &coords, std::vector<Coords> &places, int distance, bool (&visited)[hive::X][hive::Y]) noexcept;
     

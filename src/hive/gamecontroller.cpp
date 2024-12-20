@@ -44,8 +44,9 @@ bool Controller::validateQueen() const noexcept {
 }
 
 
-bool Controller::can_move_on_board() const noexcept {
-    return this->board.get_turns() > hive::turns ? true : this->validateQueen();
+bool Controller::can_move_on_board(const std::string &piece) noexcept {
+    auto from = this->insects.find(piece)->second;
+    return this->board.is_connected(from);
 }
 
 
@@ -88,25 +89,23 @@ void Controller::hoppable_locations(const std::string &piece, std::vector<Coords
 }
 
 
-void Controller::crawlable_locations(const std::string &piece, std::vector<Coords> &places) noexcept {
+void Controller::beetle_locations(const std::string &piece, std::vector<Coords> &places) noexcept {
     auto beetle_coords = this->insects.find(piece)->second;
-    for (auto c: beetle_coords.get_surrounding_locations()) {
-        if (this->board[c].type == Insect::notexists) continue;
-        Coords up = this->board.get_upper(c);
-        up.z++;
-        places.push_back(up);
-    }
-}
-
-
-void Controller::dropable_locations(const std::string &piece, std::vector<Coords> &places) noexcept {
-    auto beetle_coords = this->insects.at(piece);
-    if (beetle_coords.z == 0) return; // nie da się zejść niżej
-    for (auto c: beetle_coords.get_surrounding_locations()) {
-        if (this->board[c].type != Insect::notexists) continue;
-        c.z = 0;
-        Coords up = this->board.get_upper(c);
-        up.z++;
+    auto neighbors = beetle_coords.get_surrounding_locations();
+    for (std::size_t i = 0; i < neighbors.size(); ++i) {
+        Coords up = neighbors[i];
+        up.z = 0;
+        up = this->board.get_upper(up);
+        if(this->board[up].type != Insect::notexists) up.z++;
+        if (up.z == neighbors[i].z) {
+            auto adjacentLeft = this->board[neighbors[i==0? 5 : i-1]];
+            bool left = false;
+            auto adjacentRight = this->board[neighbors[i==5? 0 : i+1]];
+            bool right = false;
+            if (adjacentLeft.type != Insect::notexists) left = true;
+            if (adjacentRight.type != Insect::notexists) right = true;
+            if (left == right) continue;
+        }
         places.push_back(up);
     }
 }
@@ -221,7 +220,7 @@ void Controller::prepare_pieces() {
 
 Coords Controller::find_destination(const std::string &piece, Directions direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
-    if (this->board.get_turns() == 1) return this->board.second_location;
+    // if (this->board.get_turns() == 1) return this->board.second_location;
     if (this->insects.find(piece) == this->insects.end()) {
         if (this->hands.find(piece) == this->hands.end()) throw PieceNotExisting(piece);
         throw PieceNotOnTheBoard(piece);
@@ -231,6 +230,11 @@ Coords Controller::find_destination(const std::string &piece, Directions directi
 
 
 std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) noexcept {
+    if (c.z > 0) {
+        auto down = c;
+        down.z--;
+        return {this->board[down].to_str(), Directions::UP};
+    }
     for (auto neighbor: c.get_surrounding_locations()) {
         if (this->board[neighbor].type != Insect::notexists) {
             return {this->board[neighbor].to_str(), neighbor.get_direction(c)};

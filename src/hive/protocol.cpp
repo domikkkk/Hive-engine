@@ -4,6 +4,7 @@
 
 std::istream &operator>>(std::istream &is, Command &command) {
     std::string line;
+    command.arguments = "";
     if (std::getline(is, line)) {
         std::istringstream line_stream(line);
         std::getline(line_stream, command.command_type, ' ');
@@ -14,39 +15,50 @@ std::istream &operator>>(std::istream &is, Command &command) {
 
 
 void Command::execute(Game &game) {
-    if (this->command_type == Instrucions::newgame) {
-        std::cout << game.get_gamestring();
-    } else if (this->command_type == Instrucions::info) {
+    try {
+        if (this->command_type == Instrucions::newgame) {
+            std::cout << game.get_gamestring();
+        } else if (this->command_type == Instrucions::info) {
 
-    } else if (this->command_type == Instrucions::play) {
-        game.player_move(create_move(this->arguments));
-        game.update();
-        std::cout << game.get_gamestring();
-    } else if (this->command_type == Instrucions::undo) {
-        int n = 1;
-        if (this->arguments.size() > 0) n = std::stoi(this->arguments);
-        game.undo(std::max(1, n));
-        std::cout << game.get_gamestring();
-    } else if (this->command_type == Instrucions::validmoves) {
-        game.set_valid_moves();
-        std::cout << game.get_valid_moves();
-    } else if (this->command_type == Instrucions::bestmove) {
+        } else if (this->command_type == Instrucions::play) {
+            game.player_move(create_move(this->arguments));
+            game.update();
+            std::cout << game.get_gamestring();
+        } else if (this->command_type == Instrucions::undo) {
+            int n = 1;
+            if (this->arguments.size() > 0) n = std::stoi(this->arguments);
+            game.undo(std::max(1, n));
+            std::cout << game.get_gamestring();
+        } else if (this->command_type == Instrucions::validmoves) {
+            std::cout << game.get_valid_moves();
+        } else if (this->command_type == Instrucions::bestmove) {
 
-    } else if (this->command_type == Instrucions::options) {
-        
-    } else if (this->command_type == Instrucions::help) {
-        std::cout << "Usage: <COMMAND> [optional arguments]\n";
-        std::cout << "Possible commands:\n";
-        std::cout << "info                                          - display info about game.\n";
-        std::cout << "newgame                                       - start a new game\n";
-        std::cout << "play [what insect] [next to another insect]   - make a move in game.\n\tFor example: play wS1 /wG1 - place the first white spider on the bottom left edge of the first white grasshoper\n";
-        std::cout << "undo [n]                                      - go back n moves. Default 1\n";
-        std::cout << "validmoves                                    - return all possible moves separated ';' for actual possition\n";
-        std::cout << "bestmove                                      - return the best move according to engine for actual possition\n";
-        std::cout << "options                                       - return options about engine\n";
-        std::cout << "help                                          - return help";
-    } else {
-        std::cout << "err Invalid command. Try 'help' to see a list of valid commands.";
+        } else if (this->command_type == Instrucions::options) {
+            
+        } else if (this->command_type == Instrucions::help) {
+            std::cout << "Usage: <COMMAND> [optional arguments]\n";
+            std::cout << "Possible commands:\n";
+            std::cout << "info                                          - display info about game.\n";
+            std::cout << "newgame                                       - start a new game\n";
+            std::cout << "play [what insect] [next to another insect]   - make a move in game.\n\tFor example: play wS1 /wG1 - place the first white spider on the bottom left edge of the first white grasshoper\n";
+            std::cout << "undo [n]                                      - go back n moves. Default 1\n";
+            std::cout << "validmoves                                    - return all possible moves separated ';' for actual possition\n";
+            std::cout << "bestmove                                      - return the best move according to engine for actual possition\n";
+            std::cout << "options                                       - return options about engine\n";
+            std::cout << "help                                          - return help";
+        } else {
+            std::cout << "err Invalid command. Try 'help' to see a list of valid commands.";
+        }
+    } catch (PieceNotExisting e) {
+        std::cout << e.what();
+    } catch (PieceNotOnTheBoard e) {
+        std::cout << e.what();
+    } catch (NotOneHive e) {
+        std::cout << e.what();
+    } catch (InvalidMove e) {
+        std::cout << e.what();
+    } catch (std::exception e) {
+        std::cout << e.what();
     }
     std::cout << "\nok\n";
 }

@@ -20,25 +20,25 @@ TEST(Piece, pieces) {
 
 
 TEST(Piece, ability) {
-    hive::Ability a = hive::gen_possibility(Insect::bee);
+    hive::Ability a = hive::gen_ability(Insect::bee);
 
     ASSERT_FALSE(a.can_crawl);
     ASSERT_FALSE(a.can_hop);
     ASSERT_EQ(a.how_far, 1);
 
-    a = hive::gen_possibility(Insect::ant);
+    a = hive::gen_ability(Insect::ant);
 
     ASSERT_FALSE(a.can_crawl);
     ASSERT_FALSE(a.can_hop);
     ASSERT_EQ(a.how_far, possible_infinity);
 
-    a = hive::gen_possibility(Insect::grasshopper);
+    a = hive::gen_ability(Insect::grasshopper);
 
     ASSERT_FALSE(a.can_crawl);
     ASSERT_TRUE(a.can_hop);
     ASSERT_EQ(a.how_far, 0);
 
-    a = hive::gen_possibility(Insect::beetle);
+    a = hive::gen_ability(Insect::beetle);
 
     ASSERT_TRUE(a.can_crawl);
     ASSERT_FALSE(a.can_hop);
@@ -229,7 +229,7 @@ TEST(controller, movable) {
     c.move("wA1", {-1, -1});
     c.move("bA1", {2, 1});
     std::vector<Coords> result;
-    c.movable_locations("wA1", result, hive::gen_possibility(Insect::ant).how_far);
+    c.movable_locations("wA1", result, hive::gen_ability(Insect::ant).how_far);
 
     std::vector<Coords> ans;
     ans.emplace_back(Coords{-1, 0});

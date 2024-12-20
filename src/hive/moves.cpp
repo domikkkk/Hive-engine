@@ -13,7 +13,7 @@ Moves::~Moves() {
 }
 
 
-struct hive::Ability hive::gen_possibility(const char &type) {
+struct hive::Ability hive::gen_ability(const char &type) {
     switch (type)
     {
     case Insect::beetle:

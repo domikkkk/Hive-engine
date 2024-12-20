@@ -11,11 +11,10 @@ void Game::update() noexcept {
 }
 
 
-void Game::set_valid_moves() noexcept {
-    this->valid_moves.clear();
+void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept {
     std::unordered_map<char, char> hand;
     std::vector<std::string> pieces;
-    for (auto piece_in_hands: this->controller.get_hands()) {
+    for (const auto &piece_in_hands: this->controller.get_hands()) {
         if (color_from_piece(piece_in_hands[0]) != this->controller.get_current()) continue;
         switch (piece_in_hands[1])
         {
@@ -35,19 +34,31 @@ void Game::set_valid_moves() noexcept {
             piece += info.first;
             if (info.first != 'w') piece += info.second;
             for (auto c: destinations) {
-                this->valid_moves[piece].emplace_back(c);
+                valid_moves[piece].emplace_back(c);
             }
         }
     }
-//     for (auto piece: this->controller.get_pieces()) {
-
-//     }
+    for (const auto &piece: this->controller.get_pieces()) {
+        if (color_from_piece(piece.first[0]) != this->controller.get_current()) continue;
+        if (!this->controller.can_move_on_board(piece.first)) continue;
+        hive::Ability ability = hive::gen_ability(piece.first[1]);
+        if (ability.can_hop) {
+            this->controller.hoppable_locations(piece.first, valid_moves[piece.first]);
+            continue;
+        } else if (ability.can_crawl) {
+            this->controller.beetle_locations(piece.first, valid_moves[piece.first]);
+        } else {
+            this->controller.movable_locations(piece.first, valid_moves[piece.first], ability.how_far);
+        }
+    }
 }
 
 
 const std::string Game::get_valid_moves() noexcept {
     std::string to_display = "";
-    for (auto move: this->valid_moves) {
+    std::unordered_map<std::string, std::vector<Coords>> valid_moves;
+    this->set_valid_moves(valid_moves);
+    for (auto move: valid_moves) {
         for (auto where: move.second) {
             to_display += move.first + " ";
             auto adjacent = this->controller.find_adjacent(where);
@@ -70,6 +81,9 @@ const std::string Game::get_valid_moves() noexcept {
                 break;
             case Directions::N:
                 to_display += "\\" + adjacent.first;
+                break;
+            case Directions::UP:
+                to_display += adjacent.first;
                 break;
             case Directions::DEFAULT:
                 to_display.erase(to_display.size()-1);

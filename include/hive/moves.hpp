@@ -39,7 +39,7 @@ namespace hive {
         bool can_crawl = false;
     };
 
-    struct Ability gen_possibility(const char &type);
+    struct Ability gen_ability(const char &type);
 };
 
 

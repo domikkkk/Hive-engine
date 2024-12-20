@@ -15,16 +15,13 @@ public:
     void undo(const int &n = 1) noexcept;
     void update() noexcept;
 
-    void set_valid_moves() noexcept;
+    void set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept;
 
 private:
     Controller controller;
     std::string gameType = GameType::base;
     State state = State::NOTSTARTED;
     std::vector<std::string> moves;
-
-public:
-    std::unordered_map<std::string, std::vector<Coords>> valid_moves = {};
 };
 
 
