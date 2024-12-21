@@ -104,7 +104,11 @@ void Controller::beetle_locations(const std::string &piece, std::vector<Coords> 
             bool right = false;
             if (adjacentLeft.type != Insect::notexists) left = true;
             if (adjacentRight.type != Insect::notexists) right = true;
-            if (left == right) continue;
+            if (up.z > 0) {
+                if (left && right) continue;
+            } else {
+                if (left == right) continue;
+            }
         }
         places.push_back(up);
     }
@@ -220,7 +224,6 @@ void Controller::prepare_pieces() {
 
 Coords Controller::find_destination(const std::string &piece, Directions direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
-    // if (this->board.get_turns() == 1) return this->board.second_location;
     if (this->insects.find(piece) == this->insects.end()) {
         if (this->hands.find(piece) == this->hands.end()) throw PieceNotExisting(piece);
         throw PieceNotOnTheBoard(piece);

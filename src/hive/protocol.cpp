@@ -49,16 +49,16 @@ void Command::execute(Game &game) {
         } else {
             std::cout << "err Invalid command. Try 'help' to see a list of valid commands.";
         }
-    } catch (PieceNotExisting e) {
-        std::cout << e.what();
-    } catch (PieceNotOnTheBoard e) {
-        std::cout << e.what();
-    } catch (NotOneHive e) {
-        std::cout << e.what();
-    } catch (InvalidMove e) {
-        std::cout << e.what();
-    } catch (std::exception e) {
-        std::cout << e.what();
+    } catch (const PieceNotExisting &e) {
+        std::cerr << e.what();
+    } catch (const PieceNotOnTheBoard &e) {
+        std::cerr << e.what();
+    } catch (const NotOneHive &e) {
+        std::cerr << e.what();
+    } catch (const InvalidMove &e) {
+        std::cerr << e.what();
+    } catch (const std::exception &e) {
+        std::cerr << e.what();
     }
     std::cout << "\nok\n";
 }
@@ -70,6 +70,7 @@ Move_parameters create_move(std::string &arguments) {
     std::getline(stream, piece, ' ');
     std::getline(stream, target);
     if (target.length() == 0) return {piece, target, Directions::DEFAULT, arguments};
+    std::size_t n = target.size()-1;
     Directions d;
     if (target[0] < 97) {
         switch (target[0])
@@ -88,8 +89,7 @@ Move_parameters create_move(std::string &arguments) {
             break;
         }
         return {piece, target.erase(0, 1), d, arguments};
-    } else {
-        std::size_t n = target.size()-1;
+    } else if ((target[n] > 57 && target[n] < 97) || (target[n] < 48)) {
         switch (target[n])
         {
         case '/':
@@ -106,5 +106,7 @@ Move_parameters create_move(std::string &arguments) {
             break;
         }
         return {piece, target.erase(n, 1), d, arguments};
+    } else {
+        return {piece, target, Directions::UP, arguments};
     }
 }
