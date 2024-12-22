@@ -54,6 +54,11 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
 }
 
 
+Controller &Game::get_controller() noexcept {
+    return this->controller;
+}
+
+
 const std::string Game::get_valid_moves() noexcept {
     std::string to_display = "";
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;

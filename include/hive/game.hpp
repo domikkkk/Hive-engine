@@ -17,6 +17,8 @@ public:
 
     void set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept;
 
+    Controller &get_controller() noexcept;
+
 private:
     Controller controller;
     std::string gameType = GameType::base;

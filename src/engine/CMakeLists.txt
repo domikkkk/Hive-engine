@@ -1,5 +1,5 @@
 cmake_minimum_required( VERSION 3.8)
 
-add_library(AlfaBeta STATIC "alfabeta.cpp")
+add_library(AlfaBeta STATIC "alfabeta.cpp" "evaluations.cpp")
 
 target_include_directories(AlfaBeta PUBLIC "${CMAKE_SOURCE_DIR}/include/" ${CMAKE_CURRENT_SOURCE_DIR})
