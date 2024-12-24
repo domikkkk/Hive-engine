@@ -12,7 +12,6 @@ class Controller {
 public:
     Controller() {this->prepare_pieces();};
     explicit Controller(const hive::Board &board): board(board) {};
-    void switch_turn() noexcept;
     const Color &get_player() const noexcept;
     void add_piece(const std::string &piece, const Coords &where) noexcept;
     bool is_finished() noexcept;
@@ -23,11 +22,33 @@ public:
     void undo_move() noexcept;
     void prepare_pieces();
     bool check_destination(const Coords &destination);
-    std::unordered_map<std::string, Coords> &get_pieces() noexcept;
-    std::unordered_set<std::string> &get_hands() noexcept;
-    hive::Board &get_board() noexcept;
-    std::size_t get_turns() const noexcept;
-    const Color &get_current() const noexcept;
+
+    inline void switch_turn() noexcept {
+        this->current = opposite[this->current];
+    }
+
+    inline std::unordered_map<std::string, Coords> &get_pieces() noexcept {
+        return this->insects;
+    }
+
+    inline std::unordered_set<std::string> &get_hands() noexcept {
+        return this->hands;
+    }
+
+    inline hive::Board &get_board() noexcept {
+        return this->board;
+    }
+
+    inline const Color &get_current() const noexcept {
+        return this->current;
+    }
+
+    inline std::size_t get_turns() const noexcept {
+        return this->board.get_turns() / 2 + 1;
+    }
+
+    int count_queen_surrounded(const Color &c) noexcept;
+
     Coords find_destination(const std::string &piece, Directions direction) const;
     std::pair<std::string, Directions> find_adjacent(const Coords &coords) noexcept;
 

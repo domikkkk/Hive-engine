@@ -11,12 +11,15 @@ private:
     using EvaluationFunc = std::function<float(Controller&)>;
 
     EvaluationFunc evaluation;
-    Controller game_c;
+    Game game;
+
+    Color maximazing = Color::WHITE;
+    Color minimazing = Color::BLACK;
 
 public:
     AlfaBeta() = default;
-    AlfaBeta(Controller &controller, EvaluationFunc func)
-        : evaluation(func), game_c(controller) {}
+    AlfaBeta(Game &game, EvaluationFunc func)
+        : evaluation(func), game(game) {}
 
     std::pair<std::string, Coords> get_best_move() noexcept;
 };

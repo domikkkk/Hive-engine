@@ -34,9 +34,12 @@ namespace hive {
         void move(const Coords &from, const Coords &to) noexcept;
         void unmove() noexcept;
         const struct Move back() const noexcept;
-        std::size_t get_turns() const noexcept;
+
+        inline std::size_t get_turns() const noexcept {
+            return this->moves.get_move_counts();
+        }
+
         Coords get_upper(Coords c) noexcept;
-        Piece &operator()(const std::size_t &x, const std::size_t &y) noexcept; // do zmiany
         Piece &operator[](const Coords &c) noexcept;
 
         std::size_t count_insects = 0;

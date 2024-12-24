@@ -19,6 +19,13 @@ enum Color {
 };
 
 
+const Color opposite[] = {
+    Color::BLACK,
+    Color::WHITE,
+    Color::WHITE,
+};
+
+
 const std::string colorToString[] = {
     "w",
     "b",

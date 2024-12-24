@@ -14,6 +14,13 @@ void Game::update() noexcept {
 void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept {
     std::unordered_map<char, char> hand;
     std::vector<std::string> pieces;
+    if (!this->controller.validateQueen() && this->controller.get_turns() == 4) {
+        std::vector<Coords> destinations;
+        this->controller.legal_piece_placement(destinations);
+        std::string piece = colorToString[this->controller.get_current()] + Insect::bee;
+        valid_moves[piece] = destinations;
+        return;
+    }
     for (const auto &piece_in_hands: this->controller.get_hands()) {
         if (color_from_piece(piece_in_hands[0]) != this->controller.get_current()) continue;
         switch (piece_in_hands[1])
@@ -30,12 +37,10 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
         std::vector<Coords> destinations;
         this->controller.legal_piece_placement(destinations);
         for (auto info: hand) {
-            std::string piece = this->controller.get_current() == Color::WHITE? "w" : "b";
+            std::string piece = colorToString[this->controller.get_current()];
             piece += info.first;
-            if (info.first != 'w') piece += info.second;
-            for (auto c: destinations) {
-                valid_moves[piece].emplace_back(c);
-            }
+            if (info.first != Insect::bee) piece += info.second;
+            valid_moves[piece] = destinations;
         }
     }
     for (const auto &piece: this->controller.get_pieces()) {

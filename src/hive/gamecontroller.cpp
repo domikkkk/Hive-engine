@@ -1,21 +1,6 @@
 #include <hive/gamecontroller.hpp>
 
 
-void Controller::switch_turn() noexcept {
-    switch (this->current)
-    {
-    case Color::WHITE:
-        this->current = Color::BLACK;
-        break;
-    case Color::BLACK:
-        this->current = Color::WHITE;
-        break;
-    default:
-        this->current = Color::WHITE;
-        break;
-    }
-}
-
 
 const Color &Controller::get_player() const noexcept {
     return this->current;
@@ -28,7 +13,7 @@ void Controller::add_piece(const std::string &piece, const Coords &where) noexce
 
 
 bool Controller::is_finished() noexcept {
-    const Coords &queen = this->insects[colorToString[this->current]+"Q"];
+    const Coords &queen = this->insects[colorToString[this->current]+Insect::bee];
     for (const Coords neighbor: queen.get_surrounding_locations()) {
         if (this->board[neighbor].type == Insect::notexists) {
             return false;
@@ -39,8 +24,19 @@ bool Controller::is_finished() noexcept {
 
 
 bool Controller::validateQueen() const noexcept {
-    if (this->hands.find(colorToString[this->current] + "Q") == this->hands.end()) return false;
-    return true;
+    if (this->hands.find(colorToString[this->current] + Insect::bee) == this->hands.end()) return true;
+    return false;
+}
+
+
+int Controller::count_queen_surrounded(const Color &c) noexcept {
+    auto bee = this->insects.find(colorToString[c] + Insect::bee);
+    if (bee == this->insects.end()) return 0;
+    int i = 0;
+    for (auto neighbor: bee->second.get_surrounding_locations()) {
+        if (this->board[neighbor].type != Insect::notexists) ++i;
+    }
+    return i;
 }
 
 
@@ -149,10 +145,8 @@ void Controller::movable_locations(const Coords &c, std::vector<Coords> &places,
 
 
 void Controller::move(const std::string &piece, const Coords &to) {  // tylko dla graczy ta funkcja
-    bool in_hands = true;
-    if (this->hands.find(piece) == this->hands.end()) in_hands = false;
     if (color_from_piece(piece[0]) != this->current) throw InvalidMove("Can't move using opponent piece"); // czy na pewno ruch odpowiednią figurą (żeby nie pomylić kolorów)
-    if (in_hands) { // nie istnieje jeszcze na planszy, więc trzeba dodać
+    if (this->hands.find(piece) != this->hands.end()) { // nie istnieje jeszcze na planszy, więc trzeba dodać
         if (this->board.get_turns() >= 2 && !this->check_destination(to)) throw InvalidMove("Can't put new piece on the board next to the opponent"); // jeśli jest zły sąsiad to trzeba odrzucić
         hive::Piece p = create_piece(piece);
         this->board.add_piece(p, to);
@@ -256,31 +250,6 @@ bool Controller::check_destination(const Coords &destination) {
         }
     }
     return true;
-}
-
-
-std::unordered_map<std::string, Coords> &Controller::get_pieces() noexcept {
-    return this->insects;
-}
-
-
-std::unordered_set<std::string> &Controller::get_hands() noexcept {
-    return this->hands;    
-}
-
-
-hive::Board &Controller::get_board() noexcept {
-    return this->board;
-}
-
-
-std::size_t Controller::get_turns() const noexcept {
-    return this->board.get_turns() / 2 + 1;
-}
-
-
-const Color &Controller::get_current() const noexcept {
-    return this->current;
 }
 
 

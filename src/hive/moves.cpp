@@ -57,8 +57,3 @@ void Moves::pop_back() noexcept {
 const Move &Moves::back() const noexcept {
     return this->all.back();
 }
-
-
-std::size_t Moves::get_move_counts() const noexcept {
-    return this->all.size();
-}

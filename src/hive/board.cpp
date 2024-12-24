@@ -60,7 +60,10 @@ const struct Move hive::Board::back() const noexcept {
 
 bool hive::Board::is_connected(const Coords &from) noexcept {
     if (this->count_insects < 2) return true;
-    if (from.z > 0 && (*this)[from.get_neighbor(Directions::UP)].type == Insect::notexists) return true;
+    if (from.z) {
+        if ((*this)[from.get_neighbor(Directions::UP)].type != Insect::notexists) return false;
+        return true;
+    } else if ((*this)[from.get_neighbor(Directions::UP)].type != Insect::notexists) return false;
     std::queue<Coords> q;
     Coords c;
     bool visited[Z][X][Y] = {false};
@@ -102,11 +105,6 @@ bool hive::Board::is_connected(const Coords &from) noexcept {
 }
 
 
-std::size_t hive::Board::get_turns() const noexcept {
-    return this->moves.get_move_counts();
-}
-
-
 Coords hive::Board::get_upper(Coords c) noexcept {
     Coords cc = c.get_neighbor(Directions::UP);
     while ((*this)[cc].type != Insect::notexists) {
@@ -114,11 +112,6 @@ Coords hive::Board::get_upper(Coords c) noexcept {
         ++cc.z;
     }
     return c;
-}
-
-
-hive::Piece &hive::Board::operator()(const std::size_t &x, const std::size_t &y) noexcept {
-    return this->fields[x + X/2][y + Y/2];
 }
 
 
