@@ -2,6 +2,118 @@
 #include <sstream>
 
 
+void Protocol::create_game() noexcept {
+    this->game = Game(++this->n_game);
+    this->engine.set_game(game, heuristic1);
+}
+
+
+std::string Protocol::get_info() noexcept {
+    std::string gamestring = this->game.get_gameType() + ";";
+    switch (this->game.get_gameState())
+    {
+    case State::NOTSTARTED:
+        gamestring += GameState::notstarted;
+        break;
+    case State::INPROGRESS:
+        gamestring += GameState::inprogress;
+        break;
+    case State::DRAW:
+        gamestring += GameState::draw;
+        break;
+    case State::WHITEWINS:
+        gamestring += GameState::whitewins;
+        break;
+    case State::BLACKWINS:
+        gamestring += GameState::blackwins;
+        break;
+    default:
+        break;
+    }
+    gamestring += ";";
+    switch (this->game.get_controller().get_current())
+    {
+    case Color::WHITE:
+        gamestring += "White[";
+        break;
+    case Color::BLACK:
+        gamestring += "Black[";
+    default:
+        break;
+    }
+    gamestring += std::to_string(this->game.get_controller().get_turns()) + "]";
+    for (auto str: this->game.get_moves()) {
+        gamestring += ';' + str;
+    }
+    return gamestring;
+}
+
+
+void Protocol::move(const struct Move_parameters &move) {
+    this->game.player_move(move);
+    this->game.update();
+}
+
+
+void Protocol::unmove(const int &n) noexcept {
+    this->game.undo(n);
+}
+
+
+std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
+    std::string to_display = piece + " ";
+    auto adjacent = this->game.get_controller().find_adjacent(where);
+    switch (adjacent.second)
+    {
+    case Directions::NE:
+        to_display += adjacent.first + "/";
+        break;
+    case Directions::E:
+        to_display += adjacent.first + "-";
+        break;
+    case Directions::S:
+        to_display += adjacent.first + "\\";
+        break;
+    case Directions::SW:
+        to_display += "/" + adjacent.first;
+        break;
+    case Directions::W:
+        to_display += "-" + adjacent.first;
+        break;
+    case Directions::N:
+        to_display += "\\" + adjacent.first;
+        break;
+    case Directions::UP:
+        to_display += adjacent.first;
+        break;
+    case Directions::DEFAULT:
+        to_display.erase(to_display.size()-1);
+    default:
+        break;
+    }
+    return to_display;
+}
+
+
+std::string Protocol::get_valid_moves() noexcept {
+    std::string to_display = "";
+    std::unordered_map<std::string, std::vector<Coords>> valid_moves;
+    this->game.set_valid_moves(valid_moves);
+    for (auto move: valid_moves) {
+        for (auto where: move.second) {
+            to_display += this->get_notation(move.first, where) + ";";
+        }
+    }
+    return to_display.erase(to_display.size()-1, 1);
+}
+
+
+std::string Protocol::get_best_move(const int &n) noexcept {
+    auto best_move = this->engine.get_best_move(n);
+    return get_notation(best_move.first, best_move.second);
+}
+
+
 std::istream &operator>>(std::istream &is, Command &command) {
     std::string line;
     command.arguments = "";
@@ -14,25 +126,25 @@ std::istream &operator>>(std::istream &is, Command &command) {
 }
 
 
-void Command::execute(Game &game) {
+void Command::execute(Protocol &protocol) {
     try {
         if (this->command_type == Instrucions::newgame) {
-            std::cout << game.get_gamestring();
+            protocol.create_game();
+            std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::info) {
-
+            std::cout << protocol.get_best_move(1);
         } else if (this->command_type == Instrucions::play) {
-            game.player_move(create_move(this->arguments));
-            game.update();
-            std::cout << game.get_gamestring();
+            protocol.move(create_move(this->arguments));
+            std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::undo) {
             int n = 1;
             if (this->arguments.size() > 0) n = std::stoi(this->arguments);
-            game.undo(std::max(1, n));
-            std::cout << game.get_gamestring();
+            protocol.unmove(std::max(1, n));
+            std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::validmoves) {
-            std::cout << game.get_valid_moves();
+            std::cout << protocol.get_valid_moves();
         } else if (this->command_type == Instrucions::bestmove) {
-
+            std::cout << protocol.get_best_move();
         } else if (this->command_type == Instrucions::options) {
             
         } else if (this->command_type == Instrucions::help) {

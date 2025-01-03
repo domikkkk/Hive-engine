@@ -19,7 +19,7 @@ enum Color {
 };
 
 
-const Color opposite[] = {
+constexpr Color opposite[] = {
     Color::BLACK,
     Color::WHITE,
     Color::WHITE,

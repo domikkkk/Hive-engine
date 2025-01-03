@@ -8,20 +8,27 @@
 
 class AlfaBeta {
 private:
-    using EvaluationFunc = std::function<float(Controller&)>;
+    using EvaluationFunc = std::function<float(Controller&, Color&)>;
 
     EvaluationFunc evaluation;
-    Game game;
+    Game *game = nullptr;
 
     Color maximazing = Color::WHITE;
     Color minimazing = Color::BLACK;
 
+    int depth = 5;
+
 public:
     AlfaBeta() = default;
-    AlfaBeta(Game &game, EvaluationFunc func)
-        : evaluation(func), game(game) {}
+    // AlfaBeta(Game &game, EvaluationFunc func)
+    //     : evaluation(func), game(game) {}
 
-    std::pair<std::string, Coords> get_best_move() noexcept;
+    void set_game(Game &game, EvaluationFunc func) noexcept;
+
+    float evaluate() noexcept;
+
+    std::pair<std::string, Coords> get_best_move(const int &depth=0) noexcept;
+    std::pair<std::pair<std::string, Coords>, float> minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
 };
 
 
