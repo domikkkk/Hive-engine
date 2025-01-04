@@ -3,7 +3,7 @@
 
 
 void AlfaBeta::set_game(Game &game, EvaluationFunc func) noexcept {
-    delete this->game;
+    // delete this->game;
     this->game = &game;
     this->evaluation = func;
 }
@@ -14,25 +14,24 @@ float AlfaBeta::evaluate() noexcept {
 }
 
 
-std::pair<std::string, Coords> AlfaBeta::get_best_move(const int &d) noexcept {
+BestMove AlfaBeta::get_best_move(const int &d) noexcept {
     auto depth = d? d: this->depth;
     this->maximazing = this->game->get_controller().get_current();
-    this->minimazing = opposite[this->maximazing];
-    std::cout << this->maximazing << " " << this->minimazing << ' ';
-    auto best_move = this->minimax(depth, true, -possible_infinity, possible_infinity);
-    std::cout << best_move.second << '\n';
-    return best_move.first;
+    auto best_move = this->minimax(1, true, -infinity/2, infinity/2);
+    auto best_move1 = this->minimax(depth, true, -infinity/2, infinity/2);
+    if (best_move1.piece == "") best_move = best_move1;
+    std::cout << best_move.value << "\n";
+    return best_move;
 }
 
 
-std::pair<std::pair<std::string, Coords>, float> AlfaBeta::minimax(int depth, bool maximazing, float alfa, float beta) noexcept {
+BestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float beta) noexcept {
     if (this->game->is_finished() || depth == 0) {
-        auto color = maximazing? this->minimazing: this->maximazing;
-        int multiply[] = {2, -2};
-        float score = this->evaluation(this->game->get_controller(), color);
-        return {{}, score};
+        constexpr int multiply[] = {2, -2};
+        float score = this->evaluation(this->game->get_controller(), this->maximazing) + depth * multiply[this->maximazing];
+        return {score};
     }
-    std::pair<std::pair<std::string, Coords>, float> best_move = {{}, maximazing? -possible_infinity: possible_infinity};
+    BestMove best_move = {maximazing? -infinity/2: infinity/2};
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game->set_valid_moves(valid_moves);
     for (const auto &move: valid_moves) {
@@ -40,17 +39,19 @@ std::pair<std::pair<std::string, Coords>, float> AlfaBeta::minimax(int depth, bo
             this->game->get_controller().engine_move(move.first, where);
             auto result = this->minimax(depth-1, !maximazing, alfa, beta);
             if (maximazing) {
-                if (result.second > best_move.second) {
-                    best_move.second = result.second;
-                    best_move.first = {move.first, where};
+                if (result.value > best_move.value) {
+                    best_move.value = result.value;
+                    best_move.piece = move.first;
+                    best_move.where = where;
                 }
-                alfa = std::max(alfa, best_move.second);
+                alfa = std::max(alfa, best_move.value);
             } else {
-                if (result.second < best_move.second) {
-                    best_move.second = result.second;
-                    best_move.first = {move.first, where};
+                if (result.value < best_move.value) {
+                    best_move.value = result.value;
+                    best_move.piece = move.first;
+                    best_move.where = where;
                 }
-                beta = std::min(beta, best_move.second);
+                beta = std::min(beta, best_move.value);
             }
             this->game->get_controller().undo_move();
             if (beta <= alfa) return best_move;

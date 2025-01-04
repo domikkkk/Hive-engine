@@ -58,6 +58,12 @@ namespace Instrucions {
 };
 
 
+namespace BestMove_Argument {
+    static const std::string depth = "depth";
+    static const std::string time = "time";
+};
+
+
 enum class State {
     INPROGRESS,
     NOTSTARTED,
@@ -121,5 +127,6 @@ namespace hive {
 
 static constexpr int possible_infinity = __INT_MAX__;
 static constexpr int limit = 1000;
+static constexpr float infinity = __FLT_MAX__;
 
 #endif

@@ -37,7 +37,16 @@ typedef struct Command {
 } Command;
 
 
-Move_parameters create_move(std::string &parameters);
+typedef struct _BestMove_Arguments {
+    int depth = 0;
+    int time = 0;
+    bool is_time = false;
+} _BestMove_Arguments;
+
+
+Move_parameters create_move(const std::string &parameters) noexcept;
+
+_BestMove_Arguments get_info_from_BestMove(const std::string &arguments) noexcept;
 
 
 #endif

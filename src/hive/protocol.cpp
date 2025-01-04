@@ -110,7 +110,7 @@ std::string Protocol::get_valid_moves() noexcept {
 
 std::string Protocol::get_best_move(const int &n) noexcept {
     auto best_move = this->engine.get_best_move(n);
-    return get_notation(best_move.first, best_move.second);
+    return get_notation(best_move.piece, best_move.where);
 }
 
 
@@ -144,7 +144,12 @@ void Command::execute(Protocol &protocol) {
         } else if (this->command_type == Instrucions::validmoves) {
             std::cout << protocol.get_valid_moves();
         } else if (this->command_type == Instrucions::bestmove) {
-            std::cout << protocol.get_best_move();
+            auto info = get_info_from_BestMove(this->arguments);
+            if (info.is_time) {
+
+            } else {
+                std::cout << protocol.get_best_move(info.depth);
+            }
         } else if (this->command_type == Instrucions::options) {
             
         } else if (this->command_type == Instrucions::help) {
@@ -176,7 +181,7 @@ void Command::execute(Protocol &protocol) {
 }
 
 
-Move_parameters create_move(std::string &arguments) {
+Move_parameters create_move(const std::string &arguments) noexcept {
     std::string piece, target;
     std::istringstream stream(arguments);
     std::getline(stream, piece, ' ');
@@ -201,7 +206,7 @@ Move_parameters create_move(std::string &arguments) {
             break;
         }
         return {piece, target.erase(0, 1), d, arguments};
-    } else if ((target[n] > 57 && target[n] < 97) || (target[n] < 48)) {
+    } else if (((target[n] > 57 && target[n] < 97) || (target[n] < 48)) && target[n] != 81) {
         switch (target[n])
         {
         case '/':
@@ -221,4 +226,26 @@ Move_parameters create_move(std::string &arguments) {
     } else {
         return {piece, target, Directions::UP, arguments};
     }
+}
+
+
+_BestMove_Arguments get_info_from_BestMove(const std::string &arguments) noexcept {
+    _BestMove_Arguments result;
+    std::string type, number;
+    std::istringstream stream(arguments);
+    std::getline(stream, type, ' ');
+    if (type.size() == 0) return result;
+    if (type == BestMove_Argument::depth) {
+        std::getline(stream, number);
+        result.depth = std::stoi(number);
+    } else if (type == BestMove_Argument::time) {
+        result.is_time = true;
+        std::getline(stream, number, ':');
+        result.time += std::stoi(number) * 3600;
+        std::getline(stream, number, ':');
+        result.time += std::stoi(number) * 60;
+        std::getline(stream, number);
+        result.time += std::stoi(number);
+    }
+    return result;
 }
