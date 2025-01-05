@@ -3,11 +3,30 @@
 #pragma once
 
 
-// #define MOSQUITO_E
-// #define LADYBUG_E
-
 #define PLAYERS 2
 
+
+#ifdef ML
+    #define MOSQUITO_E
+    #define LADYBUG_E
+#endif
+
+#ifdef MP
+    #define MOSQUITO_E
+    #define PILLBUG_E
+#endif
+
+#ifdef LP
+    #define LADYBUG_E
+    #define PILLBUG_E
+#endif
+
+
+#ifdef MLP
+    #define MOSQUITO_E
+    #define LADYBUG_E
+    #define PILLBUG_E
+#endif
 
 #include <string>
 
@@ -55,6 +74,7 @@ namespace Instrucions {
     static const std::string bestmove = "bestmove";
     static const std::string help = "help";
     static const std::string options = "options";
+    static const std::string pass = "pass";
 };
 
 
@@ -98,9 +118,15 @@ namespace Insect {
     static constexpr char ant = 'A';
     static constexpr char grasshopper = 'G';
     static constexpr char spider = 'S';
+#ifdef LADYBUG_E
     static constexpr char ladybug = 'L';
+#endif
+#ifdef MOSQUITO_E
     static constexpr char mosquito = 'M';
+#endif
+#ifdef PILLBUG_E
     static constexpr char pillbug = 'P';
+#endif
     static constexpr char notexists = '\0';
 };
 
@@ -111,22 +137,47 @@ namespace Insects {
     static constexpr int beetle = 2;
     static constexpr int grasshopper = 3;
     static constexpr int spider = 2;
+#ifdef LADYBUG_E
     static constexpr int ladybug = 1;
+#else
+    static constexpr int ladybug = 0;
+#endif
+#ifdef MOSQUITO_E
     static constexpr int mosquito = 1;
+#else
+    static constexpr int mosquito = 0;
+#endif
+#ifdef PILLBUG_E
     static constexpr int pillbug = 1;
+#else
+    static constexpr int pillbug = 0;
+#endif
 };
 
 
 namespace hive {
     static constexpr int X = 40;
     static constexpr int Y = 40;
-    static constexpr int Z = 8;
+    static constexpr int Z = 5;
     static constexpr int turns = 4;
 };
 
 
 static constexpr int possible_infinity = __INT_MAX__;
 static constexpr int limit = 1000;
-static constexpr float infinity = __FLT_MAX__;
+static constexpr float infinity = __FLT_MAX__ / 2;
+
+
+static constexpr int multiply[] = {2, -2};
+
+
+enum EntryType {
+    Exact = 0,
+    LowerBound,
+    UpperBound,
+};
+
+constexpr int number = 2 * (Insects::bee + Insects::ant + Insects::beetle + Insects::grasshopper +
+    Insects::spider + Insects::mosquito + Insects::ladybug + Insects::pillbug);
 
 #endif

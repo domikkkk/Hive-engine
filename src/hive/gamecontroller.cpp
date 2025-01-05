@@ -151,6 +151,7 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         hive::Piece p = create_piece(piece);
         this->board.add_piece(p, to);
         this->hands.erase(piece);
+        this->hash.togglePiece(piece, to.x, to.y, to.z);
     } else {
         if (this->insects.find(piece) == this->insects.end()) throw PieceNotExisting(piece);
         auto from = this->insects.at(piece);  // może wywalić index_out_of_range
@@ -159,6 +160,8 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         if (this->board[from].type == Insect::notexists) throw std::invalid_argument("Unexpected error");
         if (this->board[to].type != Insect::notexists) throw InvalidMove("Destination file is occupied");  // invalid move
         this->board.move(from, to);
+        this->hash.togglePiece(piece, from.x, from.y, from.z);
+        this->hash.togglePiece(piece, to.x, to.y, to.z);
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -170,9 +173,12 @@ void Controller::engine_move(const std::string &piece, const Coords &to) { // za
         hive::Piece p = create_piece(piece);
         this->board.add_piece(p, to);
         this->hands.erase(piece);
+        this->hash.togglePiece(piece, to.x, to.y, to.z);
     } else {
         auto from = this->insects[piece];
         this->board.move(from, to);
+        this->hash.togglePiece(piece, from.x, from.y, from.z);
+        this->hash.togglePiece(piece, to.x, to.y, to.z);
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -185,8 +191,11 @@ void Controller::undo_move() noexcept {
     if (m.added) {
         this->hands.insert(piece);
         this->insects.erase(piece);
+        this->hash.togglePiece(piece, m.to.x, m.to.y, m.to.z);
     } else {
         this->insects[piece] = m.from;
+        this->hash.togglePiece(piece, m.from.x, m.from.y, m.from.z);
+        this->hash.togglePiece(piece, m.to.x, m.to.y, m.to.z);
     }
     this->board.unmove();
     this->switch_turn();
@@ -201,7 +210,7 @@ void Controller::prepare_pieces() {
         {Insect::grasshopper, Insects::grasshopper},
         {Insect::spider, Insects::spider}
     };
-    for (auto pair : quantity) {
+    for (const auto &pair : quantity) {
         std::string piece(1, pair.first);
         if (pair.second == 1) {
             this->hands.insert("w"+piece);

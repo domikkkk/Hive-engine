@@ -60,6 +60,11 @@ void Protocol::unmove(const int &n) noexcept {
 }
 
 
+void Protocol::pass() noexcept {
+    this->game.get_controller().switch_turn();
+}
+
+
 std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
     std::string to_display = piece + " ";
     auto adjacent = this->game.get_controller().find_adjacent(where);
@@ -99,17 +104,22 @@ std::string Protocol::get_valid_moves() noexcept {
     std::string to_display = "";
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game.set_valid_moves(valid_moves);
+    bool is_valid = false;
     for (auto move: valid_moves) {
         for (auto where: move.second) {
+            is_valid = true;
             to_display += this->get_notation(move.first, where) + ";";
         }
+    }
+    if (!is_valid) {
+        return Instrucions::pass;
     }
     return to_display.erase(to_display.size()-1, 1);
 }
 
 
-std::string Protocol::get_best_move(const int &n) noexcept {
-    auto best_move = this->engine.get_best_move(n);
+std::string Protocol::get_best_move(const int &depth) noexcept {
+    auto best_move = this->engine.get_best_move(depth);
     return get_notation(best_move.piece, best_move.where);
 }
 
@@ -134,7 +144,8 @@ void Command::execute(Protocol &protocol) {
         } else if (this->command_type == Instrucions::info) {
             std::cout << protocol.get_best_move(1);
         } else if (this->command_type == Instrucions::play) {
-            protocol.move(create_move(this->arguments));
+            if (this->arguments == Instrucions::pass) protocol.pass();
+            else protocol.move(create_move(this->arguments));
             std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::undo) {
             int n = 1;
@@ -151,7 +162,10 @@ void Command::execute(Protocol &protocol) {
                 std::cout << protocol.get_best_move(info.depth);
             }
         } else if (this->command_type == Instrucions::options) {
-            
+        
+        } else if (this->command_type == Instrucions::pass) {
+            protocol.pass();
+            std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::help) {
             std::cout << "Usage: <COMMAND> [optional arguments]\n";
             std::cout << "Possible commands:\n";

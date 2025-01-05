@@ -3,17 +3,18 @@
 #pragma once
 
 #include <hive/game.hpp>
+#include <engine/bestmove.hpp>
 #include <functional>
+#include <engine/transpositionTable.hpp>
 
 
-typedef struct BestMove {
-    std::string piece = "";
-    Coords where;
+typedef struct PossibleMove {
+    EMove bestmove;
     float value;
 
-    BestMove(const float &value) {this->value = value;};
-    BestMove(const std::string &piece, const Coords &c, const float &v): piece(piece), where(c), value(v) {};
-} BestMove;
+    PossibleMove(const float &value) {this->value = value;};
+    PossibleMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v) {};
+} PossibleMove;
 
 
 class AlfaBeta {
@@ -27,6 +28,11 @@ private:
 
     int depth = 5;
 
+    std::string name = "Moja silnik";
+    std::string version = "v0.1.0";
+
+    TransposistionTable transpositiontable;
+
 public:
     AlfaBeta() = default;
 
@@ -34,8 +40,8 @@ public:
 
     float evaluate() noexcept;
 
-    BestMove get_best_move(const int &depth=0) noexcept;
-    BestMove minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
+    EMove get_best_move(const int &depth=0) noexcept;
+    PossibleMove minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
 };
 
 

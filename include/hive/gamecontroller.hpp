@@ -7,6 +7,7 @@
 #include <string>
 #include <stdexcept>
 #include <unordered_set>
+#include <hive/zobrist.hpp>
 
 class Controller {
 public:
@@ -25,6 +26,7 @@ public:
 
     inline void switch_turn() noexcept {
         this->current = opposite[this->current];
+        this->hash.switch_turn();
     }
 
     inline std::unordered_map<std::string, Coords> &get_pieces() noexcept {
@@ -47,6 +49,11 @@ public:
         return this->board.get_turns() / 2 + 1;
     }
 
+    inline const uint64_t
+    &__key() const noexcept {
+        return this->hash.value();
+    }
+
     int count_queen_surrounded(const Color &c) noexcept;
 
     Coords find_destination(const std::string &piece, Directions direction) const;
@@ -57,12 +64,15 @@ public:
     void beetle_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
     void movable_locations(const std::string &piece, std::vector<Coords> &places, const int &distance) noexcept;
     void movable_locations(const Coords &coords, std::vector<Coords> &places, int distance, bool (&visited)[hive::X][hive::Y]) noexcept;
+
     
 private:
     Color current = WHITE;
     hive::Board board;
     std::unordered_map<std::string, Coords> insects;
     std::unordered_set<std::string> hands;
+
+    ZobristHash hash;
 };
 
 
