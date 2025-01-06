@@ -7,7 +7,12 @@ void Game::change_state(const State &state) noexcept {
 
 
 void Game::update() noexcept {
-    if (this->moves.size() > 0) this->state = State::INPROGRESS;
+    this->state = this->moves.size()? State::INPROGRESS: State::NOTSTARTED;
+    bool w = this->controller.count_queen_surrounded(Color::WHITE) == 6;
+    bool b = this->controller.count_queen_surrounded(Color::BLACK) == 6;
+    if (w && b) this->state = State::DRAW;
+    else if (w) this->state = State::BLACKWINS;
+    else if (b) this->state = State::WHITEWINS;
 }
 
 

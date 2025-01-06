@@ -16,9 +16,9 @@ float AlfaBeta::evaluate() noexcept {
 EMove AlfaBeta::get_best_move(const int &d) noexcept {
     auto depth = d? d: this->depth;
     this->maximazing = this->game->get_controller().get_current();
-    auto good_move = this->minimax(1, true, -infinity, infinity);
+    auto good_move = this->minimax(1, true, -infinity, infinity);  // może mat w 1 i żeby znaleźć sobie potencjalny ruch
     if (!good_move.found) {good_move.bestmove.piece = "pass"; return good_move.bestmove;}
-    if (good_move.value >= infinity - 20.0) return good_move.bestmove;  // jeśli mat w 1 niech zagra
+    if (good_move.value >= infinity - this->depth * 2) return good_move.bestmove;  // jeśli mat w 1 niech zagra
     auto better_move = this->minimax(depth, true, -infinity, infinity);
     return better_move.found? better_move.bestmove: good_move.bestmove; // jeśli pass to pewnie znalazł że zawsze przegrywa więc niech zagra jakikolwiek ruch
 }

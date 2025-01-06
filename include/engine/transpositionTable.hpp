@@ -39,8 +39,7 @@ public:
         return this->table_.end();
     };
 
-    // TODO
-    // deleting old entries
+
     void _delete() noexcept;
 
 private:
