@@ -17,9 +17,10 @@ EMove AlfaBeta::get_best_move(const int &d) noexcept {
     auto depth = d? d: this->depth;
     this->maximazing = this->game->get_controller().get_current();
     auto good_move = this->minimax(1, true, -infinity, infinity);
-    if (good_move.value >= infinity - 20.0) return good_move.bestmove;
+    if (!good_move.found) {good_move.bestmove.piece = "pass"; return good_move.bestmove;}
+    if (good_move.value >= infinity - 20.0) return good_move.bestmove;  // jeśli mat w 1 niech zagra
     auto better_move = this->minimax(depth, true, -infinity, infinity);
-    return better_move.bestmove.piece == ""? good_move.bestmove: better_move.bestmove; // jeśli puste to pewnie znalazł że zawsze przegrywa więc niech zagra jakikolwiek ruch
+    return better_move.found? better_move.bestmove: good_move.bestmove; // jeśli pass to pewnie znalazł że zawsze przegrywa więc niech zagra jakikolwiek ruch
 }
 
 
@@ -55,12 +56,14 @@ PossibleMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float bet
                 if (result.value > possible_move.value) {
                     possible_move.value = result.value;
                     possible_move.bestmove = {move.first, where};
+                    possible_move.found = true;
                 }
                 alfa = std::max(alfa, possible_move.value);
             } else {
                 if (result.value < possible_move.value) {
                     possible_move.value = result.value;
                     possible_move.bestmove = {move.first, where};
+                    possible_move.found = true;
                 }
                 beta = std::min(beta, possible_move.value);
             }

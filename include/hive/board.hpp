@@ -32,6 +32,7 @@ namespace hive {
         bool is_connected(const Coords &from) noexcept;
         void swap(const Coords &from, const Coords &to) noexcept;
         void move(const Coords &from, const Coords &to) noexcept;
+        void pass() noexcept;
         void unmove() noexcept;
         const struct Move back() const noexcept;
 

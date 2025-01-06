@@ -61,11 +61,12 @@ void Protocol::unmove(const int &n) noexcept {
 
 
 void Protocol::pass() noexcept {
-    this->game.get_controller().switch_turn();
+    this->game.pass();
 }
 
 
 std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
+    if (piece == Instrucions::pass) return Instrucions::pass;
     std::string to_display = piece + " ";
     auto adjacent = this->game.get_controller().find_adjacent(where);
     switch (adjacent.second)

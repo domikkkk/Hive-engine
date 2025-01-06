@@ -11,6 +11,7 @@
 typedef struct PossibleMove {
     EMove bestmove;
     float value;
+    bool found = false;
 
     PossibleMove(const float &value) {this->value = value;};
     PossibleMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v) {};

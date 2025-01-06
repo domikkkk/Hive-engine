@@ -45,11 +45,19 @@ void hive::Board::move(const Coords &from, const Coords &to) noexcept {
 void hive::Board::unmove() noexcept {
     const struct Move m = this->moves.back();
     this->moves.pop_back();
-    if (!m.added) {
+    if (m.pass) return;
+    else if (!m.added) {
         this->swap(m.to, m.from);
     } else {
         this->remove_piece(m.to);
     }
+}
+
+
+void hive::Board::pass() noexcept {
+    Move m;
+    m.pass = true;
+    this->moves.push_back(m);
 }
 
 

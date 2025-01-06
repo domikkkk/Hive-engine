@@ -15,7 +15,7 @@ struct TranspositionTableEntry {
     float Value;
     int Depth;
     EMove Bestmove;
-    EntryType Type;
+    EntryType Type = EntryType::Exact;
     // static constexpr size_t SizeInBytes = sizeof(float) + sizeof(int) + sizeof(BestMove);
 };
 

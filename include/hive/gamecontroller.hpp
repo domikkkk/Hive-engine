@@ -23,6 +23,7 @@ public:
     void undo_move() noexcept;
     void prepare_pieces();
     bool check_destination(const Coords &destination);
+    void pass() noexcept;
 
     inline void switch_turn() noexcept {
         this->current = opposite[this->current];

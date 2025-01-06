@@ -10,6 +10,7 @@ struct Move {
     Coords from;
     Coords to;
     bool added = false;
+    bool pass = false;
     Move() = default;
     Move(const Coords &f, const Coords &t);
     explicit Move(const Coords &added);

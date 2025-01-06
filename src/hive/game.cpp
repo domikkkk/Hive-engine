@@ -11,6 +11,12 @@ void Game::update() noexcept {
 }
 
 
+void Game::pass() noexcept {
+    this->controller.pass();
+    this->moves.push_back("pass");
+}
+
+
 void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept {
     std::unordered_map<char, char> hand;
     std::vector<std::string> pieces;
@@ -76,8 +82,7 @@ void Game::undo(const int &n) noexcept {
 
 
 bool Game::is_finished() noexcept {
-    const auto &pieces = this->controller.get_pieces();
     const auto &current = this->controller.get_current();
-    if (pieces.find(colorToString[current]+Insect::bee) == pieces.end()) return false;
-    return this->controller.count_queen_surrounded(current) == 6; // sprawdzam po ruchu danego gracza/silnika czy ma pszczołe otoczoną
+    const auto enemy = opposite[current];
+    return this->controller.count_queen_surrounded(current) == 6 || this->controller.count_queen_surrounded(enemy) == 6; // sprawdzam po ruchu danego gracza/silnika czy ma pszczołe otoczoną
 }

@@ -192,12 +192,18 @@ void Controller::undo_move() noexcept {
         this->hands.insert(piece);
         this->insects.erase(piece);
         this->hash.togglePiece(piece, m.to.x, m.to.y, m.to.z);
-    } else {
+    } else if (!m.pass) {
         this->insects[piece] = m.from;
         this->hash.togglePiece(piece, m.from.x, m.from.y, m.from.z);
         this->hash.togglePiece(piece, m.to.x, m.to.y, m.to.z);
     }
     this->board.unmove();
+    this->switch_turn();
+}
+
+
+void Controller::pass() noexcept {
+    this->board.pass();
     this->switch_turn();
 }
 
