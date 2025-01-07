@@ -11,14 +11,15 @@
 
 class Protocol {
 public:
+    const std::string info() const noexcept;
     void create_game() noexcept;
-    std::string get_info() noexcept;
+    const std::string get_info() noexcept;
     void move(const struct Move_parameters &move);
     void unmove(const int &n) noexcept;
     void pass() noexcept;
-    std::string get_notation(const std::string &piece, const Coords &where) noexcept;
-    std::string get_valid_moves() noexcept;
-    std::string get_best_move(const int &depth=0) noexcept;
+    const std::string get_notation(const std::string &piece, const Coords &where) noexcept;
+    const std::string get_valid_moves() noexcept;
+    const std::string get_best_move(const int &depth=0) noexcept;
 
     float get_mark() noexcept {
         return this->engine.evaluate();

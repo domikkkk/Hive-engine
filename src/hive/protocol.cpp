@@ -2,13 +2,18 @@
 #include <sstream>
 
 
-void Protocol::create_game() noexcept {
-    this->game = Game(++this->n_game);
-    this->engine.set_game(game, heuristic1);
+const std::string Protocol::info() const noexcept {
+    return "id " + this->engine._name() + " " + this->engine._version() + "\n";   
 }
 
 
-std::string Protocol::get_info() noexcept {
+void Protocol::create_game() noexcept {
+    this->game = Game(++this->n_game);
+    this->engine.new_game(game, heuristic1);
+}
+
+
+const std::string Protocol::get_info() noexcept {
     std::string gamestring = this->game.get_gameType() + ";";
     switch (this->game.get_gameState())
     {
@@ -65,7 +70,7 @@ void Protocol::pass() noexcept {
 }
 
 
-std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
+const std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
     if (piece == Instrucions::pass) return Instrucions::pass;
     std::string to_display = piece + " ";
     auto adjacent = this->game.get_controller().find_adjacent(where);
@@ -101,7 +106,7 @@ std::string Protocol::get_notation(const std::string &piece, const Coords &where
 }
 
 
-std::string Protocol::get_valid_moves() noexcept {
+const std::string Protocol::get_valid_moves() noexcept {
     std::string to_display = "";
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game.set_valid_moves(valid_moves);
@@ -119,7 +124,7 @@ std::string Protocol::get_valid_moves() noexcept {
 }
 
 
-std::string Protocol::get_best_move(const int &depth) noexcept {
+const std::string Protocol::get_best_move(const int &depth) noexcept {
     auto best_move = this->engine.get_best_move(depth);
     return get_notation(best_move.piece, best_move.where);
 }
@@ -143,7 +148,7 @@ void Command::execute(Protocol &protocol) {
             protocol.create_game();
             std::cout << protocol.get_info();
         } else if (this->command_type == Instrucions::info) {
-            std::cout << protocol.get_best_move(1);
+            std::cout << protocol.info();
         } else if (this->command_type == Instrucions::play) {
             if (this->arguments == Instrucions::pass) protocol.pass();
             else protocol.move(create_move(this->arguments));

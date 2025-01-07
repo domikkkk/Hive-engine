@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-void AlfaBeta::set_game(Game &game, EvaluationFunc func) noexcept {
+void AlfaBeta::new_game(Game &game, EvaluationFunc func) noexcept {
     this->game = &game;
     this->evaluation = func;
 }
@@ -10,6 +10,16 @@ void AlfaBeta::set_game(Game &game, EvaluationFunc func) noexcept {
 
 float AlfaBeta::evaluate() noexcept {
     return this->evaluation(this->game->get_controller(), this->maximazing);
+}
+
+
+const std::string &AlfaBeta::_name() const noexcept {
+    return this->name;
+}
+
+
+const std::string &AlfaBeta::_version() const noexcept {
+    return this->version;
 }
 
 
@@ -35,13 +45,10 @@ PossibleMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float bet
     if (entry != this->transpositiontable.end()) {
         const auto &tt_entry = entry->second;
         if (tt_entry.Depth >= depth) {
-            if (tt_entry.Type == EntryType::Exact) {
-                return {tt_entry.Value};
-            } else if (tt_entry.Type == EntryType::LowerBound && maximazing) {
-                alfa = std::max(alfa, tt_entry.Value);
-            } else if (tt_entry.Type == EntryType::UpperBound && !maximazing) {
-                beta = std::min(beta, tt_entry.Value);
-            }
+            if (tt_entry.Type == EntryType::Exact) return {tt_entry.Value};
+            else if (tt_entry.Type == EntryType::LowerBound) alfa = std::max(alfa, tt_entry.Value);
+            else if (tt_entry.Type == EntryType::UpperBound) beta = std::min(beta, tt_entry.Value);
+            if (alfa >= beta) return {tt_entry.Value};
         }
     }
 
@@ -71,7 +78,9 @@ PossibleMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float bet
             if (beta <= alfa) return possible_move;
         }
     }
-    EntryType entry_type = (maximazing ? EntryType::UpperBound : EntryType::LowerBound);
-    this->transpositiontable[hash] = TranspositionTableEntry{possible_move.value, depth, possible_move.bestmove, entry_type};
+    if (possible_move.found) {
+        EntryType entry_type = maximazing ? EntryType::UpperBound : EntryType::LowerBound;
+        this->transpositiontable[hash] = TranspositionTableEntry(possible_move.value, depth, possible_move.bestmove, entry_type);
+    }
     return possible_move;
 }

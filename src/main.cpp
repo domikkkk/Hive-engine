@@ -7,12 +7,10 @@
 int main(int argc, char **argv) {
     Protocol protocol;
     Command c;
-    std::cout << "id Moj silnik v0.1.0\nok\n"; 
+    std::cout << protocol.info() << "ok\n";
     while(true) {
         std::cin >> c;
         c.execute(protocol);
     }
-    // AlfaBeta a(game, heuristic1);
-    // a.get_best_move();
     return 0;
 }
