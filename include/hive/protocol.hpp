@@ -9,6 +9,13 @@
 #include <HiveAI>
 
 
+typedef struct _BestMove_Arguments {
+    int depth = 0;
+    int time = 0;
+    bool is_time = false;
+} _BestMove_Arguments;
+
+
 class Protocol {
 public:
     const std::string info() const noexcept;
@@ -19,7 +26,7 @@ public:
     void pass() noexcept;
     const std::string get_notation(const std::string &piece, const Coords &where) noexcept;
     const std::string get_valid_moves() noexcept;
-    const std::string get_best_move(const int &depth=0) noexcept;
+    const std::string get_best_move(const _BestMove_Arguments &arg) noexcept;
 
     float get_mark() noexcept {
         return this->engine.evaluate();
@@ -40,16 +47,9 @@ typedef struct Command {
 } Command;
 
 
-typedef struct _BestMove_Arguments {
-    int depth = 0;
-    int time = 0;
-    bool is_time = false;
-} _BestMove_Arguments;
-
-
 Move_parameters create_move(const std::string &parameters) noexcept;
 
-_BestMove_Arguments get_info_from_BestMove(const std::string &arguments) noexcept;
+_BestMove_Arguments get_info_from_command(const std::string &arguments) noexcept;
 
 
 #endif

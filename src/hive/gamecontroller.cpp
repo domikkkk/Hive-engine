@@ -7,22 +7,6 @@ const Color &Controller::get_player() const noexcept {
 }
 
 
-void Controller::add_piece(const std::string &piece, const Coords &where) noexcept {
-    this->insects[piece] = where;
-}
-
-
-bool Controller::is_finished() noexcept {
-    const Coords &queen = this->insects[colorToString[this->current]+Insect::bee];
-    for (const Coords neighbor: queen.get_surrounding_locations()) {
-        if (this->board[neighbor].type == Insect::notexists) {
-            return false;
-        }
-    }
-    return true;
-}
-
-
 bool Controller::validateQueen() const noexcept {
     if (this->hands.find(colorToString[this->current] + Insect::bee) == this->hands.end()) return true;
     return false;
@@ -168,7 +152,7 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
 }
 
 
-void Controller::engine_move(const std::string &piece, const Coords &to) { // zakładamy, że robi to zawsze poprawnie
+void Controller::engine_move(const std::string &piece, const Coords &to) noexcept { // zakładamy, że robi to zawsze poprawnie
     if (this->hands.find(piece) != this->hands.end()) {  // tzn że miał w ręce
         hive::Piece p = create_piece(piece);
         this->board.add_piece(p, to);
@@ -243,11 +227,9 @@ Coords Controller::find_destination(const std::string &piece, Directions directi
 
 std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) noexcept {
     if (c.z > 0) {
-        auto down = c;
-        down.z--;
-        return {this->board[down].to_str(), Directions::UP};
+        return {this->board[c.get_neighbor(Directions::DOWN)].to_str(), Directions::UP};
     }
-    for (auto neighbor: c.get_surrounding_locations()) {
+    for (const auto neighbor: c.get_surrounding_locations()) {
         if (this->board[neighbor].type != Insect::notexists) {
             return {this->board[neighbor].to_str(), neighbor.get_direction(c)};
         }
@@ -256,10 +238,10 @@ std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) no
 }
 
 
-bool Controller::check_destination(const Coords &destination) {
+bool Controller::check_destination(const Coords &destination) noexcept {
     for (const Coords neigbor_location: destination.get_surrounding_locations()) {
         if (this->board[neigbor_location].type == Insect::notexists) continue; // jeśli koło potencjalnego pola jest inne puste to nie ma co
-        const Coords upper = this->board.get_upper(neigbor_location); // bierzemy wierzchnią figure by sprawdzić kolor
+        const Coords &upper = this->board.get_upper(neigbor_location); // bierzemy wierzchnią figure by sprawdzić kolor
         if (this->board[upper].color != this->current) {     // jeśli kolor jest przeciwnika to wykluczamy location jako potencjalne pole na dołożenie nowej figury
             return false;
         }

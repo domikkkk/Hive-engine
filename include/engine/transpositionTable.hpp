@@ -11,10 +11,10 @@
 struct TranspositionTableEntry {
     TranspositionTableEntry() = default;
     TranspositionTableEntry(const float &v, const int &d, const EMove &b, const EntryType &t):
-        Value(v), Depth(d), Bestmove(b), Type(t) {};
+        Value(v), Depth(d), BestMove(b), Type(t) {};
     float Value;
     int Depth = -1;
-    EMove Bestmove;
+    EMove BestMove;
     EntryType Type = EntryType::Exact;
     // static constexpr size_t SizeInBytes = sizeof(float) + sizeof(int) + sizeof(BestMove);
 };

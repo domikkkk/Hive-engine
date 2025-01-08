@@ -33,31 +33,6 @@ Directions Coords::get_direction(const Coords &c) const noexcept {
 }
 
 
-// const Coords Coords::get_neighbor(const Directions &direction) const noexcept {
-//     switch (direction)
-//     {
-//     case Directions::N:  // N
-//         return {this->x, this->y + 1};
-//     case Directions::NE:  // NE
-//         return {this->x + 1, this->y + 1};
-//     case Directions::E:  // SE
-//         return {this->x + 1, this->y};
-//     case Directions::S:  // S
-//         return {this->x, this->y - 1};
-//     case Directions::SW:  // SW
-//         return {this->x - 1, this->y - 1};
-//     case Directions::W:  // NW
-//         return {this->x - 1, this->y};
-//     case Directions::UP:
-//         return {this->x, this->y, this->z + 1};
-//     case Directions::DOWN:
-//         return {this->x, this->y, this->z - 1};
-//     default:
-//         return {200, 200};  // unexpected error
-//     }
-// }
-
-
 const Coords Coords::get_ground() const noexcept {
     return {this->x, this->y, 0};
 }

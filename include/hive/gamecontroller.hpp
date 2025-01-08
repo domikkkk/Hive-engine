@@ -2,6 +2,7 @@
 #define GAMECONTROLLER_HPP
 #pragma once
 
+
 #include <hive/namespaces.hpp>
 #include <hive/board.hpp>
 #include <string>
@@ -9,20 +10,19 @@
 #include <unordered_set>
 #include <hive/zobrist.hpp>
 
+
 class Controller {
 public:
     Controller() {this->prepare_pieces();};
     explicit Controller(const hive::Board &board): board(board) {};
     const Color &get_player() const noexcept;
-    void add_piece(const std::string &piece, const Coords &where) noexcept;
-    bool is_finished() noexcept;
     bool validateQueen() const noexcept;
     bool can_move_on_board(const std::string &piece) noexcept;
     void move(const std::string &piece, const Coords &to);
-    void engine_move(const std::string &piece, const Coords &to);
+    void engine_move(const std::string &piece, const Coords &to) noexcept;
     void undo_move() noexcept;
     void prepare_pieces();
-    bool check_destination(const Coords &destination);
+    bool check_destination(const Coords &destination) noexcept;
     void pass() noexcept;
 
     inline void switch_turn() noexcept {

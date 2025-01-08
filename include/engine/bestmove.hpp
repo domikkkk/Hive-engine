@@ -15,4 +15,14 @@ typedef struct EMove {
 } EMove;
 
 
+typedef struct PossibleBestMove {
+    EMove bestmove;
+    float value;
+    bool found = false;
+
+    PossibleBestMove(const float &value) {this->value = value;};
+    PossibleBestMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v) {};
+} PossibleBestMove;
+
+
 #endif

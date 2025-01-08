@@ -39,16 +39,16 @@ const std::string Protocol::get_info() noexcept {
     switch (this->game.get_controller().get_current())
     {
     case Color::WHITE:
-        gamestring += "White[";
+        gamestring += "White";
         break;
     case Color::BLACK:
-        gamestring += "Black[";
+        gamestring += "Black";
     default:
         break;
     }
-    gamestring += std::to_string(this->game.get_controller().get_turns()) + "]";
+    gamestring += "[" + std::to_string(this->game.get_controller().get_turns()) + "]";
     for (auto str: this->game.get_moves()) {
-        gamestring += ';' + str;
+        gamestring += ";" + str;
     }
     return gamestring;
 }
@@ -124,8 +124,13 @@ const std::string Protocol::get_valid_moves() noexcept {
 }
 
 
-const std::string Protocol::get_best_move(const int &depth) noexcept {
-    auto best_move = this->engine.get_best_move(depth);
+const std::string Protocol::get_best_move(const _BestMove_Arguments &arg) noexcept {
+    EMove best_move;
+    if (arg.is_time) {
+        best_move = this->engine.get_best_move_with_time_limit(arg.time);
+    } else {
+        best_move = this->engine.get_best_move(arg.depth);
+    }
     return get_notation(best_move.piece, best_move.where);
 }
 
@@ -161,12 +166,8 @@ void Command::execute(Protocol &protocol) {
         } else if (this->command_type == Instrucions::validmoves) {
             std::cout << protocol.get_valid_moves();
         } else if (this->command_type == Instrucions::bestmove) {
-            auto info = get_info_from_BestMove(this->arguments);
-            if (info.is_time) {
-
-            } else {
-                std::cout << protocol.get_best_move(info.depth);
-            }
+            auto info = get_info_from_command(this->arguments);
+            std::cout << protocol.get_best_move(info);
         } else if (this->command_type == Instrucions::options) {
         
         } else if (this->command_type == Instrucions::pass) {
@@ -249,7 +250,7 @@ Move_parameters create_move(const std::string &arguments) noexcept {
 }
 
 
-_BestMove_Arguments get_info_from_BestMove(const std::string &arguments) noexcept {
+_BestMove_Arguments get_info_from_command(const std::string &arguments) noexcept {
     _BestMove_Arguments result;
     std::string type, number;
     std::istringstream stream(arguments);

@@ -1,11 +1,6 @@
 #include <hive/game.hpp>
 
 
-void Game::change_state(const State &state) noexcept {
-    this->state = state;
-}
-
-
 void Game::update() noexcept {
     this->state = this->moves.size()? State::INPROGRESS: State::NOTSTARTED;
     bool w = this->controller.count_queen_surrounded(Color::WHITE) == 6;
@@ -18,7 +13,7 @@ void Game::update() noexcept {
 
 void Game::pass() noexcept {
     this->controller.pass();
-    this->moves.push_back("pass");
+    this->moves.push_back(Instrucions::pass);
 }
 
 
@@ -26,7 +21,7 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
     std::unordered_map<char, char> hand;
     std::vector<std::string> pieces;
     std::vector<Coords> destinations;
-    this->controller.legal_piece_placement(destinations);
+    if (!this->controller.get_hands().empty()) this->controller.legal_piece_placement(destinations);
     if (this->controller.get_turns() == 4 && !this->controller.validateQueen()) {
         std::string piece = colorToString[this->controller.get_current()] + Insect::bee;
         valid_moves[piece] = destinations;
@@ -45,8 +40,6 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
         }
     }
     if (hand.size() != 0) {
-        std::vector<Coords> destinations;
-        this->controller.legal_piece_placement(destinations);
         for (auto info: hand) {
             std::string piece = colorToString[this->controller.get_current()];
             piece += info.first;
@@ -61,7 +54,6 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
         hive::Ability ability = hive::gen_ability(piece.first[1]);
         if (ability.can_hop) {
             this->controller.hoppable_locations(piece.first, valid_moves[piece.first]);
-            continue;
         } else if (ability.can_crawl) {
             this->controller.beetle_locations(piece.first, valid_moves[piece.first]);
         } else {

@@ -8,16 +8,6 @@
 #include <engine/transpositionTable.hpp>
 
 
-typedef struct PossibleMove {
-    EMove bestmove;
-    float value;
-    bool found = false;
-
-    PossibleMove(const float &value) {this->value = value;};
-    PossibleMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v) {};
-} PossibleMove;
-
-
 class AlfaBeta {
 private:
     using EvaluationFunc = std::function<float(Controller&, Color&)>;
@@ -27,7 +17,7 @@ private:
 
     Color maximazing = Color::WHITE;
 
-    int depth = 5;
+    int max_depth = 10;
 
     const std::string name = "Moja silnik";
     const std::string version = "v0.1.0";
@@ -44,8 +34,11 @@ public:
     const std::string &_name() const noexcept;
     const std::string &_version() const noexcept;
 
+    void order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<EMove> &sorted_moves) noexcept;
+
     EMove get_best_move(const int &depth=0) noexcept;
-    PossibleMove minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
+    EMove get_best_move_with_time_limit(const int &time=0) noexcept;
+    PossibleBestMove minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
 };
 
 

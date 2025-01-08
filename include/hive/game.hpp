@@ -9,7 +9,6 @@ class Game {
 public:
     Game() noexcept = default;
     explicit Game(const int &n) : created(n) {};
-    void change_state(const State &state) noexcept;
     void player_move(const struct Move_parameters &move);
     void pass() noexcept;
     void undo(const int &n = 1) noexcept;

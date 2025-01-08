@@ -75,7 +75,7 @@ bool hive::Board::is_connected(const Coords &from) noexcept {
     std::queue<Coords> q;
     Coords c;
     bool visited[Z][X][Y] = {false};
-    for (Coords start : from.get_surrounding_locations()) {
+    for (const Coords start : from.get_surrounding_locations()) {
         if ((*this)[start].type != Insect::notexists) {
             c = start;
             break;
@@ -96,7 +96,7 @@ bool hive::Board::is_connected(const Coords &from) noexcept {
         auto neighbors = c.get_surrounding_locations();
         auto z_neighbors = c.get_in_Z();
         neighbors.insert(neighbors.end(), z_neighbors.begin(), z_neighbors.end());
-        for (Coords neighbor: neighbors) {
+        for (const Coords &neighbor: neighbors) {
             if (!visited[neighbor.z][neighbor.x + X/2][neighbor.y + Y/2]) {
                 visited[neighbor.z][neighbor.x + X/2][neighbor.y + Y/2] = true;
                 if ((*this)[neighbor].type != Insect::notexists) {
