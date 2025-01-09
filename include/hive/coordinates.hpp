@@ -31,6 +31,9 @@ struct Coords {
     const Coords get_ground() const noexcept;
     bool operator==(const Coords &c) const noexcept;
     bool operator!=(const Coords &c) const noexcept;
+
+    float distance(const Coords &from) const noexcept;
+
     Directions get_direction(const Coords &c) const noexcept;
     std::vector<Coords> get_surrounding_locations() const noexcept;
     std::vector<Coords> get_in_Z() const noexcept;

@@ -3,14 +3,20 @@
 #include <chrono>
 
 
-void AlfaBeta::new_game(Game &game, EvaluationFunc func) noexcept {
+void AlfaBeta::new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept {
     this->game = &game;
     this->evaluation = func;
+    this->to_order_moves = order;
 }
 
 
 float AlfaBeta::evaluate() noexcept {
     return this->evaluation(this->game->get_controller(), this->maximazing);
+}
+
+
+float AlfaBeta::evaluate_to_order() noexcept {
+    return this->to_order_moves(this->game->get_controller(), this->maximazing);
 }
 
 
@@ -45,11 +51,11 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
     // Posortuj pozostałe ruchy według heurystyki
     std::sort(sorted_moves.begin() + 1, sorted_moves.end(), [&](const EMove &a, const EMove &b) {
         this->game->get_controller().engine_move(a.piece, a.where);
-        float eval_a = this->evaluate();
+        float eval_a = this->evaluate_to_order();
         this->game->get_controller().undo_move();
 
         this->game->get_controller().engine_move(b.piece, b.where);
-        float eval_b = this->evaluate();
+        float eval_b = this->evaluate_to_order();
         this->game->get_controller().undo_move();
 
         return eval_a > eval_b;
@@ -65,9 +71,7 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     auto start_time = Clock::now();
     for (int depth = 1; depth < this->max_depth; ++depth) {
         auto result = this->minimax(depth, true, -infinity, infinity);
-        if (result.found) {
-            best_move = result.bestmove;
-        }
+        best_move = result.bestmove;
         auto now = Clock::now();
         if (now - start_time >= time_limit) {
             break;
@@ -99,10 +103,10 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
     if (entry != this->transpositiontable.end()) {
         const auto &tt_entry = entry->second;
         if (tt_entry.Depth >= depth) {
-            if (tt_entry.Type == EntryType::Exact) return {tt_entry.Value};
+            if (tt_entry.Type == EntryType::Exact) return {tt_entry.BestMove, tt_entry.Value};
             else if (tt_entry.Type == EntryType::LowerBound) alfa = std::max(alfa, tt_entry.Value);
             else if (tt_entry.Type == EntryType::UpperBound) beta = std::min(beta, tt_entry.Value);
-            if (alfa >= beta) return {tt_entry.Value};
+            if (alfa >= beta) return {tt_entry.BestMove, tt_entry.Value};
         }
     }
 
@@ -111,6 +115,7 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
     this->game->set_valid_moves(valid_moves);
     std::vector<EMove> moves;
     this->order_moves(valid_moves, moves);
+    if (moves.size() != 0) possible_move.bestmove = moves[0];
     for (const auto &move: moves) {
         this->game->get_controller().engine_move(move.piece, move.where);
         auto result = this->minimax(depth-1, !maximazing, alfa, beta);

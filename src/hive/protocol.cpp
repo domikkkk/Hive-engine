@@ -9,7 +9,7 @@ const std::string Protocol::info() const noexcept {
 
 void Protocol::create_game() noexcept {
     this->game = Game(++this->n_game);
-    this->engine.new_game(game, heuristic1);
+    this->engine.new_game(game, heuristic2, heuristic1);
 }
 
 
@@ -131,7 +131,7 @@ const std::string Protocol::get_best_move(const _BestMove_Arguments &arg) noexce
     } else {
         best_move = this->engine.get_best_move(arg.depth);
     }
-    return get_notation(best_move.piece, best_move.where);
+    return this->get_notation(best_move.piece, best_move.where);
 }
 
 

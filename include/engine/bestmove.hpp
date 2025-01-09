@@ -21,7 +21,7 @@ typedef struct PossibleBestMove {
     bool found = false;
 
     PossibleBestMove(const float &value) {this->value = value;};
-    PossibleBestMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v) {};
+    PossibleBestMove(const EMove &bestmove, const float &v): bestmove(bestmove) , value(v), found(true) {};
 } PossibleBestMove;
 
 

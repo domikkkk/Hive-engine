@@ -13,6 +13,7 @@ private:
     using EvaluationFunc = std::function<float(Controller&, Color&)>;
 
     EvaluationFunc evaluation;
+    EvaluationFunc to_order_moves;
     Game *game = nullptr;
 
     Color maximazing = Color::WHITE;
@@ -20,16 +21,17 @@ private:
     int max_depth = 10;
 
     const std::string name = "Moja silnik";
-    const std::string version = "v0.1.0";
+    const std::string version = "v0.2.1";
 
     TransposistionTable transpositiontable;
 
 public:
     AlfaBeta() = default;
 
-    void new_game(Game &game, EvaluationFunc func) noexcept;
+    void new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept;
 
     float evaluate() noexcept;
+    float evaluate_to_order() noexcept;
 
     const std::string &_name() const noexcept;
     const std::string &_version() const noexcept;

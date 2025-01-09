@@ -3,7 +3,7 @@
 #pragma once
 
 #include <hive/namespaces.hpp>
-#include <map>
+#include <unordered_map>
 
 
 class ZobristHash {
@@ -28,7 +28,7 @@ private:
 
     uint64_t rand64() noexcept;
 
-    std::map<std::string, int> insect_index = {
+    std::unordered_map<std::string, int> insect_index = {
         {"wQ", 0},
         {"wS1", 1},
         {"wS2", 2},

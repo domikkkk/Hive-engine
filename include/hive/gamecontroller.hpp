@@ -30,6 +30,10 @@ public:
         this->hash.switch_turn();
     }
 
+    inline const std::unordered_map<char, float> _weights() const noexcept {
+        return this->weights;
+    }
+
     inline std::unordered_map<std::string, Coords> &get_pieces() noexcept {
         return this->insects;
     }
@@ -74,6 +78,14 @@ private:
     std::unordered_set<std::string> hands;
 
     ZobristHash hash;
+
+    std::unordered_map<char, float> weights = {
+        {Insect::bee, 1.0},
+        {Insect::spider, 1.7},
+        {Insect::beetle, 1.5},
+        {Insect::ant, 3.5},
+        {Insect::grasshopper, 2.0}  
+    };
 };
 
 

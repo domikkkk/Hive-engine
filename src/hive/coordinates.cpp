@@ -1,5 +1,6 @@
 #include <hive/coordinates.hpp>
 #include <hive/namespaces.hpp>
+#include <cmath>
 
 
 bool Coords::operator==(const Coords &c) const noexcept {
@@ -60,7 +61,13 @@ std::vector<Coords> Coords::get_in_Z() const noexcept {
         Z.emplace_back(this->x, this->y, this->z + 1);
     }
     return Z;
-};
+}
+
+
+float Coords::distance(const Coords &c) const noexcept {
+    int d = hive::X/2 - 2 * std::abs(c.x - this->x) - 2 * std::abs(c.y - this->y);
+    return (float)d / (float)hive::X;
+}
 
 
 std::size_t HashFn::operator()(const Coords &c) const noexcept {
