@@ -48,16 +48,14 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
         }
     }
     if (!this->controller.validateQueen()) return;
-    for (const auto &piece: this->controller.get_pieces()) {
-        if (color_from_piece(piece.first[0]) != this->controller.get_current()) continue;
-        if (!this->controller.can_move_on_board(piece.first)) continue;
-        hive::Ability ability = hive::gen_ability(piece.first[1]);
+    for (const auto &piece: this->controller.pieces_possible_to_move()) {
+        hive::Ability ability = hive::gen_ability(piece[1]);
         if (ability.can_hop) {
-            this->controller.hoppable_locations(piece.first, valid_moves[piece.first]);
+            this->controller.hoppable_locations(piece, valid_moves[piece]);
         } else if (ability.can_crawl) {
-            this->controller.beetle_locations(piece.first, valid_moves[piece.first]);
+            this->controller.beetle_locations(piece, valid_moves[piece]);
         } else {
-            this->controller.movable_locations(piece.first, valid_moves[piece.first], ability.how_far);
+            this->controller.movable_locations(piece, valid_moves[piece], ability.how_far);
         }
     }
 }

@@ -64,7 +64,11 @@ public:
     Coords find_destination(const std::string &piece, Directions direction) const;
     std::pair<std::string, Directions> find_adjacent(const Coords &coords) noexcept;
 
+    const std::vector<std::string> pieces_possible_to_move() noexcept;
+
+    // funkcja znajdująca możliwe pola na dołożenie figur
     void legal_piece_placement(std::vector<Coords> &places) noexcept;
+    // funkcje znajdujące lokacje dla figury
     void hoppable_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
     void beetle_locations(const std::string &piece, std::vector<Coords> &places) noexcept;
     void movable_locations(const std::string &piece, std::vector<Coords> &places, const int &distance) noexcept;
@@ -81,10 +85,10 @@ private:
 
     std::unordered_map<char, float> weights = {
         {Insect::bee, 1.0},
-        {Insect::spider, 1.7},
+        {Insect::spider, 1.3},
         {Insect::beetle, 1.5},
-        {Insect::ant, 3.5},
-        {Insect::grasshopper, 2.0}  
+        {Insect::ant, 3.0},
+        {Insect::grasshopper, 2.0}
     };
 };
 

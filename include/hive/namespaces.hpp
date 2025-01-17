@@ -31,6 +31,19 @@
 #include <string>
 
 
+enum class Directions {
+    N,
+    NE,
+    E,
+    S,
+    SW,
+    W,
+    UP,
+    DOWN,
+    DEFAULT,  // not existing -> error
+};
+
+
 enum Color {
     WHITE,
     BLACK,

@@ -30,36 +30,29 @@ const std::string &AlfaBeta::_version() const noexcept {
 }
 
 
-void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<EMove> &sorted_moves) noexcept {
-    for (const auto &piece: all_moves) {
-        for (const auto &where: piece.second) {
-            sorted_moves.emplace_back(piece.first, where);
-        }
-    }
+void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves) noexcept {
     auto hash = this->game->get_controller().__key();
     auto entry = this->transpositiontable.find(hash);
+    int was = 0;
     if (entry != this->transpositiontable.end()) {
-        const auto &best_move = entry->second.BestMove;
-        auto it = std::find_if(sorted_moves.begin(), sorted_moves.end(), [&](const EMove &m) {
-            return m.piece == best_move.piece && m.where == best_move.where;
-        });
-        if (it != sorted_moves.end()) {
-            std::iter_swap(it, sorted_moves.begin());
+        const auto &best_move = entry->second;
+        sorted_moves.emplace_back(best_move.BestMove, best_move.Value);
+        was = 1;
+    }
+    for (const auto &piece: all_moves) {
+        for (const auto &where: piece.second) {
+            if (was && where == sorted_moves[0].bestmove.where && piece.first == sorted_moves[0].bestmove.piece) continue;
+            this->game->get_controller().engine_move(piece.first, where);
+            float eval = this->evaluate_to_order();
+            this->game->get_controller().undo_move();
+            sorted_moves.emplace_back(EMove{piece.first, where}, eval);
         }
     }
-
-    // Posortuj pozostałe ruchy według heurystyki
-    std::sort(sorted_moves.begin() + 1, sorted_moves.end(), [&](const EMove &a, const EMove &b) {
-        this->game->get_controller().engine_move(a.piece, a.where);
-        float eval_a = this->evaluate_to_order();
-        this->game->get_controller().undo_move();
-
-        this->game->get_controller().engine_move(b.piece, b.where);
-        float eval_b = this->evaluate_to_order();
-        this->game->get_controller().undo_move();
-
-        return eval_a > eval_b;
-    });
+    if (sorted_moves.size() > 2) {
+        std::sort(sorted_moves.begin() + was, sorted_moves.end(), [&](const PossibleBestMove &a, const PossibleBestMove &b) {
+            return a.value > b.value;
+        });
+    }
 }
 
 
@@ -71,7 +64,7 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     auto start_time = Clock::now();
     for (int depth = 1; depth < this->max_depth; ++depth) {
         auto result = this->minimax(depth, true, -infinity, infinity);
-        best_move = result.bestmove;
+        if (result.found) best_move = result.bestmove;
         auto now = Clock::now();
         if (now - start_time >= time_limit) {
             break;
@@ -113,23 +106,23 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
     PossibleBestMove possible_move = {maximazing? -infinity: infinity};
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game->set_valid_moves(valid_moves);
-    std::vector<EMove> moves;
+    std::vector<PossibleBestMove> moves;
     this->order_moves(valid_moves, moves);
-    if (moves.size() != 0) possible_move.bestmove = moves[0];
+    if (moves.size() != 0) possible_move.bestmove = moves[0].bestmove;
     for (const auto &move: moves) {
-        this->game->get_controller().engine_move(move.piece, move.where);
+        this->game->get_controller().engine_move(move.bestmove.piece, move.bestmove.where);
         auto result = this->minimax(depth-1, !maximazing, alfa, beta);
         if (maximazing) {
             if (result.value > possible_move.value) {
                 possible_move.value = result.value;
-                possible_move.bestmove = {move.piece, move.where};
+                possible_move.bestmove = {move.bestmove.piece, move.bestmove.where};
                 possible_move.found = true;
             }
             alfa = std::max(alfa, possible_move.value);
         } else {
             if (result.value < possible_move.value) {
                 possible_move.value = result.value;
-                possible_move.bestmove = {move.piece, move.where};
+                possible_move.bestmove = {move.bestmove.piece, move.bestmove.where};
                 possible_move.found = true;
             }
             beta = std::min(beta, possible_move.value);

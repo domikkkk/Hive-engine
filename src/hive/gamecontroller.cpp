@@ -30,6 +30,17 @@ bool Controller::can_move_on_board(const std::string &piece) noexcept {
 }
 
 
+const std::vector<std::string> Controller::pieces_possible_to_move() noexcept {
+    std::vector<std::string> pieces;
+    for (const auto &piece: this->insects) {
+        if (color_from_piece(piece.first[0]) != this->current) continue;
+        if (!this->board.is_connected(piece.second)) continue;
+        pieces.emplace_back(piece.first);
+    }
+    return pieces;
+}
+
+
 void Controller::legal_piece_placement(std::vector<Coords> &legal_places) noexcept {
     auto turns = this->board.get_turns();
     if (turns == 0) {

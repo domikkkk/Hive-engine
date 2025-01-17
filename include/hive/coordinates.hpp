@@ -5,19 +5,7 @@
 
 #include <vector>
 #include <cassert>
-
-
-enum class Directions {
-    N,
-    NE,
-    E,
-    S,
-    SW,
-    W,
-    UP,
-    DOWN,
-    DEFAULT,  // not existing -> error
-};
+#include <hive/namespaces.hpp>
 
 
 struct Coords {
@@ -32,7 +20,7 @@ struct Coords {
     bool operator==(const Coords &c) const noexcept;
     bool operator!=(const Coords &c) const noexcept;
 
-    float distance(const Coords &from) const noexcept;
+    int distance(const Coords &from) const noexcept;
 
     Directions get_direction(const Coords &c) const noexcept;
     std::vector<Coords> get_surrounding_locations() const noexcept;

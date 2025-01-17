@@ -64,9 +64,12 @@ std::vector<Coords> Coords::get_in_Z() const noexcept {
 }
 
 
-float Coords::distance(const Coords &c) const noexcept {
-    int d = hive::X/2 - 2 * std::abs(c.x - this->x) - 2 * std::abs(c.y - this->y);
-    return (float)d / (float)hive::X;
+int Coords::distance(const Coords &c) const noexcept {
+    int dx = c.x - this->x;
+    int dy = c.y - this->y;
+    if (dx > 0 && dy > 0) return std::max(dx, dy);
+    else if (dx < 0 && dy < 0) return std::max(-dx, -dy);
+    return 2 * std::abs(dx) + 2 * std::abs(dy);
 }
 
 
