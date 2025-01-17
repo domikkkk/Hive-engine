@@ -58,7 +58,7 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
 EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     this->maximazing = this->game->get_controller().get_current();
     EMove best_move;
-    struct CancellationToken token = CancellationToken(TimeLimit(time));
+    struct CancellationToken token = CancellationToken(CancellationToken::TimeLimit(time));
     for (int depth = 1; depth < this->max_depth; ++depth) {
         auto result = this->minimax(depth, true, -infinity, infinity, token);
         if (result.found) best_move = result.bestmove;

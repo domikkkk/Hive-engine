@@ -69,7 +69,7 @@ int Coords::distance(const Coords &c) const noexcept {
     int dy = c.y - this->y;
     if (dx > 0 && dy > 0) return std::max(dx, dy);
     else if (dx < 0 && dy < 0) return std::max(-dx, -dy);
-    return 2 * std::abs(dx) + 2 * std::abs(dy);
+    return std::abs(dx) + std::abs(dy);
 }
 
 

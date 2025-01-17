@@ -1,4 +1,5 @@
 #include <engine/evaluations.hpp>
+#include <cmath>
 
 
 float heuristic1(Controller &controller, const Color &maximazing) {
@@ -27,9 +28,9 @@ float heuristic2(Controller &controller, const Color &maximazing) {
     for (const auto &piece: pieces) {
         if (piece.first[1] == Insect::bee) continue;
         if (color_from_piece(piece.first[0]) == maximazing) {
-            value += (weights.find(piece.first[1])->second * (1 - bee_min.distance(piece.second) / hive::X));
+            value += (weights.find(piece.first[1])->second * (1 - pow(2.0, bee_min.distance(piece.second)) / hive::X));
         } else {
-            value -= (weights.find(piece.first[1])->second * (1 - bee_max.distance(piece.second) / hive::X));
+            value -= (weights.find(piece.first[1])->second * (1 - pow(2.0, bee_max.distance(piece.second)) / hive::X));
         }
     }
     return value;

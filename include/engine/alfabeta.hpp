@@ -9,12 +9,10 @@
 #include <chrono>
 
 
-using Clock = std::chrono::steady_clock;
-using TimeLimit = std::chrono::seconds;
-
-
 struct CancellationToken {
     using Time = std::chrono::_V2::steady_clock::time_point;
+    using Clock = std::chrono::steady_clock;
+    using TimeLimit = std::chrono::seconds;
 
     CancellationToken() = default;
     CancellationToken(const TimeLimit &limit): timelimit(limit), defined(true), start(Clock::now()) {};
@@ -42,7 +40,7 @@ private:
     int max_depth = 10;
 
     const std::string name = "Mój silnik";
-    const std::string version = "v0.2.2";
+    const std::string version = "v0.2.3";
 
     TransposistionTable transpositiontable;
 
