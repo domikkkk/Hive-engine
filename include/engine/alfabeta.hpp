@@ -6,6 +6,27 @@
 #include <engine/bestmove.hpp>
 #include <functional>
 #include <engine/transpositionTable.hpp>
+#include <chrono>
+
+
+using Clock = std::chrono::steady_clock;
+using TimeLimit = std::chrono::seconds;
+
+
+struct CancellationToken {
+    using Time = std::chrono::_V2::steady_clock::time_point;
+
+    CancellationToken() = default;
+    CancellationToken(const TimeLimit &limit): timelimit(limit), defined(true), start(Clock::now()) {};
+
+    inline bool is_end() const noexcept {
+        return Clock::now() - this->start >= this->timelimit;
+    }
+
+    TimeLimit timelimit;
+    bool defined = false;
+    Time start;
+};
 
 
 class AlfaBeta {
@@ -40,7 +61,7 @@ public:
 
     EMove get_best_move(const int &depth=0) noexcept;
     EMove get_best_move_with_time_limit(const int &time=0) noexcept;
-    PossibleBestMove minimax(int depth, bool maximazing, float alfa, float beta) noexcept;
+    PossibleBestMove minimax(int depth, bool maximazing, float alfa, float beta, const struct CancellationToken &token = {}) noexcept;
 };
 
 
