@@ -3,8 +3,8 @@
 
 void Game::update() noexcept {
     this->state = this->moves.size()? State::INPROGRESS: State::NOTSTARTED;
-    bool w = this->controller.count_queen_surrounded(Color::WHITE) == 6;
-    bool b = this->controller.count_queen_surrounded(Color::BLACK) == 6;
+    bool w = this->controller.count_surrounded_fields_of_queen(Color::WHITE) == 6;
+    bool b = this->controller.count_surrounded_fields_of_queen(Color::BLACK) == 6;
     if (w && b) this->state = State::DRAW;
     else if (w) this->state = State::BLACKWINS;
     else if (b) this->state = State::WHITEWINS;
@@ -79,5 +79,5 @@ void Game::undo(const int &n) noexcept {
 bool Game::is_finished() noexcept {
     const auto &current = this->controller.get_current();
     const auto enemy = opposite[current];
-    return this->controller.count_queen_surrounded(current) == 6 || this->controller.count_queen_surrounded(enemy) == 6; // sprawdzam po ruchu danego gracza/silnika czy ma pszczołe otoczoną
+    return this->controller.count_surrounded_fields_of_queen(current) == 6 || this->controller.count_surrounded_fields_of_queen(enemy) == 6; // sprawdzam po ruchu danego gracza/silnika czy ma pszczołe otoczoną
 }

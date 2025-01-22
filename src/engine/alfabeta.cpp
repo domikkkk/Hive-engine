@@ -29,7 +29,7 @@ const std::string &AlfaBeta::_version() const noexcept {
 }
 
 
-void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves) noexcept {
+void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves, bool maximazing) noexcept {
     auto hash = this->game->get_controller().__key();
     auto entry = this->transpositiontable.find(hash);
     int was = 0;
@@ -49,7 +49,7 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
     }
     if (sorted_moves.size() > 2) {
         std::sort(sorted_moves.begin() + was, sorted_moves.end(), [&](const PossibleBestMove &a, const PossibleBestMove &b) {
-            return a.value > b.value;
+            return maximazing? a.value > b.value : a.value < b.value;
         });
     }
 }
@@ -103,7 +103,7 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game->set_valid_moves(valid_moves);
     std::vector<PossibleBestMove> moves;
-    this->order_moves(valid_moves, moves);
+    this->order_moves(valid_moves, moves, maximazing);
     if (moves.size() != 0){
         possible_move.bestmove = moves[0].bestmove;
         possible_move.found = true;

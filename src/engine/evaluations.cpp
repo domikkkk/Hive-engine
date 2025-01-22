@@ -3,8 +3,8 @@
 
 
 float heuristic1(Controller &controller, const Color &maximazing) {
-    auto maxx = controller.count_queen_surrounded(maximazing);
-    auto minn = controller.count_queen_surrounded(opposite[maximazing]);
+    auto maxx = controller.count_surrounded_fields_of_queen(maximazing);
+    auto minn = controller.count_surrounded_fields_of_queen(opposite[maximazing]);
     if (maxx == 6 && minn == 6) return 0;
     if (maxx == 6) return -infinity;
     if (minn == 6) return infinity;
@@ -13,8 +13,8 @@ float heuristic1(Controller &controller, const Color &maximazing) {
 
 
 float heuristic2(Controller &controller, const Color &maximazing) {
-    auto maxx = controller.count_queen_surrounded(maximazing);
-    auto minn = controller.count_queen_surrounded(opposite[maximazing]);
+    auto maxx = controller.count_surrounded_fields_of_queen(maximazing);
+    auto minn = controller.count_surrounded_fields_of_queen(opposite[maximazing]);
     if (maxx == 6 && minn == 6) return 0;
     if (maxx == 6) return -infinity;
     if (minn == 6) return infinity;
@@ -22,15 +22,20 @@ float heuristic2(Controller &controller, const Color &maximazing) {
 
     const auto &weights = controller._weights();
     const auto &pieces = controller.get_pieces(); // figury na planszy
-    const auto &bee_max = pieces.find(colorToString[maximazing] + Insect::bee)->second;
-    const auto &bee_min = pieces.find(colorToString[opposite[maximazing]] + Insect::bee)->second;
+    const auto bee_max = colorToString[maximazing] + Insect::bee;
+    const auto &bee_max_coords = pieces.find(bee_max)->second;
+    const auto bee_min = colorToString[opposite[maximazing]] + Insect::bee;
+    const auto &bee_min_coords = pieces.find(bee_min)->second;
     float value = 3 * (minn - maxx);
+    float d;
     for (const auto &piece: pieces) {
         if (piece.first[1] == Insect::bee) continue;
         if (color_from_piece(piece.first[0]) == maximazing) {
-            value += (weights.find(piece.first[1])->second * (1 - pow(2.0, bee_min.distance(piece.second)) / hive::X));
+            d = 1 - pow(2.0, bee_min_coords.distance(piece.second)) / hive::X;
+            value += (weights.find(piece.first[1])->second * d);
         } else {
-            value -= (weights.find(piece.first[1])->second * (1 - pow(2.0, bee_max.distance(piece.second)) / hive::X));
+            d = 1 - pow(2.0, bee_max_coords.distance(piece.second)) / hive::X;
+            value -= (weights.find(piece.first[1])->second * d);
         }
     }
     return value;

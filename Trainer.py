@@ -1,6 +1,6 @@
 import subprocess
 import json
-
+import sys
 
 class HiveEngine:
     def __init__(self, engine_path):
@@ -37,22 +37,22 @@ def get_state(string: str):
     return par[1]
 
 class Analyse:
-    def __init__(self, engine1_path, engine2_path, move_limit = 30):
+    def __init__(self, engine1_path, engine2_path, move_limit = 35):
         self.engine1 = HiveEngine(engine1_path)
         self.engine2 = HiveEngine(engine2_path)
         self.move_limit = move_limit
-        self.stats = [["" for _ in range(5)] for _ in range(5)]
+        self.stats = [["" for _ in range(3)] for _ in range(3)]
         print(self.engine1.get_response())
         print(self.engine2.get_response())
         
-    def play_game(self, par1, par2):
+    def play_game(self, par1, par2, time=False):
         print('#######')
         print(self.engine1.send_command('newgame'))
         print(self.engine2.send_command('newgame'))
         for move_number in range(self.move_limit):  # Maksymalna liczba ruchów
             print(f"#{move_number + 1}", end=' ')
 
-            best_move = self.engine1.send_command(f"bestmove time {par1}")
+            best_move = self.engine1.send_command(f"bestmove {"time" if time else "depth"} {par1}")
     
             self.engine1.send_command(f"play {best_move}")
             string = self.engine2.send_command(f"play {best_move}")
@@ -61,7 +61,7 @@ class Analyse:
             if state != 'InProgress':
                 break
 
-            best_move2 = self.engine2.send_command(f"bestmove time {par2}")
+            best_move2 = self.engine2.send_command(f"bestmove {"time" if time else "depth"} {par2}")
 
             self.engine1.send_command(f"play {best_move2}")
             string = self.engine2.send_command(f"play {best_move2}")
@@ -72,19 +72,18 @@ class Analyse:
         return state
 
     def tournament(self):
-        for depth1 in range(3, 8):
-            for depth2 in range(depth1, 9):
-                state = self.play_game(depth1, depth2)
-                self.stats[depth1-3][depth2-3] = state
-                with open("res1.json", 'w') as f:
+        for depth1 in range(4, 7):
+            for depth2 in range(4, 7):
+                state = self.play_game(depth1, depth2, False)
+                self.stats[depth1-4][depth2-4] = state
+                with open("v1_vs_v2.json", 'w') as f:
                     json.dump(self.stats, f, indent=4)
         self.engine1.close()
         self.engine2.close()
 
-# Ścieżki do silników
-engine1_path = "./hive_engine_v0.1.0"
-engine2_path = "./hive_engine_v0.2.1"
+engine1_path = "./" + sys.argv[1]
+engine2_path = "./" + sys.argv[2]
 
 a = Analyse(engine1_path, engine2_path)
 
-print(a.play_game("00:00:10", "00:00:10"))
+a.tournament()

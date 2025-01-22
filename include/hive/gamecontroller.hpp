@@ -59,7 +59,7 @@ public:
         return this->hash.value();
     }
 
-    int count_queen_surrounded(const Color &c) noexcept;
+    int count_surrounded_fields_of_queen(const Color &c) noexcept;
 
     Coords find_destination(const std::string &piece, Directions direction) const;
     std::pair<std::string, Directions> find_adjacent(const Coords &coords) noexcept;

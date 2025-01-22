@@ -55,7 +55,7 @@ public:
     const std::string &_name() const noexcept;
     const std::string &_version() const noexcept;
 
-    void order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves) noexcept;
+    void order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves, bool maximazing) noexcept;
 
     EMove get_best_move(const int &depth=0) noexcept;
     EMove get_best_move_with_time_limit(const int &time=0) noexcept;

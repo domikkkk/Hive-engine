@@ -13,7 +13,7 @@ bool Controller::validateQueen() const noexcept {
 }
 
 
-int Controller::count_queen_surrounded(const Color &c) noexcept {
+int Controller::count_surrounded_fields_of_queen(const Color &c) noexcept {
     auto bee = this->insects.find(colorToString[c] + Insect::bee);
     if (bee == this->insects.end()) return 0;
     int i = 0;

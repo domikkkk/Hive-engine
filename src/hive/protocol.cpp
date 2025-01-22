@@ -3,7 +3,7 @@
 
 
 const std::string Protocol::info() const noexcept {
-    return "id " + this->engine._name() + " " + this->engine._version() + "\n";   
+    return "id " + this->engine._name() + " " + this->engine._version();   
 }
 
 
