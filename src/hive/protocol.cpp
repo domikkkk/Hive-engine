@@ -9,7 +9,7 @@ const std::string Protocol::info() const noexcept {
 
 void Protocol::create_game() noexcept {
     this->game = Game(++this->n_game);
-    this->engine.new_game(game, heuristic2, heuristic1);
+    this->engine.new_game(game, heuristic3, heuristic1);
 }
 
 

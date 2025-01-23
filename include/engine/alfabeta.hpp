@@ -7,6 +7,7 @@
 #include <functional>
 #include <engine/transpositionTable.hpp>
 #include <chrono>
+#include <version.h>
 
 
 struct CancellationToken {
@@ -37,10 +38,10 @@ private:
 
     Color maximazing = Color::WHITE;
 
-    int max_depth = 10;
+    int max_depth = 20;
 
     const std::string name = "Mój silnik";
-    const std::string version = "v0.2.3";
+    const std::string version = VERSION;
 
     TransposistionTable transpositiontable;
 
@@ -49,8 +50,13 @@ public:
 
     void new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept;
 
-    float evaluate() noexcept;
-    float evaluate_to_order() noexcept;
+    inline float evaluate() noexcept {
+        return this->evaluation(this->game->get_controller(), this->maximazing);
+    }
+
+    inline float evaluate_to_order() noexcept {
+        return this->to_order_moves(this->game->get_controller(), this->maximazing);
+    }
 
     const std::string &_name() const noexcept;
     const std::string &_version() const noexcept;

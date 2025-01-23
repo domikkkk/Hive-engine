@@ -30,10 +30,10 @@ bool Controller::can_move_on_board(const std::string &piece) noexcept {
 }
 
 
-const std::vector<std::string> Controller::pieces_possible_to_move() noexcept {
+const std::vector<std::string> Controller::pieces_possible_to_move() noexcept { // zwraca WSZYSTKIE
     std::vector<std::string> pieces;
     for (const auto &piece: this->insects) {
-        if (color_from_piece(piece.first[0]) != this->current) continue;
+        // if (color_from_piece(piece.first[0]) != this->current) continue;
         if (!this->board.is_connected(piece.second)) continue;
         pieces.emplace_back(piece.first);
     }

@@ -9,16 +9,6 @@ void AlfaBeta::new_game(Game &game, EvaluationFunc func, EvaluationFunc order) n
 }
 
 
-float AlfaBeta::evaluate() noexcept {
-    return this->evaluation(this->game->get_controller(), this->maximazing);
-}
-
-
-float AlfaBeta::evaluate_to_order() noexcept {
-    return this->to_order_moves(this->game->get_controller(), this->maximazing);
-}
-
-
 const std::string &AlfaBeta::_name() const noexcept {
     return this->name;
 }
@@ -40,7 +30,9 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
     }
     for (const auto &piece: all_moves) {
         for (const auto &where: piece.second) {
-            if (was && where == sorted_moves[0].bestmove.where && piece.first == sorted_moves[0].bestmove.piece) continue;
+            if (was && where == sorted_moves[0].bestmove.where && piece.first == sorted_moves[0].bestmove.piece) {
+                continue;
+            }
             this->game->get_controller().engine_move(piece.first, where);
             float eval = this->evaluate_to_order();
             this->game->get_controller().undo_move();
@@ -59,12 +51,18 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     this->maximazing = this->game->get_controller().get_current();
     EMove best_move;
     struct CancellationToken token = CancellationToken(CancellationToken::TimeLimit(time));
-    for (int depth = 1; depth < this->max_depth; ++depth) {
+#ifdef INFO
+    setbuf(stdout, NULL);
+#endif
+    for (int depth = 1; depth <= this->max_depth; ++depth) {
         auto result = this->minimax(depth, true, -infinity, infinity, token);
         if (result.found) best_move = result.bestmove;
         if (token.is_end()) {
             break;
         }
+#ifdef INFO
+        printf("info depth: %d, value: %f\n", depth, result.value);
+#endif
     }
     return best_move;
 }
@@ -111,7 +109,7 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
     for (const auto &move: moves) {
         if (token.defined && token.is_end()) break;
         this->game->get_controller().engine_move(move.bestmove.piece, move.bestmove.where);
-        auto result = this->minimax(depth-1, !maximazing, alfa, beta);
+        auto result = this->minimax(depth-1, !maximazing, alfa, beta, token);
         if (maximazing) {
             if (result.value > possible_move.value) {
                 possible_move.value = result.value;

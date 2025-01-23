@@ -49,6 +49,7 @@ void Game::set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> 
     }
     if (!this->controller.validateQueen()) return;
     for (const auto &piece: this->controller.pieces_possible_to_move()) {
+        if (color_from_piece(piece[0]) != this->controller.get_current()) continue;
         hive::Ability ability = hive::gen_ability(piece[1]);
         if (ability.can_hop) {
             this->controller.hoppable_locations(piece, valid_moves[piece]);
@@ -69,7 +70,8 @@ void Game::player_move(const struct Move_parameters &move) {
 
 
 void Game::undo(const int &n) noexcept {
-    for (int i = 0; i < std::min(n, (int)this->moves.size()); ++i) {
+    const int mini = (int)this->moves.size();
+    for (int i = 0; i < std::min(n, mini); ++i) {
         this->controller.undo_move();
         this->moves.pop_back();
     }
