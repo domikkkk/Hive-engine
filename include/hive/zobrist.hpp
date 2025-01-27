@@ -11,7 +11,11 @@ public:
     ZobristHash() noexcept;
 
     void switch_turn() noexcept;
-    void togglePiece(const std::string &piece, const int &q, const int &c, const int &s) noexcept;
+    void Xor(const std::string &piece, const int &q, const int &c, const int &s) noexcept;
+    
+    void reset() noexcept {
+        this->_hash = 0;
+    }
 
     inline const uint64_t
     &value() const noexcept {
@@ -23,8 +27,7 @@ private:
     uint64_t _hash = 0;
 
     uint64_t hashByColor;
-    uint64_t hashByStack[hive::Z];
-    uint64_t hashByPosition[number][hive::X][hive::Y];
+    uint64_t hashByPosition[number][hive::X][hive::Y][hive::Z];
 
     uint64_t rand64() noexcept;
 

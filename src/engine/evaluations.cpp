@@ -51,10 +51,10 @@ float heuristic3(Controller &controller, const Color &maximazing) {
     if (controller.get_turns() <= 4) return minn - maxx;
 
     const auto &weights = controller._weights();
-    float value = 3.5 * (minn - maxx);
+    float value = 3.5 * minn - maxx;
     for (const auto &piece : controller.pieces_possible_to_move()) {
         const float &w = weights.find(piece[1])->second;
-        value += color_from_piece(piece[0]) == maximazing? w: -w;
+        value += color_from_piece(piece[0]) == maximazing? 0.2*w: -w;
     }
     return value;
 }

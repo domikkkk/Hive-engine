@@ -33,10 +33,12 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
             if (was && where == sorted_moves[0].bestmove.where && piece.first == sorted_moves[0].bestmove.piece) {
                 continue;
             }
+            EMove move = {piece.first, where};
+            // float eval = this->evaluate_move(move);
             this->game->get_controller().engine_move(piece.first, where);
             float eval = this->evaluate_to_order();
             this->game->get_controller().undo_move();
-            sorted_moves.emplace_back(EMove{piece.first, where}, eval);
+            sorted_moves.emplace_back(move, eval);
         }
     }
     if (sorted_moves.size() > 2) {
@@ -44,6 +46,34 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
             return maximazing? a.value > b.value : a.value < b.value;
         });
     }
+}
+
+
+float AlfaBeta::evaluate_move(const EMove &move) noexcept {
+    auto &con = this->game->get_controller();
+    auto &board = con.get_board();
+    auto own_color = color_from_piece(move.piece[0]);
+    con.engine_move(move.piece, move.where);
+    // bool added = board.back().added;
+    float value = 0.0;
+    int free_space = 0;
+    for (const auto &c : move.where.get_surrounding_locations()) {
+        if (board[c].type == Insect::bee) {
+            value = opposite[own_color] == board[c].color? 6.0: board.is_connected(c)? -0.5: -6.0;
+            con.undo_move();
+            return value;
+        } else if (board[c].type != Insect::notexists) {}
+        //     if (opposite[own_color] == board[c].color){
+        //         value = board.is_connected(c)? -1.0: 3.0;
+        //     } else {
+        //         value = board.is_connected(c)? 1.0: -3.0;
+        //     }
+        // } else {
+        //     ++free_space;
+        // } 
+    }
+    con.undo_move();
+    return value + (float)free_space;
 }
 
 
@@ -57,6 +87,7 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     for (int depth = 1; depth <= this->max_depth; ++depth) {
         auto result = this->minimax(depth, true, -infinity, infinity, token);
         if (result.found) best_move = result.bestmove;
+        if (result.value >= infinity) return best_move;
         if (token.is_end()) {
             break;
         }
@@ -81,7 +112,7 @@ EMove AlfaBeta::get_best_move(const int &d) noexcept {
 
 PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float beta, const struct CancellationToken &token) noexcept {
     if (depth == 0 || this->game->is_finished()) {
-        return {this->evaluate() + depth * multiply[this->maximazing]};
+        return {this->evaluate()};
     }
 
     auto hash = this->game->get_controller().__key();
@@ -113,14 +144,14 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
         if (maximazing) {
             if (result.value > possible_move.value) {
                 possible_move.value = result.value;
-                possible_move.bestmove = {move.bestmove.piece, move.bestmove.where};
+                possible_move.bestmove = move.bestmove;
                 possible_move.found = true;
             }
             alfa = std::max(alfa, possible_move.value);
         } else {
             if (result.value < possible_move.value) {
                 possible_move.value = result.value;
-                possible_move.bestmove = {move.bestmove.piece, move.bestmove.where};
+                possible_move.bestmove = move.bestmove;
                 possible_move.found = true;
             }
             beta = std::min(beta, possible_move.value);

@@ -83,3 +83,11 @@ bool Game::is_finished() noexcept {
     const auto enemy = opposite[current];
     return this->controller.count_surrounded_fields_of_queen(current) == 6 || this->controller.count_surrounded_fields_of_queen(enemy) == 6; // sprawdzam po ruchu danego gracza/silnika czy ma pszczołe otoczoną
 }
+
+
+void Game::new_game() noexcept {
+    this->controller.reset();
+    this->created++;
+    this->moves.clear();
+    this->state = State::NOTSTARTED;
+}

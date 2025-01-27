@@ -3,13 +3,13 @@
 
 
 const std::string Protocol::info() const noexcept {
-    return "id " + this->engine._name() + " " + this->engine._version();   
+    return "id " + this->engine._name() + " " + this->engine._version();
 }
 
 
 void Protocol::create_game() noexcept {
-    this->game = Game(++this->n_game);
-    this->engine.new_game(game, heuristic3, heuristic1);
+    this->game.new_game();
+    this->engine.new_game(this->game, heuristic3, heuristic1);
 }
 
 

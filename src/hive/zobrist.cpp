@@ -6,9 +6,8 @@ void ZobristHash::switch_turn() noexcept {
 }
 
 
-void ZobristHash::togglePiece(const std::string &piece, const int &q, const int &c, const int &s) noexcept {
-    this->_hash ^= this->hashByPosition[this->insect_index[piece]][hive::X/2 + q][hive::Y/2 + c];
-    this->_hash ^= this->hashByStack[s];
+void ZobristHash::Xor(const std::string &piece, const int &q, const int &c, const int &s) noexcept {
+    this->_hash ^= this->hashByPosition[this->insect_index[piece]][hive::X/2 + q][hive::Y/2 + c][s];
 }
 
 
@@ -24,11 +23,10 @@ ZobristHash::ZobristHash() noexcept {
     for (int pn=0; pn<number; ++pn) {
         for (int r=0; r<hive::X; ++r) {
             for (int c=0; c<hive::Y; ++c) {
-                this->hashByPosition[pn][r][c] = this->rand64();
+                for (int s=0; s<hive::Z; ++s) {
+                    this->hashByPosition[pn][r][c][s] = this->rand64();
+                }
             }
         }
-    }
-    for (int z=0; z<hive::Z; ++z) {
-        this->hashByStack[z] = this->rand64();
     }
 }

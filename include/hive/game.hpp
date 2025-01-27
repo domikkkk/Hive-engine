@@ -13,6 +13,7 @@ public:
     void pass() noexcept;
     void undo(const int &n = 1) noexcept;
     void update() noexcept;
+    void new_game() noexcept;
 
     void set_valid_moves(std::unordered_map<std::string, std::vector<Coords>> &valid_moves) noexcept;
 
@@ -34,7 +35,7 @@ public:
         return this->moves;
     }
 
-    inline bool was_created() noexcept {
+    inline bool was_created() const noexcept {
         return this->created > 0;
     }
 

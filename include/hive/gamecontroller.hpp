@@ -24,6 +24,7 @@ public:
     void prepare_pieces();
     bool check_destination(const Coords &destination) noexcept;
     void pass() noexcept;
+    void reset() noexcept;
 
     inline void switch_turn() noexcept {
         this->current = opposite[this->current];

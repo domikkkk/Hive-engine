@@ -1,10 +1,8 @@
 #include <Hive>
 #include <iostream>
-#include <decorators.hpp>
 
 
-
-int main(int argc, char **argv) {
+int main() {
     Protocol protocol;
     Command c;
     std::cout << protocol.info() << "\nok\n";

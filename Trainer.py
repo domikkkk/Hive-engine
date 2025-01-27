@@ -1,6 +1,7 @@
 import subprocess
 import json
 import sys
+import random
 
 class HiveEngine:
     def __init__(self, engine_path):
@@ -37,13 +38,20 @@ def get_state(string: str):
     return par[1]
 
 class Analyse:
-    def __init__(self, engine1_path, engine2_path, move_limit = 35):
-        self.engine1 = HiveEngine(engine1_path)
-        self.engine2 = HiveEngine(engine2_path)
+    def __init__(self, engine1, engine2, move_limit = 35):
+        if engine1 != "rand":
+            self.engine1 = HiveEngine("./" + engine1)
+            print(self.engine1.get_response())
+        else:
+            self.engine1 = "rand"
+            print(engine1)
+        if engine2 != "rand":
+            self.engine2 = HiveEngine("./" + engine2)
+            print(self.engine2.get_response())
+        else:
+            self.engine2 = "rand"
+            print(engine2)
         self.move_limit = move_limit
-        self.stats = [["" for _ in range(3)] for _ in range(3)]
-        print(self.engine1.get_response())
-        print(self.engine2.get_response())
         
     def play_game(self, par1, par2, time=False):
         print('#######')
@@ -52,7 +60,7 @@ class Analyse:
         for move_number in range(self.move_limit):  # Maksymalna liczba ruchów
             print(f"#{move_number + 1}", end=' ')
 
-            best_move = self.engine1.send_command(f"bestmove {"time" if time else "depth"} {par1}")
+            best_move = self.engine1.send_command(f'bestmove {"time" if time else "depth"} {par1}')
     
             self.engine1.send_command(f"play {best_move}")
             string = self.engine2.send_command(f"play {best_move}")
@@ -61,7 +69,7 @@ class Analyse:
             if state != 'InProgress':
                 break
 
-            best_move2 = self.engine2.send_command(f"bestmove {"time" if time else "depth"} {par2}")
+            best_move2 = self.engine2.send_command(f'bestmove {"time" if time else "depth"} {par2}')
 
             self.engine1.send_command(f"play {best_move2}")
             string = self.engine2.send_command(f"play {best_move2}")
@@ -71,19 +79,69 @@ class Analyse:
             print(f"{best_move2}")
         return state
 
-    def tournament(self):
-        for depth1 in range(4, 7):
-            for depth2 in range(4, 7):
-                state = self.play_game(depth1, depth2, False)
-                self.stats[depth1-4][depth2-4] = state
-                with open("v1_vs_v2.json", 'w') as f:
-                    json.dump(self.stats, f, indent=4)
+    def play_with_naive(self, par, time=False):
+        engine = self.engine1 if self.engine1 != "rand" else self.engine2
+        engine_not_start = 0 if self.engine1 != "rand" else 1
+        print('#######')
+        print(engine.send_command("newgame"))
+        if engine_not_start:
+            validmoves = engine.send_command('validmoves')
+            best_move = random.choice(validmoves.split(';'))
+            engine.send_command(f'play {best_move}')
+            print(f"{best_move}", end=' ')
+
+        for move_number in range(engine_not_start, self.move_limit):
+            best_move = engine.send_command(f'bestmove {"time" if time else "depth"} {par}')
+            string = engine.send_command(f'play {best_move}')
+            end = '\n' if engine_not_start else ' '
+            print(f"{best_move}", end=end)
+            
+            state = get_state(string)
+            if state != 'InProgress':
+                break
+            
+            validmoves = engine.send_command('validmoves')
+            best_move = random.choice(validmoves.split(';'))
+            string = engine.send_command(f'play {best_move}')
+            end = ' ' if engine_not_start else '\n'
+            print(f"{best_move}", end=end)
+            
+            state = get_state(string)
+            if state != 'InProgress':
+                break
+        return state
+        
+
+    def close(self):
         self.engine1.close()
         self.engine2.close()
 
-engine1_path = "./" + sys.argv[1]
-engine2_path = "./" + sys.argv[2]
 
-a = Analyse(engine1_path, engine2_path)
+def tournament(engine1, engine2):
+    times = ['00:00:05', '00:00:10', '00:01:00', '00:05:00']
+    stats = [["" for _ in range(len(times))] for _ in range(len(times))]
+    for i, time1 in enumerate(times):
+        for j, time2 in enumerate(times):
+            a = Analyse(engine1, engine2)
+            state = a.play_game(time1, time2, True)
+            a.close()
+            stats[i][j] = state
+            with open(f"{engine1}_vs_{engine2}_time.json", 'w') as f:
+                json.dump(stats, f, indent=4)
 
-a.tournament()
+
+def naive_tournament(engine1, engine2):
+    times = ['00:00:05', '00:00:10', '00:01:00', '00:05:00']
+    stats = ["" for _ in range(len(times))]
+    for i, time in enumerate(times):
+        a = Analyse(engine1, engine2)
+        state = a.play_with_naive(time, True)
+        stats[i] = state
+        with open(f"{engine1}_vs_{engine2}_time.json", 'w') as f:
+            json.dump(stats, f, indent=4)
+
+
+# tournament(*sys.argv[1:])
+
+a = Analyse(*sys.argv[1:])
+a.play_game('00:00:05', '00:00:05', time=True)
