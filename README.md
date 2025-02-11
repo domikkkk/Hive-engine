@@ -41,28 +41,42 @@ to run test:
 <project root>
 ├── CMakeLists.txt
 ├── README.md
+├── Trainer.py
 ├── build.sh
 ├── include
 │   ├── Hive
 │   ├── HiveAI
+│   ├── decorators.hpp
 │   ├── engine
-│   │   └── alfabeta.hpp
-│   └── hive
-│       ├── board.hpp
-│       ├── coordinates.hpp
-│       ├── moves.hpp
-│       └── pieces.hpp
+│   │   ├── alfabeta.hpp
+│   │   ├── bestmove.hpp
+│   │   ├── evaluations.hpp
+│   │   └── transpositionTable.hpp
+│   ├── hive
+│   │   ├── board.hpp
+│   │   ├── coordinates.hpp
+│   │   ├── game.hpp
+│   │   ├── gamecontroller.hpp
+│   │   ├── moves.hpp
+│   │   ├── namespaces.hpp
+│   │   ├── protocol.hpp
+│   │   └── zobrist.hpp
+│   └── version.h
 ├── src
 │   ├── engine
 │   │   ├── CMakeLists.txt
-│   │   └── alfabeta.cpp
+│   │   ├── alfabeta.cpp
+│   │   ├── evaluations.cpp
+│   │   └── transpositionTable.cpp
 │   ├── hive
 │   │   ├── CMakeLists.txt
 │   │   ├── board.cpp
-│   │   ├── board.tpp
 │   │   ├── coordinates.cpp
+│   │   ├── game.cpp
+│   │   ├── gamecontroller.cpp
 │   │   ├── moves.cpp
-│   │   └── pieces.cpp
+│   │   ├── protocol.cpp
+│   │   └── zobrist.cpp
 │   └── main.cpp
 └── test
     └── test.cpp

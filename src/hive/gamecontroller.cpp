@@ -260,7 +260,7 @@ std::pair<std::string, Directions> Controller::find_adjacent(const Coords &c) no
 
 
 bool Controller::check_destination(const Coords &destination) noexcept {
-    for (const Coords neigbor_location: destination.get_surrounding_locations()) {
+    for (const Coords &neigbor_location: destination.get_surrounding_locations()) {
         if (this->board[neigbor_location].type == Insect::notexists) continue; // jeśli koło potencjalnego pola jest inne puste to nie ma co
         const Coords &upper = this->board.get_upper(neigbor_location); // bierzemy wierzchnią figure by sprawdzić kolor
         if (this->board[upper].color != this->current) {     // jeśli kolor jest przeciwnika to wykluczamy location jako potencjalne pole na dołożenie nowej figury

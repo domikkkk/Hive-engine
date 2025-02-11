@@ -34,7 +34,7 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
                 continue;
             }
             EMove move = {piece.first, where};
-            // float eval = this->evaluate_move(move);
+            // float eval = this->evaluate_move(move);  // to trzeba zastosować kiedyś i pozbyć się poniższego kodu
             this->game->get_controller().engine_move(piece.first, where);
             float eval = this->evaluate_to_order();
             this->game->get_controller().undo_move();
@@ -49,12 +49,11 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
 }
 
 
-float AlfaBeta::evaluate_move(const EMove &move) noexcept {
+float AlfaBeta::evaluate_move(const EMove &move) noexcept {  // do dopisania
     auto &con = this->game->get_controller();
     auto &board = con.get_board();
     auto own_color = color_from_piece(move.piece[0]);
     con.engine_move(move.piece, move.where);
-    // bool added = board.back().added;
     float value = 0.0;
     int free_space = 0;
     for (const auto &c : move.where.get_surrounding_locations()) {

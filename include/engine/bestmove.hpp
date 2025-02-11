@@ -2,7 +2,6 @@
 #define BESTMOVE_HPP
 #pragma once
 
-#include <iostream>
 #include <hive/coordinates.hpp>
 
 

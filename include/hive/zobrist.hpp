@@ -31,7 +31,7 @@ private:
 
     uint64_t rand64() noexcept;
 
-    std::unordered_map<std::string, int> insect_index = {
+    std::unordered_map<std::string, int> insect_index = { // pewnie lepiej dla samych radzajów zrobić zamiast rozdzielać do pojedyńczej figury
         {"wQ", 0},
         {"wS1", 1},
         {"wS2", 2},
@@ -54,7 +54,7 @@ private:
         {"bA1", 19},
         {"bA2", 20},
         {"bA3", 21},
-        {"wM", 22},
+        {"wM", 22}, // dla rozszerzeń
         {"bM", 23},
         {"wL", 24},
         {"bL", 25},

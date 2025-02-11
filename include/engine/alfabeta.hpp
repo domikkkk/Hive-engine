@@ -54,7 +54,7 @@ public:
         return this->evaluation(this->game->get_controller(), this->maximazing);
     }
 
-    inline float evaluate_to_order() noexcept {
+    inline float evaluate_to_order() noexcept { // do pozbycia się kiedyś
         return this->to_order_moves(this->game->get_controller(), this->maximazing);
     }
 
@@ -62,7 +62,7 @@ public:
     const std::string &_version() const noexcept;
 
     void order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves, bool maximazing) noexcept;
-    float evaluate_move(const EMove &move) noexcept;
+    float evaluate_move(const EMove &move) noexcept;  // kiedyś zamiast evaluate_to_order()
 
     EMove get_best_move(const int &depth=0) noexcept;
     EMove get_best_move_with_time_limit(const int &time=0) noexcept;
