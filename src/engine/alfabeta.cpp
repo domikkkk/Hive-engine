@@ -1,6 +1,6 @@
 #include <engine/alfabeta.hpp>
-#include <iostream>
 
+constexpr bool use_minimax = false;
 
 void AlfaBeta::new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept {
     this->game = &game;
@@ -84,7 +84,7 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
     setbuf(stdout, NULL);
 #endif
     for (int depth = 1; depth <= this->max_depth; ++depth) {
-        auto result = this->minimax(depth, true, -infinity, infinity, token);
+        auto result = use_minimax ? this->minimax(depth, true, -infinity, infinity, token) : this->negamax(depth, -infinity, infinity, token);
         if (result.found) best_move = result.bestmove;
         if (result.value >= infinity) return best_move;
         if (token.is_end()) {
@@ -101,10 +101,10 @@ EMove AlfaBeta::get_best_move_with_time_limit(const int &time) noexcept {
 EMove AlfaBeta::get_best_move(const int &d) noexcept {
     auto depth = d? d: this->max_depth;
     this->maximazing = this->game->get_controller().get_current();
-    auto good_move = this->minimax(1, true, -infinity, infinity);  // może mat w 1 i żeby znaleźć sobie potencjalny ruch
+    auto good_move = use_minimax ? this->minimax(1, true, -infinity, infinity) : this->negamax(1, -infinity, infinity); // może mat w 1 i żeby znaleźć sobie potencjalny ruch
     if (!good_move.found) {good_move.bestmove.piece = "pass"; return good_move.bestmove;}
     if (good_move.value >= infinity - this->max_depth * 2) return good_move.bestmove;  // jeśli mat w 1 niech zagra
-    auto better_move = this->minimax(depth, true, -infinity, infinity);
+    auto better_move = use_minimax ? this->minimax(depth, true, -infinity, infinity) : this->negamax(depth, -infinity, infinity); // może mat w 1 i żeby znaleźć sobie potencjalny ruch
     return better_move.found? better_move.bestmove: good_move.bestmove; // jeśli pass to pewnie znalazł że zawsze przegrywa więc niech zagra jakikolwiek ruch
 }
 
@@ -163,5 +163,71 @@ PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float
         if (alfa < beta) entry_type = EntryType::Exact;
         this->transpositiontable[hash] = TranspositionTableEntry(possible_move.value, depth, possible_move.bestmove, entry_type);
     }
+    return possible_move;
+}
+
+PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const struct CancellationToken &token) noexcept {
+    Color color = this->game->get_controller().get_player();
+    if (depth == 0 || this->game->is_finished()) {
+        auto eval = this->evaluate();
+        if (color == Color::WHITE)
+            return eval;
+        else
+            return -eval;
+    }
+
+    auto hash = this->game->get_controller().__key();
+    auto entry = this->transpositiontable.find(hash);
+
+    if (entry != this->transpositiontable.end()) {
+        const TranspositionTableEntry &tt_entry = entry->second;
+        // TODO: this should not be done in PV nodes
+        // TODO: this should only be done if tt_entry.BestMove is legal
+        if (depth <= tt_entry.Depth &&
+            ((tt_entry.Type == EntryType::Exact) ||
+             (tt_entry.Type == EntryType::LowerBound && tt_entry.Value <= alfa) ||
+             (tt_entry.Type == EntryType::UpperBound && tt_entry.Value >= beta))) {
+            return {tt_entry.BestMove, tt_entry.Value};
+        }
+    }
+
+    PossibleBestMove possible_move = -infinity;
+    std::unordered_map<std::string, std::vector<Coords>> valid_moves;
+    this->game->set_valid_moves(valid_moves);
+    std::vector<PossibleBestMove> moves;
+    this->order_moves(valid_moves, moves, Color::WHITE);
+
+    for (const auto &move: moves) {
+        if (token.defined && token.is_end()) break;
+        possible_move.found = true;
+        this->game->get_controller().engine_move(move.bestmove.piece, move.bestmove.where);
+        auto result = this->negamax(depth - 1, -beta, -alfa, token);
+        this->game->get_controller().undo_move();
+
+        if (result.value <= possible_move.value)
+            continue;
+
+        possible_move.value = result.value;
+        possible_move.bestmove = move.bestmove;
+
+        if (possible_move.value >= beta)
+            break;
+
+        if (possible_move.value > alfa) {
+            alfa = possible_move.value;
+        }
+    }
+
+    if (!possible_move.found) {
+        // TODO: return checkmate
+        return possible_move;
+    }
+
+    this->transpositiontable[hash] = TranspositionTableEntry(
+        possible_move.value, depth, possible_move.bestmove,
+        possible_move.value <= alfa   ? EntryType::LowerBound
+        : possible_move.value >= beta ? EntryType::UpperBound
+                                      : EntryType::Exact);
+
     return possible_move;
 }
