@@ -3,6 +3,7 @@
 #pragma once
 
 
+#include <cstdint>
 #include <engine/bestmove.hpp>
 #include <map>
 #include <hive/namespaces.hpp>

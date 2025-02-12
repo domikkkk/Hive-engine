@@ -2,6 +2,7 @@
 #define ZOBRIST_HPP
 #pragma once
 
+#include <cstdint>
 #include <hive/namespaces.hpp>
 #include <unordered_map>
 
