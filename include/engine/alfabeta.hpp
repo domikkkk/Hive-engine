@@ -67,6 +67,7 @@ public:
     EMove get_best_move(const int &depth=0) noexcept;
     EMove get_best_move_with_time_limit(const int &time=0) noexcept;
     PossibleBestMove minimax(int depth, bool maximazing, float alfa, float beta, const struct CancellationToken &token = {}) noexcept;
+    PossibleBestMove negamax(int depth, float alfa, float beta, const struct CancellationToken &token = {}) noexcept;
 };
 
 
