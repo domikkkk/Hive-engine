@@ -2,3 +2,5 @@ build*
 .vscode
 hive_engine*
 tests*
+*.o
+nnue_network
