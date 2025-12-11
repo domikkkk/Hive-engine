@@ -16,12 +16,16 @@ endif()
 # add hive/files
 add_subdirectory("src/hive")
 add_subdirectory("src/engine")
+add_subdirectory("src/nnue")
 
 set(DECORATORS_HPP "include/decorators.hpp")
 
 
 add_executable(${PROJECT_NAME} src/main.cpp ${DECORATORS_HPP})
 target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta)
+
+add_executable(nnue_network "src/nnue.cpp")
+target_link_libraries(nnue_network PUBLIC NNUE)
 
 
 FetchContent_Declare(

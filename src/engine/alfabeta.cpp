@@ -1,6 +1,7 @@
 #include <engine/alfabeta.hpp>
 
-constexpr bool use_minimax = false;
+constexpr bool use_minimax = true;
+long long max_nodes = 0;
 
 void AlfaBeta::new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept {
     this->game = &game;
@@ -104,12 +105,15 @@ EMove AlfaBeta::get_best_move(const int &d) noexcept {
     auto good_move = use_minimax ? this->minimax(1, true, -infinity, infinity) : this->negamax(1, -infinity, infinity); // może mat w 1 i żeby znaleźć sobie potencjalny ruch
     if (!good_move.found) {good_move.bestmove.piece = "pass"; return good_move.bestmove;}
     if (good_move.value >= infinity - this->max_depth * 2) return good_move.bestmove;  // jeśli mat w 1 niech zagra
-    auto better_move = use_minimax ? this->minimax(depth, true, -infinity, infinity) : this->negamax(depth, -infinity, infinity); // może mat w 1 i żeby znaleźć sobie potencjalny ruch
+    max_nodes = 0;
+    auto better_move = use_minimax ? this->minimax(depth, true, -infinity, infinity) : this->negamax(depth, -infinity, infinity);
+    printf("%lld\n\n", max_nodes);
     return better_move.found? better_move.bestmove: good_move.bestmove; // jeśli pass to pewnie znalazł że zawsze przegrywa więc niech zagra jakikolwiek ruch
 }
 
 
 PossibleBestMove AlfaBeta::minimax(int depth, bool maximazing, float alfa, float beta, const struct CancellationToken &token) noexcept {
+    max_nodes++;
     if (depth == 0 || this->game->is_finished()) {
         return {this->evaluate()};
     }

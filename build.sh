@@ -29,6 +29,7 @@ cmake --build .
 
 mv hive_engine ..
 mv tests ..
+mv nnue_network ..
 
 cd ..
 
