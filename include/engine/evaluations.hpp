@@ -5,11 +5,11 @@
 #include <hive/gamecontroller.hpp>
 
 
-float heuristic1(Controller &controller, const Color &maximazing);
+float heuristic1(Controller &controller);
 
-float heuristic2(Controller &controller, const Color &maximazing);
+float heuristic2(Controller &controller);
 
-float heuristic3(Controller &controller, const Color &maximazing);
+float heuristic3(Controller &controller);
 
 
 #endif

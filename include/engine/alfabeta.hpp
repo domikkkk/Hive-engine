@@ -30,13 +30,11 @@ struct CancellationToken {
 
 class AlfaBeta {
 private:
-    using EvaluationFunc = std::function<float(Controller&, Color&)>;
+    using EvaluationFunc = std::function<float(Controller&)>;
 
     EvaluationFunc evaluation;
     EvaluationFunc to_order_moves;
     Game *game = nullptr;
-
-    Color maximazing = Color::WHITE;
 
     int max_depth = 20;
 
@@ -51,11 +49,11 @@ public:
     void new_game(Game &game, EvaluationFunc func, EvaluationFunc order) noexcept;
 
     inline float evaluate() noexcept {
-        return this->evaluation(this->game->get_controller(), this->maximazing);
+        return this->evaluation(this->game->get_controller());
     }
 
     inline float evaluate_to_order() noexcept { // do pozbycia się kiedyś
-        return this->to_order_moves(this->game->get_controller(), this->maximazing);
+        return this->to_order_moves(this->game->get_controller());
     }
 
     const std::string &_name() const noexcept;
