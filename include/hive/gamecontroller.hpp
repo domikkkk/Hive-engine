@@ -6,7 +6,6 @@
 #include <hive/namespaces.hpp>
 #include <hive/board.hpp>
 #include <string>
-#include <stdexcept>
 #include <unordered_set>
 #include <hive/zobrist.hpp>
 
@@ -96,59 +95,6 @@ private:
 
 Color color_from_piece(const char &c) noexcept;
 int get_id_from_piece(const std::string &piece) noexcept;
-
-
-class InvalidMove : public std::exception {
-public:
-    explicit InvalidMove(const std::string &mess) {
-        this->message = "Invalid move: " + mess;
-    }
-
-    const char* what() const noexcept override {
-        return this->message.c_str();
-    }
-
-private:
-    std::string message;
-};
-
-
-class PieceNotExisting : public std::exception {
-public:
-    explicit PieceNotExisting(const std::string& piece) {
-        this->message = "Piece " + piece + " does not exist.";
-    }
-
-    const char* what() const noexcept override {
-        return this->message.c_str();
-    }
-
-private:
-    std::string message;
-};
-
-
-class PieceNotOnTheBoard : public std::exception {
-public:
-    explicit PieceNotOnTheBoard(const std::string& piece) {
-        this->message = "Piece " + piece + " is not on the board.";
-    }
-
-    const char* what() const noexcept override {
-        return this->message.c_str();
-    }
-
-private:
-    std::string message;
-};
-
-
-class NotOneHive : public std::exception {
-public:
-    const char* what() const noexcept override {
-        return "Board is not connected";
-    }
-};
 
 
 #endif

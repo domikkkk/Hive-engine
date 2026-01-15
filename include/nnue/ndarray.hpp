@@ -1,6 +1,26 @@
+#ifndef NDARRAY_HPP
+#define NDARRAY_HPP
+
 #pragma once
 #include <vector>
 #include <stdexcept>
+
+
+template <class T>
+struct nd2array {
+    size_t shape[2];
+    std::vector<T> data;
+
+    nd2array() = default;
+    nd2array(const size_t &r, const size_t &c) : shape{r, c}, data(r * c) {}
+
+    T& operator()(const size_t &r, const size_t &c);
+
+    const T& operator()(const size_t &r, const size_t &c) const;
+
+    nd2array operator*(const nd2array& array);
+};
+
 
 
 template <class T>
@@ -45,3 +65,6 @@ struct ndarray {
 
     }
 };
+
+
+#endif

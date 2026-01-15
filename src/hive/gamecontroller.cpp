@@ -1,4 +1,5 @@
 #include <hive/gamecontroller.hpp>
+#include <exceptions.hpp>
 
 
 

@@ -1,3 +1,6 @@
+#ifndef ACTIVATION_HPP
+#define ACTIVATION_HPP
+
 #pragma once
 #include <nnue/layer.hpp>
 #include <functional>
@@ -63,3 +66,6 @@ public:
         )
     {}
 };
+
+
+#endif

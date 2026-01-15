@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <Hive>
+#include <exceptions.hpp>
 
 
 TEST(Piece, pieces) {

@@ -8,6 +8,7 @@
 #include <engine/transpositionTable.hpp>
 #include <chrono>
 #include <version.h>
+#include <random>
 
 
 struct CancellationToken {
@@ -53,7 +54,11 @@ public:
     }
 
     inline float evaluate_to_order() noexcept { // do pozbycia się kiedyś
-        return this->to_order_moves(this->game->get_controller());
+        // return this->to_order_moves(this->game->get_controller());
+        // chwilowo losowe
+        static std::mt19937 gen(std::random_device{}());
+        static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+        return dist(gen);
     }
 
     const std::string &_name() const noexcept;

@@ -1,3 +1,6 @@
+#ifndef FULLYCONNECTED_HPP
+#define FULLYCONNECTED_HPP
+
 #pragma once
 #include <nnue/layer.hpp>
 #include <nnue/ndarray.hpp>
@@ -24,3 +27,6 @@ private:
     ndarray<T> weights;
     ndarray<T> bias;
 };
+
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef LAYER_HPP
+#define LAYER_HPP
+
 #pragma once
 #include <nnue/ndarray.hpp>
 
@@ -10,3 +13,6 @@ public:
     virtual ndarray<T> forward(ndarray<T> &input) = 0;
     virtual ndarray<T> backward(const ndarray<T> &output_gradient, const float &learning_rate) = 0;
 };
+
+
+#endif

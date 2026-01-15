@@ -5,20 +5,27 @@
 
 
 int main() {
-    ndarray<int> array(3, 2, 1);
-    array(1, 0, 0) = 23;
-    array(0, 0, 0) = 2;
+    nd2array<int> array1(3, 2), array2(3, 3), result;
+    array1(0, 0) = 2;
+    array1(1, 0) = 23;
+    array1(2, 0) = 1;
+    array1(0, 1) = 1;
+    array1(1, 1) = -1;
+    array1(2, 1) = 2;
 
-    ClippedReLU<int> t(3);
+    array2(0, 0) = 2;
+    array2(1, 0) = -1;
+    
+    result = array1 * array2;
+    // ClippedReLU<int> t(3);
     // ReLU<float> t2;
-    FullyConnected<int> fc(2, 2);
-    array.reshape(2, 3);
-    array = t(array);
-    for (const auto &a: array.data) {
+    // FullyConnected<int> fc(2, 2);
+    // array1 = t(array1);
+    for (const auto &a: result.data) {
         printf("%d\n", a);
     }
 
-    // printf("%d\n", array(1, 0));
+    // printf("%d\n", array1(1, 0));
 
     // array.reshape(2, 3);
 

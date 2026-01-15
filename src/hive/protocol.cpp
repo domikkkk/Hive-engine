@@ -1,5 +1,6 @@
 #include <hive/protocol.hpp>
 #include <sstream>
+#include <exceptions.hpp>
 
 
 const std::string Protocol::info() const noexcept {
@@ -111,8 +112,8 @@ const std::string Protocol::get_valid_moves() noexcept {
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game.set_valid_moves(valid_moves);
     bool is_valid = false;
-    for (auto move: valid_moves) {
-        for (auto where: move.second) {
+    for (const auto &move: valid_moves) {
+        for (const auto &where: move.second) {
             is_valid = true;
             to_display += this->get_notation(move.first, where) + ";";
         }
