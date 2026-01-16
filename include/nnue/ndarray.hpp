@@ -13,6 +13,8 @@ struct narray {
     virtual size_t size() const = 0;
     virtual T& operator[](size_t i) = 0;
     virtual const T& operator[](size_t i) const = 0;
+    
+    virtual void randomize(const T &min = T(-1), const T &max = T(1)) = 0;
 };
 
 
@@ -81,6 +83,8 @@ struct ndarray : public narray<T> {
         shape = {static_cast<size_t>(dims)...};
         return *this;
     }
+
+    void randomize(const T &min = T(-1), const T &max = T(1)) override;
 };
 
 
@@ -102,7 +106,7 @@ struct nd2array : public narray<T> {
     nd2array operator*(const nd2array& array) const;
     nd2array transpose() const;
 
-    void randomize(const T &min = T(-1), const T &max = T(1));
+    void randomize(const T &min = T(-1), const T &max = T(1)) override;
 };
 
 

@@ -56,18 +56,15 @@ nd2array<T> nd2array<T>::transpose() const {
 
 template<class T>
 void nd2array<T>::randomize(const T &min, const T &max) {
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
-    if constexpr (std::is_floating_point<T>::value) {
-        std::uniform_real_distribution<T> dist(min, max);
-        for (size_t i = 0; i < shape[0]; ++i)
-            for (size_t j = 0; j < shape[1]; ++j)
-                (*this)(i,j) = dist(gen);
-    } else if constexpr (std::is_integral<T>::value) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    if constexpr (std::is_integral_v<T>) {
         std::uniform_int_distribution<T> dist(min, max);
-        for (size_t i = 0; i < shape[0]; ++i)
-            for (size_t j = 0; j < shape[1]; ++j)
-                (*this)(i,j) = dist(gen);
+        for (size_t i = 0; i < this->size(); ++i) this->data[i] = dist(gen);
+    } else if constexpr (std::is_floating_point_v<T>) {
+        std::uniform_real_distribution<T> dist(min, max);
+        for (size_t i = 0; i < this->size(); ++i) this->data[i] = dist(gen);
     }
 }
 
