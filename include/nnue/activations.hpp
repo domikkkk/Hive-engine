@@ -6,65 +6,65 @@
 #include <functional>
 
 
-template<class T>
-class Activation : public Layer<T> {
+template<class T, class ArrayType>
+class Activation : public Layer<T, ArrayType> {
 public:
-    Activation(
-        std::function<ndarray<T>(ndarray<T>&)> func,
-        std::function<ndarray<T>(ndarray<T>&)> deriv
-    )
+    using Func = std::function<ArrayType(const ArrayType&)>;
+
+    Activation(Func func, Func deriv)
         : function(func), derivative(deriv) {}
-    
-    ndarray<T> operator()(ndarray<T>& input) override;
 
-    ndarray<T> forward(ndarray<T>& input) override;
-
-    ndarray<T> backward(const ndarray<T>& output_gradient, const float& learning_rate) override;
+    ArrayType operator()(const ArrayType& input) override;
+    ArrayType forward(const ArrayType& input) override;
+    ArrayType backward(const ArrayType& output_gradient,
+                       const float& learning_rate) override;
 
 private:
-    ndarray<T> last_input;
-    std::function<ndarray<T>(ndarray<T>&)> function;
-    std::function<ndarray<T>(ndarray<T>&)> derivative;
+    ArrayType last_input;
+    Func function;
+    Func derivative;
 };
 
 
-
-template<class T>
-class ReLU : public Activation<T> {
+template<class T, class ArrayType>
+class ReLU : public Activation<T, ArrayType> {
 public:
     ReLU()
-        : Activation<T>(
-            [](ndarray<T>& x) {
-                for (size_t i = 0; i < x.data.size(); ++i)
-                    x.data[i] = std::max(x.data[i], (T)0);
-                return x;
+        : Activation<T, ArrayType>(
+            [](const ArrayType& x) {
+                ArrayType y = x;
+                for (size_t i = 0; i < y.size(); ++i)
+                    y[i] = std::max(y[i], (T)0);
+                return y;
             },
-            [](ndarray<T>& x) {
-                for (size_t i = 0; i < x.data.size(); ++i)
-                    x.data[i] = (x.data[i] > 0) ? 1 : 0;
-                return x;
+            [](const ArrayType& x) {
+                ArrayType y = x;
+                for (size_t i = 0; i < y.size(); ++i)
+                    y[i] = (y[i] > 0) ? (T)1 : (T)0;
+                return y;
             }
-        )
-    {}
+        ) {}
 };
 
-template <class T>
-class ClippedReLU : public Activation<T> {
+
+template<class T, class ArrayType>
+class ClippedReLU : public Activation<T, ArrayType> {
 public:
     ClippedReLU(const T& limit)
-        : Activation<T>(
-            [limit](ndarray<T>& x) {
-                for (size_t i = 0; i < x.data.size(); ++i)
-                    x.data[i] =  std::min(std::max(x.data[i], (T)0), limit);
-                return x;
+        : Activation<T, ArrayType>(
+            [limit](const ArrayType& x) {
+                ArrayType y = x;
+                for (size_t i = 0; i < y.size(); ++i)
+                    y[i] = std::min(std::max(y[i], (T)0), limit);
+                return y;
             },
-            [limit](ndarray<T>& x) {
-                for (size_t i = 0; i < x.data.size(); ++i)
-                    x.data[i] = (x.data[i] > (T)0 && x.data[i] < limit) ? 1 : 0;
-                return x;
+            [limit](const ArrayType& x) {
+                ArrayType y = x;
+                for (size_t i = 0; i < y.size(); ++i)
+                    y[i] = (y[i] > (T)0 && y[i] < limit) ? (T)1 : (T)0;
+                return y;
             }
-        )
-    {}
+        ) {}
 };
 
 

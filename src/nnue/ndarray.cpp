@@ -1,5 +1,8 @@
 #include <nnue/ndarray.hpp>
 #include <exceptions.hpp>
+#include <random>
+#include <ctime>
+#include <type_traits>
 
 
 template<class T>
@@ -21,7 +24,7 @@ const T& nd2array<T>::operator()(const size_t &r, const size_t &c) const {
 
 
 template<class T>
-nd2array<T> nd2array<T>::operator*(const nd2array& array) {
+nd2array<T> nd2array<T>::operator*(const nd2array& array) const {
     if (this->shape[1] != array.shape[0]) {
         throw WrongMatrixSize(this->shape[0], this->shape[1], array.shape[0], array.shape[1]);
     }
@@ -38,6 +41,35 @@ nd2array<T> nd2array<T>::operator*(const nd2array& array) {
     return result;
 }
 
+
+template<class T>
+nd2array<T> nd2array<T>::transpose() const {
+    nd2array<T> transposed(shape[1], shape[0]);
+    for (size_t i = 0; i < shape[0]; ++i) {
+        for (size_t j = 0; j < shape[1]; ++j) {
+            transposed(j, i) = (*this)(i, j);
+        }
+    }
+    return transposed;
+}
+
+
+template<class T>
+void nd2array<T>::randomize(const T &min, const T &max) {
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    if constexpr (std::is_floating_point<T>::value) {
+        std::uniform_real_distribution<T> dist(min, max);
+        for (size_t i = 0; i < shape[0]; ++i)
+            for (size_t j = 0; j < shape[1]; ++j)
+                (*this)(i,j) = dist(gen);
+    } else if constexpr (std::is_integral<T>::value) {
+        std::uniform_int_distribution<T> dist(min, max);
+        for (size_t i = 0; i < shape[0]; ++i)
+            for (size_t j = 0; j < shape[1]; ++j)
+                (*this)(i,j) = dist(gen);
+    }
+}
 
 template class nd2array<float>;
 template class nd2array<int>;

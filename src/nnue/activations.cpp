@@ -1,37 +1,40 @@
 #include <nnue/activations.hpp>
 
 
-template<class T>
-ndarray<T> Activation<T>::operator()(ndarray<T>& input) {
+template<class T, class ArrayType>
+ArrayType Activation<T, ArrayType>::operator()(const ArrayType& input) {
     return this->forward(input);
 }
 
-
-template<class T>
-ndarray<T> Activation<T>::forward(ndarray<T>& input) {
+template<class T, class ArrayType>
+ArrayType Activation<T, ArrayType>::forward(const ArrayType& input) {
     this->last_input = input;
     return function(input);
 }
 
 
-template<class T>
-ndarray<T> Activation<T>::backward(const ndarray<T>& output_gradient, const float& learning_rate) {
-    ndarray<T> grad = derivative(last_input);
-    for (size_t i = 0; i < grad.data.size(); ++i) {
-        grad.data[i] *= output_gradient.data[i];
-    }
+template<class T, class ArrayType>
+ArrayType Activation<T, ArrayType>::backward(
+    const ArrayType& output_gradient,
+    const float&
+) {
+    ArrayType grad = derivative(this->last_input);
+
+    for (size_t i = 0; i < grad.size(); ++i)
+        grad[i] *= output_gradient[i];
+
     return grad;
 }
 
 
-template class Activation<float>;
-template class Activation<double>;
-template class Activation<int>;
+template class Activation<float, nd2array<float>>;
+template class Activation<double, nd2array<double>>;
+template class Activation<int, nd2array<int>>;
 
-template class ReLU<float>;
-template class ReLU<double>;
-template class ReLU<int>;
+template class ReLU<float, nd2array<float>>;
+template class ReLU<double, nd2array<double>>;
+template class ReLU<int, nd2array<int>>;
 
-template class ClippedReLU<float>;
-template class ClippedReLU<double>;
-template class ClippedReLU<int>;
+template class ClippedReLU<float, nd2array<float>>;
+template class ClippedReLU<double, nd2array<double>>;
+template class ClippedReLU<int, nd2array<int>>;

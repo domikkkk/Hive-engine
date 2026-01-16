@@ -5,13 +5,13 @@
 #include <nnue/ndarray.hpp>
 
 
-template <class T>
+template <class T, class ArrayType>
 class Layer {
 public:
     virtual ~Layer() = default; 
-    virtual ndarray<T> operator()(ndarray<T> &input) = 0;
-    virtual ndarray<T> forward(ndarray<T> &input) = 0;
-    virtual ndarray<T> backward(const ndarray<T> &output_gradient, const float &learning_rate) = 0;
+    virtual ArrayType operator()(const ArrayType &input) = 0;
+    virtual ArrayType forward(const ArrayType &input) = 0;
+    virtual ArrayType backward(const ArrayType &output_gradient, const float &learning_rate) = 0;
 };
 
 
