@@ -10,7 +10,7 @@ T& nd2array<T>::operator()(const size_t &r, const size_t &c) {
     if (r >= this->shape[0] || c >= this->shape[1]){
         throw std::out_of_range("Index out of range");
     }
-    return data[r * this->shape[1] + c];
+    return this->data[r * this->shape[1] + c];
 }
 
 
@@ -19,7 +19,7 @@ const T& nd2array<T>::operator()(const size_t &r, const size_t &c) const {
     if (r >= this->shape[0] || c >= this->shape[1]){
         throw std::out_of_range("Index out of range");
     }
-    return data[r * this->shape[1] + c];
+    return this->data[r * this->shape[1] + c];
 }
 
 

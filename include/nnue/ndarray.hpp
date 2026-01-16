@@ -33,7 +33,7 @@ struct ndarray : public narray<T> {
     ndarray(Args... dims) : shape{static_cast<size_t>(dims)...} {
         size_t total = 1;
         ((total *= dims), ...);
-        data.resize(total);
+        this->data.resize(total);
     }
 
     template <class... Args>
@@ -93,9 +93,9 @@ struct nd2array : public narray<T> {
     size_t shape[2];
     std::vector<T> data;
 
-    size_t size() const override { return data.size(); }
-    T& operator[](size_t i) override { return data[i]; }
-    const T& operator[](size_t i) const override { return data[i]; }
+    size_t size() const override { return this->data.size(); }
+    T& operator[](size_t i) override { return this->data[i]; }
+    const T& operator[](size_t i) const override { return this->data[i]; }
 
     nd2array() = default;
     nd2array(const size_t &r, const size_t &c) : shape{r, c}, data(r * c) {}
