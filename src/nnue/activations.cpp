@@ -15,8 +15,7 @@ ArrayType Activation<T, ArrayType>::forward(const ArrayType& input) {
 
 template<class T, class ArrayType>
 ArrayType Activation<T, ArrayType>::backward(
-    const ArrayType& output_gradient,
-    const float&
+    const ArrayType& output_gradient
 ) {
     ArrayType grad = derivative(this->last_input);
 

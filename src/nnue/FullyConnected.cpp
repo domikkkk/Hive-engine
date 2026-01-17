@@ -19,20 +19,27 @@ nd2array<T> FullyConnected<T>::forward(const nd2array<T>& input) {
 
 
 template <class T>
-nd2array<T> FullyConnected<T>::backward(const nd2array<T>& output_gradient, const float& learning_rate) {
-    nd2array<T> input_gradient(weights.shape[0], weights.shape[1]);
-    nd2array<T> input_T = this->last_input.transpose();
-    nd2array<T> dW = input_T * output_gradient;
+nd2array<T> FullyConnected<T>::backward(const nd2array<T>& output_gradient) {
+    nd2array<T> input_T = this->last_input._T();
+    this->dW = input_T * output_gradient;
 
-    for (size_t i = 0; i < weights.shape[0]; ++i)
-        for (size_t j = 0; j < weights.shape[1]; ++j)
-            weights(i,j) -= learning_rate * dW(i,j);
+    this->db = nd2array<T>(1, output);
+    for (size_t j = 0; j < output; ++j)
+        this->db(0, j) = output_gradient(0, j);
 
-    for (size_t j = 0; j < bias.shape[1]; ++j)
-        bias(0,j) -= learning_rate * output_gradient(0,j);
-
-    nd2array<T> weights_T = weights.transpose();
+    nd2array<T> weights_T = weights._T();
     return output_gradient * weights_T;
+}
+
+
+template <class T>
+void FullyConnected<T>::step(const float& learning_rate) {
+    for (size_t i = 0; i < this->weights.shape[0]; ++i)
+        for (size_t j = 0; j < this->weights.shape[1]; ++j)
+            this->weights(i,j) -= learning_rate * this->dW(i,j);
+
+    for (size_t j = 0; j < this->bias.shape[1]; ++j)
+        this->bias(0,j) -= learning_rate * this->db(0,j);
 }
 
 

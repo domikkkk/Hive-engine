@@ -16,8 +16,8 @@ public:
 
     ArrayType operator()(const ArrayType& input) override;
     ArrayType forward(const ArrayType& input) override;
-    ArrayType backward(const ArrayType& output_gradient,
-                       const float& learning_rate) override;
+    ArrayType backward(const ArrayType& output_gradient) override;
+    void step(const float& ) override {};
 
 private:
     ArrayType last_input;

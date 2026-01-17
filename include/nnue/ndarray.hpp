@@ -105,6 +105,7 @@ struct nd2array : public narray<T> {
 
     nd2array operator*(const nd2array& array) const;
     nd2array transpose() const;
+    nd2array _T() const { return this->transpose(); };
 
     void randomize(const T &min = T(-1), const T &max = T(1)) override;
 };

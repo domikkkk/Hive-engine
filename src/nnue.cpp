@@ -2,7 +2,7 @@
 #include <nnue/FullyConnected.hpp>
 #include <nnue/activations.hpp>
 #include <nnue/ndarray.hpp>
-#include <nnue/model.hpp>
+#include <nnue/sequential.hpp>
 
 
 int main() {
@@ -18,9 +18,9 @@ int main() {
     
     ClippedReLU<float, nd2array<float>> t(1.0), t2(1.0);
 
-    FullyConnected<float> fc(8, 4), fc2(4, 10), fc3(10, 1);
+    FullyConnected<float> fc(8, 8), fc2(8, 8), fc3(8, 1);
     
-    Model<float> model(&fc, &t, &fc2, &t2, &fc3);
+    Sequential<float, nd2array<float>> model(&fc, &t, &fc2, &t2, &fc3);
 
     output = model(array1);
 
