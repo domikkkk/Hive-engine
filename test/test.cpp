@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <Hive>
+#include <Hive.h>
 #include <exceptions.hpp>
 
 

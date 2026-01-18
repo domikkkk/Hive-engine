@@ -46,7 +46,7 @@ template<class T>
 nd2array<T> nd2array<T>::operator*(const T& a) const {
     nd2array<T> result(*this);
     for (size_t i = 0; i < result.data.size(); ++i) {
-        result[i] -= a;
+        result[i] *= a;
     }
     return result;
 }
@@ -56,7 +56,7 @@ template<class T>
 nd2array<T> nd2array<T>::operator/(const T& a) const {
     nd2array<T> result(*this);
     for (size_t i = 0; i < result.data.size(); ++i) {
-        result[i] -= a;
+        result[i] /= a;
     }
     return result;
 }
@@ -66,7 +66,7 @@ template<class T>
 nd2array<T> nd2array<T>::operator+(const T& a) const {
     nd2array<T> result(*this);
     for (size_t i = 0; i < result.data.size(); ++i) {
-        result[i] -= a;
+        result[i] += a;
     }
     return result;
 }
@@ -109,6 +109,6 @@ void nd2array<T>::randomize(const T &min, const T &max) {
 }
 
 
-template class nd2array<float>;
-template class nd2array<int>;
-template class nd2array<double>;
+template struct nd2array<float>;
+template struct nd2array<int>;
+template struct nd2array<double>;

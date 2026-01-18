@@ -12,7 +12,7 @@
 
 
 struct CancellationToken {
-    using Time = std::chrono::_V2::steady_clock::time_point;
+    using Time = std::chrono::steady_clock::time_point;
     using Clock = std::chrono::steady_clock;
     using TimeLimit = std::chrono::seconds;
 
