@@ -2,11 +2,6 @@
 
 
 template<class T, class ArrayType>
-ArrayType Activation<T, ArrayType>::operator()(const ArrayType& input) {
-    return this->forward(input);
-}
-
-template<class T, class ArrayType>
 ArrayType Activation<T, ArrayType>::forward(const ArrayType& input) {
     this->last_input = input;
     return function(input);

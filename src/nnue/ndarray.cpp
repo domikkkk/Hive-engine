@@ -43,10 +43,50 @@ nd2array<T> nd2array<T>::operator*(const nd2array& array) const {
 
 
 template<class T>
+nd2array<T> nd2array<T>::operator*(const T& a) const {
+    nd2array<T> result(*this);
+    for (size_t i = 0; i < result.data.size(); ++i) {
+        result[i] -= a;
+    }
+    return result;
+}
+
+
+template<class T>
+nd2array<T> nd2array<T>::operator/(const T& a) const {
+    nd2array<T> result(*this);
+    for (size_t i = 0; i < result.data.size(); ++i) {
+        result[i] -= a;
+    }
+    return result;
+}
+
+
+template<class T>
+nd2array<T> nd2array<T>::operator+(const T& a) const {
+    nd2array<T> result(*this);
+    for (size_t i = 0; i < result.data.size(); ++i) {
+        result[i] -= a;
+    }
+    return result;
+}
+
+
+template<class T>
+nd2array<T> nd2array<T>::operator-(const T& a) const {
+    nd2array<T> result(*this);
+    for (size_t i = 0; i < result.data.size(); ++i) {
+        result[i] -= a;
+    }
+    return result;
+}
+
+
+template<class T>
 nd2array<T> nd2array<T>::transpose() const {
-    nd2array<T> transposed(shape[1], shape[0]);
-    for (size_t i = 0; i < shape[0]; ++i) {
-        for (size_t j = 0; j < shape[1]; ++j) {
+    nd2array<T> transposed(this->shape[1], this->shape[0]);
+    for (size_t i = 0; i < this->shape[0]; ++i) {
+        for (size_t j = 0; j < this->shape[1]; ++j) {
             transposed(j, i) = (*this)(i, j);
         }
     }
@@ -67,6 +107,7 @@ void nd2array<T>::randomize(const T &min, const T &max) {
         for (size_t i = 0; i < this->size(); ++i) this->data[i] = dist(gen);
     }
 }
+
 
 template class nd2array<float>;
 template class nd2array<int>;

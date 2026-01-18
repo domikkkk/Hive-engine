@@ -2,12 +2,6 @@
 
 
 template <class T>
-nd2array<T> FullyConnected<T>::operator()(const nd2array<T>& input) {
-    return this->forward(input);
-}
-
-
-template <class T>
 nd2array<T> FullyConnected<T>::forward(const nd2array<T>& input) {
     this->last_input = input; 
     nd2array<T> result = input * weights;
@@ -40,6 +34,13 @@ void FullyConnected<T>::step(const float& learning_rate) {
 
     for (size_t j = 0; j < this->bias.shape[1]; ++j)
         this->bias(0,j) -= learning_rate * this->db(0,j);
+}
+
+
+template <class T>
+void FullyConnected<T>::zero_grad() {
+    std::fill(this->dW.data.begin(), this->dW.data.end(), 0);
+    std::fill(this->db.data.begin(), this->db.data.end(), 0);
 }
 
 

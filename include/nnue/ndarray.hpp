@@ -9,7 +9,6 @@
 template<class T>
 struct narray {
     virtual ~narray() = default;
-
     virtual size_t size() const = 0;
     virtual T& operator[](size_t i) = 0;
     virtual const T& operator[](size_t i) const = 0;
@@ -33,6 +32,12 @@ struct ndarray : public narray<T> {
     ndarray(Args... dims) : shape{static_cast<size_t>(dims)...} {
         size_t total = 1;
         ((total *= dims), ...);
+        this->data.resize(total);
+    }
+
+    explicit ndarray(const std::vector<size_t>& shape_) : shape(shape_), data(1) {
+        size_t total = 1;
+        for (auto dim : this->shape) total *= dim;
         this->data.resize(total);
     }
 
@@ -84,13 +89,18 @@ struct ndarray : public narray<T> {
         return *this;
     }
 
+    ndarray operator*(const T& a) const;
+    ndarray operator/(const T& a) const;
+    ndarray operator+(const T& a) const;
+    ndarray operator-(const T& a) const;
+
     void randomize(const T &min = T(-1), const T &max = T(1)) override;
 };
 
 
 template <class T>
 struct nd2array : public narray<T> {
-    size_t shape[2];
+    std::vector<size_t> shape;
     std::vector<T> data;
 
     size_t size() const override { return this->data.size(); }
@@ -99,9 +109,20 @@ struct nd2array : public narray<T> {
 
     nd2array() = default;
     nd2array(const size_t &r, const size_t &c) : shape{r, c}, data(r * c) {}
+    explicit nd2array(const std::vector<size_t>& shape_) : shape(shape_), data(1) {
+        if (shape_.size() != 2) throw std::invalid_argument("To many dim");
+        size_t total = 1;
+        for (const auto& dim : this->shape) total *= dim;
+        this->data.resize(total);
+    }
 
     T& operator()(const size_t &r, const size_t &c);
     const T& operator()(const size_t &r, const size_t &c) const;
+
+    nd2array operator*(const T& a) const;
+    nd2array operator/(const T& a) const;
+    nd2array operator+(const T& a) const;
+    nd2array operator-(const T& a) const;
 
     nd2array operator*(const nd2array& array) const;
     nd2array transpose() const;

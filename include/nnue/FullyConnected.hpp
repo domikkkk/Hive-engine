@@ -24,10 +24,10 @@ public:
             bias.randomize();
         };
 
-    nd2array<T> operator()(const nd2array<T>& input) override;
     nd2array<T> forward(const nd2array<T>& input) override;
     nd2array<T> backward(const nd2array<T>& output_gradient) override;
     void step(const float& learning_rate) override;
+    void zero_grad() override;
 
 private:
     

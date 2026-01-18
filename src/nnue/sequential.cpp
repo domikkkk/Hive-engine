@@ -17,6 +17,20 @@ ArrayType Sequential<T, ArrayType>::forward(const ArrayType& input) {
 }
 
 
+template <class T, class ArrayType>
+ArrayType Sequential<T, ArrayType>::backward(const ArrayType& output_gradient, const float& learning_rate) {
+    ArrayType grad = output_gradient;
+
+    for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+        grad = (*it)->backward(grad);
+        (*it)->step(learning_rate);
+        (*it)->zero_grad();
+    }
+
+    return grad;
+}
+
+
 template class Sequential<float, nd2array<float>>;
 template class Sequential<double, nd2array<double>>;
 template class Sequential<int, nd2array<int>>;

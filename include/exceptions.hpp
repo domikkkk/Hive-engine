@@ -61,8 +61,12 @@ public:
 
 class WrongMatrixSize : public std::exception {
 public:
-    explicit WrongMatrixSize(const size_t &x1, const size_t &y1, const size_t &x2, const size_t &y2) {
+    WrongMatrixSize(const size_t &x1, const size_t &y1, const size_t &x2, const size_t &y2) {
         this->message = std::format("Incompatible matrix sizes ({}, {}) with ({}, {})", x1, y1, x2, y2);
+    }
+
+    WrongMatrixSize(const size_t &x, const size_t &y) {
+        this->message = std::format("Incompatible matrix shapes {} with {}", x, y);
     }
 
     const char* what() const noexcept override {

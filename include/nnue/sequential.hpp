@@ -16,7 +16,10 @@ public:
 
     ArrayType operator()(const ArrayType& input);
     ArrayType forward(const ArrayType& input);
-    ArrayType backward(const ArrayType &output_gradient, const float &learning_rate);
+    ArrayType backward(const ArrayType &output_gradient, const float& learning_rate);
+
+    void step(const float&) {};
+    void zero_grad() {}
 
 
 private:
