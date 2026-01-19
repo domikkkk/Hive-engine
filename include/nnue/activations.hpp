@@ -16,7 +16,7 @@ public:
 
     ArrayType forward(const ArrayType& input) override;
     ArrayType backward(const ArrayType& output_gradient) override;
-    void step(const float& ) override {};
+    void step(const T& ) override {};
     void zero_grad() override {};
 
 private:

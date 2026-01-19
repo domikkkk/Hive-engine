@@ -12,7 +12,7 @@ public:
     ArrayType operator()(const ArrayType &input) { return this->forward(input); };
     virtual ArrayType forward(const ArrayType &input) = 0;
     virtual ArrayType backward(const ArrayType &output_gradient) = 0;
-    virtual void step(const float& learning_rate) = 0;
+    virtual void step(const T& learning_rate) = 0;
     virtual void zero_grad() = 0;
 };
 

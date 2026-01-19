@@ -12,14 +12,14 @@ public:
     Sequential() = default;
 
     template <typename... Layers>
-    Sequential(Layers*... args) : layers{args...} {}
+    Sequential(Layers*... args) : layers{args...} {};
 
     ArrayType operator()(const ArrayType& input);
     ArrayType forward(const ArrayType& input);
-    ArrayType backward(const ArrayType &output_gradient, const float& learning_rate);
+    ArrayType backward(const ArrayType &output_gradient, const T& learning_rate);
 
     void step(const float&) {};
-    void zero_grad() {}
+    void zero_grad() {};
 
 
 private:

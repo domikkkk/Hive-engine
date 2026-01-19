@@ -26,7 +26,7 @@ public:
 
     nd2array<T> forward(const nd2array<T>& input) override;
     nd2array<T> backward(const nd2array<T>& output_gradient) override;
-    void step(const float& learning_rate) override;
+    void step(const T& learning_rate) override;
     void zero_grad() override;
 
 private:

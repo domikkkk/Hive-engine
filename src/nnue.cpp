@@ -27,7 +27,7 @@ int main() {
 
     // --- stworzenie sieci ---
     FullyConnected<float> fc1(input_size, 10);
-    FullyConnected<float> fc2(10, 8);
+    FullyConnected<float> fc2(8, 8);
     FullyConnected<float> fc3(10, 1);
 
     ReLU<float, nd2array<float>> relu1;
@@ -43,8 +43,8 @@ int main() {
 
     MSE<float, nd2array<float>> loss_fn;
 
-    const float lr = 0.001;
-    const int epochs = 90;
+    float lr = 0.001;
+    const int epochs = 100;
 
     for (int ep = 0; ep < epochs; ++ep) {
         float epoch_loss = 0;
@@ -58,6 +58,7 @@ int main() {
             float sample_loss = loss_fn(out, Y[i]);
             epoch_loss += sample_loss;
         }
+        if (ep >= 85) lr = 0.0001;
 
         std::cout << "Epoch " << ep << ", loss: " << epoch_loss / n_samples << "\n";
     }

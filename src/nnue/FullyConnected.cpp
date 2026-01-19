@@ -27,7 +27,7 @@ nd2array<T> FullyConnected<T>::backward(const nd2array<T>& output_gradient) {
 
 
 template <class T>
-void FullyConnected<T>::step(const float& learning_rate) {
+void FullyConnected<T>::step(const T& learning_rate) {
     for (size_t i = 0; i < this->weights.shape[0]; ++i)
         for (size_t j = 0; j < this->weights.shape[1]; ++j)
             this->weights(i,j) -= learning_rate * this->dW(i,j);
