@@ -7,14 +7,24 @@ fi
 VERSION=""
 DEBUG_FLAG="-DDEBUG=0"
 INFO_FLAG="-DINFO=0"
+TEST_FLAG="-DTEST=0"
 
-if [ "$1" == "DEBUG" ]; then
-    DEBUG_FLAG="-DDEBUG=1"
-elif [ "$1" == "INFO" ]; then
-    INFO_FLAG="-DINFO=1"
-elif [[ "$1" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-    VERSION="$1"
-fi
+for arg in "$@"; do
+    case "$arg" in
+        DEBUG)
+            DEBUG_FLAG="-DDEBUG=1"
+            ;;
+        INFO)
+            INFO_FLAG="-DINFO=1"
+            ;;
+        TEST)
+            TEST_FLAG="-DTEST=1"
+            ;;
+        v[0-9]*.[0-9]*.[0-9]*)
+            VERSION="$arg"
+            ;;
+    esac
+done
 
 if [ -n "$VERSION" ]; then
     echo "#pragma once" > version.h
@@ -24,12 +34,15 @@ fi
 
 cd build
 
-cmake .. $DEBUG_FLAG $INFO_FLAG
+cmake .. $DEBUG_FLAG $INFO_FLAG $TEST_FLAG
 cmake --build .
 
 mv hive_engine ..
-mv tests ..
 mv nnue_network ..
+
+if [ "$TEST_FLAG" == "-DTEST=1" ]; then
+    mv tests ..
+fi
 
 cd ..
 

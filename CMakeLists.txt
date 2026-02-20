@@ -18,25 +18,26 @@ add_subdirectory("src/hive")
 add_subdirectory("src/nnue")
 add_subdirectory("src/engine")
 
-set(DECORATORS_HPP "include/decorators.hpp")
+# set(DECORATORS_HPP "include/decorators.hpp")
 
 
-add_executable(${PROJECT_NAME} src/main.cpp ${DECORATORS_HPP})
+add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta NNUE)
 
 add_executable(nnue_network "src/nnue.cpp")
 target_link_libraries(nnue_network PUBLIC NNUE)
 
+if(${TEST})
+    FetchContent_Declare(
+        gtest
+        GIT_REPOSITORY "https://github.com/google/googletest.git"
+        GIT_TAG        "release-1.12.0"
+    )
 
-FetchContent_Declare(
-    gtest
-    GIT_REPOSITORY "https://github.com/google/googletest.git"
-    GIT_TAG        "release-1.12.0"
-)
+    FetchContent_MakeAvailable(gtest)
 
-FetchContent_MakeAvailable(gtest)
+    # testing
+    add_executable(tests "test/test.cpp")
 
-# testing
-add_executable(tests "test/test.cpp")
-
-target_link_libraries(tests gtest gtest_main Hive)
+    target_link_libraries(tests gtest gtest_main Hive)
+endif()

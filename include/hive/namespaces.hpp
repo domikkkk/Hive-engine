@@ -171,8 +171,9 @@ namespace Insects {
 namespace hive {
     static constexpr int X = 64;
     static constexpr int Y = 64;
-    static constexpr int Z = 8;
+    static constexpr int Z = 5;
     static constexpr int turns = 4;
+    static constexpr int bettles[2][2] = {{0, 1}, {2, 3}};
 };
 
 

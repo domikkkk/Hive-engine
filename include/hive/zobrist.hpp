@@ -28,7 +28,8 @@ private:
     uint64_t _hash = 0;
 
     uint64_t hashByColor;
-    uint64_t hashByPosition[number][hive::X][hive::Y][hive::Z];
+    uint64_t hashByPosition[number][hive::X][hive::Y];
+    uint64_t hashByBettle[4][hive::Z];
 
     uint64_t rand64() noexcept;
 

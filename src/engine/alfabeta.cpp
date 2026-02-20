@@ -47,7 +47,7 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
     }
 }
 
-
+//nie używane na razie
 float AlfaBeta::evaluate_move(const EMove &move) noexcept {  // do dopisania
     auto &con = this->game->get_controller();
     auto &board = con.get_board();

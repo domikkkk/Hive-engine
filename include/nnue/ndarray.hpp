@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <hive/coordinates.hpp>
 #include <hive/namespaces.hpp>
+#include <unordered_map>
 
 
 template<class T>
