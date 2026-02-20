@@ -12,7 +12,7 @@ public:
     Sequential() = default;
 
     template <typename... Layers>
-    Sequential(Layers*... args) : layers{args...} {};
+    Sequential(Layers*... args) : layers{args...} {}
 
     ArrayType operator()(const ArrayType& input);
     ArrayType forward(const ArrayType& input);

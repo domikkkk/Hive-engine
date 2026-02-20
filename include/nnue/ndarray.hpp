@@ -4,6 +4,8 @@
 #pragma once
 #include <vector>
 #include <stdexcept>
+#include <hive/coordinates.hpp>
+#include <hive/namespaces.hpp>
 
 
 template<class T>
@@ -130,6 +132,12 @@ struct nd2array : public narray<T> {
 
     void randomize(const T &min = T(-1), const T &max = T(1)) override;
 };
+
+
+int get_index_for_input(const std::pair<std::string, Coords> &piece);
+
+template <class T>
+void set_input(nd2array<T> *input, const std::unordered_map<std::string, Coords> *insects);
 
 
 #endif

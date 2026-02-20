@@ -2,7 +2,7 @@
 #include <exceptions.hpp>
 #include <random>
 #include <ctime>
-#include <type_traits>
+#include <unordered_map>
 
 
 template<class T>
@@ -107,6 +107,31 @@ void nd2array<T>::randomize(const T &min, const T &max) {
         for (size_t i = 0; i < this->size(); ++i) this->data[i] = dist(gen);
     }
 }
+
+
+int get_index_for_input(const std::pair<std::string, Coords> &piece) {
+    int insect_type = 0;
+    switch(piece.first[1]) {
+        case 'Q': insect_type = 0; break;
+        case 'S': insect_type = 1; break;
+        case 'B': insect_type = 2; break;
+        case 'G': insect_type = 3; break;
+        case 'A': insect_type = 4; break;
+    }
+    const int color_offset = piece.first[0] == 'w' ? 0 : 1;
+    const int layer = (color_offset * 5) + insect_type;
+    return (layer * hive::X * hive::Y) + ((piece.second.y + hive::Y/2) * hive::X) + piece.second.x + hive::X/2;
+}
+
+
+template <class T>
+void set_input(nd2array<T> *input, const std::unordered_map<std::string, Coords> *insects) {
+    for (const auto &p : insects) {
+        int idx = get_index_for_input(p);
+        (*input)(0, idx) = static_cast<T>(1);
+    }
+}
+
 
 
 template struct nd2array<float>;
