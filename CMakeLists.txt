@@ -3,7 +3,7 @@ include(FetchContent)
 
 project("hive_engine" CXX)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic -g -O3 -ffast-math")
+add_compile_options(-Wall -Wextra -pedantic -O3 -ffast-math)
 
 if(${DEBUG})
     add_compile_definitions(DEBUG)
@@ -14,18 +14,18 @@ if(${INFO})
 endif()
 
 # add hive/files
-add_subdirectory("src/hive")
 add_subdirectory("src/nnue")
+add_subdirectory("src/hive")
 add_subdirectory("src/engine")
 
 # set(DECORATORS_HPP "include/decorators.hpp")
 
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta NNUE)
+target_link_libraries(${PROJECT_NAME} PUBLIC NNUE Hive AlfaBeta)
 
-add_executable(nnue_network "src/nnue.cpp")
-target_link_libraries(nnue_network PUBLIC NNUE)
+# add_executable(nnue_network "src/nnue.cpp")
+# target_link_libraries(nnue_network PUBLIC NNUE)
 
 if(${TEST})
     FetchContent_Declare(

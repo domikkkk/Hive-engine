@@ -2,6 +2,21 @@
 #include <exceptions.hpp>
 
 
+Controller::Controller() noexcept {
+    this->prepare_pieces();
+
+    FullyConnected<float> fc1(hive::X * hive::Y * 2 * 5, 8), fc2(8, 8), fc3(8, 1);
+    ClippedReLU<float, nd2array<float>> relu1(16.0), relu2(256.0);
+
+    this->model = Sequential<float, nd2array<float>>(
+        &fc1, &relu1, &fc2, &relu2, &fc3
+    );
+
+    this->loss_fn = MSE<float, nd2array<float>>();
+
+    this->accumulator._input() = nd2array<float>(1, hive::X * hive::Y * 2 * 5);
+}
+
 
 const Color &Controller::get_player() const noexcept {
     return this->current;

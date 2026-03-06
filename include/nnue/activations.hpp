@@ -14,10 +14,10 @@ public:
     Activation(Func func, Func deriv)
         : function(func), derivative(deriv) {}
 
-    ArrayType forward(const ArrayType& input) override;
-    ArrayType backward(const ArrayType& output_gradient) override;
-    void step(const T& ) override {};
-    void zero_grad() override {};
+    ArrayType forward(const ArrayType& input);
+    ArrayType backward(const ArrayType& output_gradient);
+    void step(const T& ) {};
+    void zero_grad() {};
 
 private:
     ArrayType last_input;

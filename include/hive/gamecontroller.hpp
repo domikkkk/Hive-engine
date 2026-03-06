@@ -9,10 +9,17 @@
 #include <unordered_set>
 #include <hive/zobrist.hpp>
 
+#include <nnue/ndarray.hpp>
+#include <nnue/activations.hpp>
+#include <nnue/FullyConnected.hpp>
+#include <nnue/loss.hpp>
+#include <nnue/sequential.hpp>
+#include <nnue/accumulator.hpp>
+
 
 class Controller {
 public:
-    Controller() {this->prepare_pieces();};
+    Controller() noexcept;
     explicit Controller(const hive::Board &board): board(board) {};
     const Color &get_player() const noexcept;
     bool validateQueen() const noexcept;
@@ -90,6 +97,10 @@ private:
         {Insect::ant, 3.0},
         {Insect::grasshopper, 2.0}
     };
+
+    Sequential<float, nd2array<float>> model;
+    MSE<float, nd2array<float>> loss_fn;
+    Accumulator<float> accumulator;
 };
 
 

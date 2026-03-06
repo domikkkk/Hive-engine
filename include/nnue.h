@@ -1,0 +1,5 @@
+#include "nnue/sequential.hpp"
+#include "nnue/loss.hpp"
+#include "nnue/activations.hpp"
+#include "nnue/ndarray.hpp"
+#include "nnue/FullyConnected.hpp"
