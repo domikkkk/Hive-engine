@@ -34,9 +34,9 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
             }
             EMove move = {piece.first, where};
             // float eval = this->evaluate_move(move);  // to trzeba zastosować kiedyś i pozbyć się poniższego kodu
-            this->game->get_controller().engine_move(piece.first, where);
-            float eval = this->evaluate_to_order();
-            this->game->get_controller().undo_move();
+            // this->game->get_controller().engine_move(piece.first, where);
+            float eval = this->evaluate_to_order(); // chwilowo zwraca losowo - tzn losowo ocenia ruchy
+            // this->game->get_controller().undo_move();
             sorted_moves.emplace_back(move, eval);
         }
     }
@@ -128,11 +128,13 @@ PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const stru
         }
     }
 
-    PossibleBestMove possible_move = -infinity;
+    PossibleBestMove possible_move(-infinity);
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game->set_valid_moves(valid_moves);
     std::vector<PossibleBestMove> moves;
     this->order_moves(valid_moves, moves, Color::WHITE);
+
+    float old_alfa = alfa;
 
     for (const auto &move: moves) {
         if (token.defined && token.is_end()) break;
@@ -163,8 +165,8 @@ PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const stru
 
     this->transpositiontable[hash] = TranspositionTableEntry(
         possible_move.value, depth, possible_move.bestmove,
-        possible_move.value <= alfa   ? EntryType::LowerBound
-        : possible_move.value >= beta ? EntryType::UpperBound
+        possible_move.value <= old_alfa   ? EntryType::UpperBound
+        : possible_move.value >= beta ? EntryType::LowerBound
                                       : EntryType::Exact);
 
     return possible_move;

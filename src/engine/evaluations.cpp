@@ -51,10 +51,10 @@ float heuristic3(Controller &controller) {
     if (controller.get_turns() <= 4) return black - white;
 
     const auto &weights = controller._weights();
-    float value = 3.5 * black - white;
+    float value = black - white;
     for (const auto &piece : controller.pieces_possible_to_move()) {
         const float &w = weights.find(piece[1])->second;
-        value += color_from_piece(piece[0]) == Color::WHITE? 0.2*w: -w;
+        value += color_from_piece(piece[0]) == Color::WHITE? w: -w;
     }
     return value;
 }
