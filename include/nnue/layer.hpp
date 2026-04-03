@@ -10,10 +10,10 @@ class Layer {
 public:
     ~Layer() = default; 
     ArrayType operator()(const ArrayType &input) { return this->forward(input); };
-    ArrayType forward(const ArrayType &input);
-    ArrayType backward(const ArrayType &output_gradient);
-    void step(const T& learning_rate);
-    void zero_grad();
+    virtual ArrayType forward(const ArrayType &input) = 0;
+    virtual ArrayType backward(const ArrayType &output_gradient) = 0;
+    virtual void step(const T& learning_rate) = 0;
+    virtual void zero_grad() = 0;
 };
 
 

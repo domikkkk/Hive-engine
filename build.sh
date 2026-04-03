@@ -8,6 +8,7 @@ VERSION=""
 DEBUG_FLAG="-DDEBUG=0"
 INFO_FLAG="-DINFO=0"
 TEST_FLAG="-DTEST=0"
+LEARN_FLAG="-DLEARN=0"
 
 for arg in "$@"; do
     case "$arg" in
@@ -19,6 +20,9 @@ for arg in "$@"; do
             ;;
         TEST)
             TEST_FLAG="-DTEST=1"
+            ;;
+        LEARN)
+            LEARN_FLAG="-DLEARN=1"
             ;;
         v[0-9]*.[0-9]*.[0-9]*)
             VERSION="$arg"
@@ -34,11 +38,14 @@ fi
 
 cd build
 
-cmake .. $DEBUG_FLAG $INFO_FLAG $TEST_FLAG
+cmake .. $DEBUG_FLAG $INFO_FLAG $TEST_FLAG $LEARN_FLAG
 cmake --build .
 
 mv hive_engine ..
-mv nnue_network ..
+
+if [ "$LEARN_FLAG" == "-DLEARN=1" ]; then
+    mv nnue_network ..
+fi
 
 if [ "$TEST_FLAG" == "-DTEST=1" ]; then
     mv tests ..

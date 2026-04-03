@@ -2,6 +2,7 @@
 #include <cmath>
 
 
+
 float heuristic1(Controller &controller) {
     auto white = controller.count_surrounded_fields_of_queen(Color::WHITE);
     auto black = controller.count_surrounded_fields_of_queen(Color::BLACK);
@@ -60,33 +61,29 @@ float heuristic3(Controller &controller) {
 }
 
 
-
-int get_index_for_input(const std::pair<std::string, Coords> &piece) {
-    int insect_type = 0;
-    switch(piece.first[1]) {
-        case 'Q': insect_type = 0; break;
-        case 'S': insect_type = 1; break;
-        case 'B': insect_type = 2; break;
-        case 'G': insect_type = 3; break;
-        case 'A': insect_type = 4; break;
+int zliczacz(nd2array<float> array) {
+    int counterrr = 0;
+    for (const auto &a : array.data) {
+        counterrr += a == 1.0f;
     }
-    const int color_offset = piece.first[0] == 'w' ? 0 : 1;
-    const int layer = (color_offset * 5) + insect_type;
-    return (layer * hive::X * hive::Y) + ((piece.second.y + hive::Y/2) * hive::X) + piece.second.x + hive::X/2;
+    return counterrr;
 }
 
-
-template <class T>
-void set_input(nd2array<T> *input, const std::unordered_map<std::string, Coords> *insects) {
-    for (const auto &p : *insects) {
-        const int &idx = get_index_for_input(p);
-        (*input)(0, idx) = static_cast<T>(1);
-    }
-}
-
+float total_loss = 0.0f;
+int counter = 0;
 
 float learn_nnue(Controller &controller) {
-    float value = heuristic3(controller);
+    nd2array<float> output(1, 1);
+    output(0, 0) = heuristic3(controller);
+    auto& loss_fn = controller.get_loss_fn();
+    auto *model = controller.get_model();
+    auto& input = controller.get_accumulator()._input();
+    auto pred = model->forward(input);
 
-    return value;
+    auto loss = loss_fn(pred, output);
+    auto grad = loss_fn.backward(pred, output);
+    model->backward(grad, 0.001);
+    total_loss += loss;
+    counter++;
+    return static_cast<float>(output(0, 0));
 }

@@ -13,8 +13,12 @@ if(${INFO})
     add_compile_definitions(INFO)
 endif()
 
+if(${LEARN})
+    add_compile_definitions(LEARN)
+endif()
+
 # add hive/files
-add_subdirectory("src/nnue")
+# add_subdirectory("src/nnue")
 add_subdirectory("src/hive")
 add_subdirectory("src/engine")
 
@@ -22,10 +26,12 @@ add_subdirectory("src/engine")
 
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_link_libraries(${PROJECT_NAME} PUBLIC NNUE Hive AlfaBeta)
+target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta)
 
-# add_executable(nnue_network "src/nnue.cpp")
-# target_link_libraries(nnue_network PUBLIC NNUE)
+if(${LEARN})
+    add_executable(nnue_network src/nnue.cpp)
+    target_link_libraries(nnue_network PUBLIC AlfaBeta Hive)
+endif()
 
 if(${TEST})
     FetchContent_Declare(

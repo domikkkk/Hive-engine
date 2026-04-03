@@ -14,8 +14,18 @@ public:
     Activation(Func func, Func deriv)
         : function(func), derivative(deriv) {}
 
-    ArrayType forward(const ArrayType& input);
-    ArrayType backward(const ArrayType& output_gradient);
+    ArrayType forward(const ArrayType& input) {
+        this->last_input = input;
+        return this->function(input);
+    }
+    ArrayType backward(const ArrayType& output_gradient) {
+        ArrayType grad = this->derivative(this->last_input);
+
+        for (size_t i = 0; i < grad.size(); ++i)
+            grad[i] *= output_gradient[i];
+
+        return grad;
+    }
     void step(const T& ) {};
     void zero_grad() {};
 

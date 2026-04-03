@@ -3,3 +3,4 @@
 #include "nnue/activations.hpp"
 #include "nnue/ndarray.hpp"
 #include "nnue/FullyConnected.hpp"
+#include "nnue/accumulator.hpp"

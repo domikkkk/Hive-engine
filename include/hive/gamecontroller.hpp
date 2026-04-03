@@ -20,7 +20,7 @@
 class Controller {
 public:
     Controller() noexcept;
-    explicit Controller(const hive::Board &board): board(board) {};
+    // explicit Controller(const hive::Board &board): board(board) {};
     const Color &get_player() const noexcept;
     bool validateQueen() const noexcept;
     bool can_move_on_board(const std::string &piece) noexcept;
@@ -66,9 +66,23 @@ public:
         return this->hash.value();
     }
 
+// #ifdef LEARN
+    inline Sequential<float, nd2array<float>>* get_model() noexcept {
+        return &this->model;
+    }
+
+    inline MSE<float, nd2array<float>>& get_loss_fn() noexcept {
+        return this->loss_fn;
+    }
+
+    inline Accumulator<float>& get_accumulator() noexcept {
+        return this->accumulator;
+    }
+// #endif
+
     int count_surrounded_fields_of_queen(const Color &c) noexcept;
 
-    Coords find_destination(const std::string &piece, Directions direction) const;
+    Coords find_destination(const std::string &piece, const Directions &direction) const;
     std::pair<std::string, Directions> find_adjacent(const Coords &coords) noexcept;
 
     const std::vector<std::string> pieces_possible_to_move() noexcept;
@@ -99,6 +113,8 @@ private:
     };
 
     Sequential<float, nd2array<float>> model;
+    FullyConnected<float> fc1, fc2, fc3;
+    ClippedReLU<float, nd2array<float>> relu1, relu2;
     MSE<float, nd2array<float>> loss_fn;
     Accumulator<float> accumulator;
 };

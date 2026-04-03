@@ -1,12 +1,9 @@
 #include <hive/gamecontroller.hpp>
 #include <exceptions.hpp>
 
+#define INPUT hive::X * hive::Y * 2 * 5 + 16
 
-Controller::Controller() noexcept {
-    this->prepare_pieces();
-
-    FullyConnected<float> fc1(hive::X * hive::Y * 2 * 5, 8), fc2(8, 8), fc3(8, 1);
-    ClippedReLU<float, nd2array<float>> relu1(16.0), relu2(256.0);
+Controller::Controller() noexcept : fc1(INPUT, 8), fc2(8, 8), fc3(8, 1), relu1(16.0f), relu2(256.0f) {
 
     this->model = Sequential<float, nd2array<float>>(
         &fc1, &relu1, &fc2, &relu2, &fc3
@@ -14,7 +11,9 @@ Controller::Controller() noexcept {
 
     this->loss_fn = MSE<float, nd2array<float>>();
 
-    this->accumulator._input() = nd2array<float>(1, hive::X * hive::Y * 2 * 5);
+    this->accumulator._input() = nd2array<float>(1, INPUT);
+
+    this->prepare_pieces();
 }
 
 
@@ -163,6 +162,7 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         this->board.add_piece(p, to);
         this->hands.erase(piece);
         this->hash.Xor(piece, to.x, to.y, to.z);
+        this->accumulator.change_input(piece, to.x, to.y, to.z);
     } else {
         if (this->insects.find(piece) == this->insects.end()) throw PieceNotExisting(piece);
         auto from = this->insects.at(piece);  // może wywalić index_out_of_range
@@ -173,6 +173,8 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         this->board.move(from, to);
         this->hash.Xor(piece, from.x, from.y, from.z);
         this->hash.Xor(piece, to.x, to.y, to.z);
+        this->accumulator.change_input(piece, from.x, from.y, from.z);
+        this->accumulator.change_input(piece, to.x, to.y, to.z);
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -185,11 +187,14 @@ void Controller::engine_move(const std::string &piece, const Coords &to) noexcep
         this->board.add_piece(p, to);
         this->hands.erase(piece);
         this->hash.Xor(piece, to.x, to.y, to.z);
+        this->accumulator.change_input(piece, to.x, to.y, to.z);
     } else {
         auto from = this->insects[piece];
         this->board.move(from, to);
         this->hash.Xor(piece, from.x, from.y, from.z);
         this->hash.Xor(piece, to.x, to.y, to.z);
+        this->accumulator.change_input(piece, from.x, from.y, from.z);
+        this->accumulator.change_input(piece, to.x, to.y, to.z);
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -203,10 +208,13 @@ void Controller::undo_move() noexcept {
         this->hands.insert(piece);
         this->insects.erase(piece);
         this->hash.Xor(piece, m.to.x, m.to.y, m.to.z);
+        this->accumulator.change_input(piece, m.to.x, m.to.y, m.to.z);
     } else if (!m.pass) {
         this->insects[piece] = m.from;
         this->hash.Xor(piece, m.from.x, m.from.y, m.from.z);
         this->hash.Xor(piece, m.to.x, m.to.y, m.to.z);
+        this->accumulator.change_input(piece, m.from.x, m.from.y, m.from.z);
+        this->accumulator.change_input(piece, m.to.x, m.to.y, m.to.z);
     }
     this->board.unmove();
     this->switch_turn();
@@ -249,10 +257,11 @@ void Controller::prepare_pieces() {
             this->hands.insert("b"+piece+std::to_string(i+1));
         }
     }
+    // this->accumulator._input() = nd2array<float>(1, hive::X * hive::Y * 2 * 5 + 16);
 }
 
 
-Coords Controller::find_destination(const std::string &piece, Directions direction) const {
+Coords Controller::find_destination(const std::string &piece, const Directions &direction) const {
     if (this->board.get_turns() == 0) return this->board.first_location;
     if (this->insects.find(piece) == this->insects.end()) {
         if (this->hands.find(piece) == this->hands.end()) throw PieceNotExisting(piece);
