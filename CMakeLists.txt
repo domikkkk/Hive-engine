@@ -17,6 +17,10 @@ if(${LEARN})
     add_compile_definitions(LEARN)
 endif()
 
+if(${NNUE})
+    add_compile_definitions(NNUE)
+endif()
+
 # add hive/files
 # add_subdirectory("src/nnue")
 add_subdirectory("src/hive")
@@ -29,8 +33,13 @@ add_executable(${PROJECT_NAME} src/main.cpp)
 target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta)
 
 if(${LEARN})
+    # add_compile_definitions(LEARN)
+
     add_executable(nnue_network src/nnue.cpp)
     target_link_libraries(nnue_network PUBLIC AlfaBeta Hive)
+
+    add_executable(trained_nnue src/trained_nnue.cpp)
+    target_link_libraries(trained_nnue PUBLIC AlfaBeta Hive)
 endif()
 
 if(${TEST})

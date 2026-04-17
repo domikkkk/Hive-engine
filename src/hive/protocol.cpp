@@ -10,7 +10,20 @@ const std::string Protocol::info() const noexcept {
 
 void Protocol::create_game() noexcept {
     this->game.new_game();
+
+#ifndef NNUE
     this->engine.new_game(this->game, heuristic3, heuristic1);
+#endif
+
+#ifdef LEARN
+    this->engine.new_game(this->game, heuristic3, heuristic1);
+#endif
+
+#ifdef NNUE
+#ifndef LEARN
+    this->engine.new_game(this->game, heuristic_nnue, heuristic1);
+#endif
+#endif
 }
 
 

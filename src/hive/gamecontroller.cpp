@@ -1,21 +1,34 @@
 #include <hive/gamecontroller.hpp>
 #include <exceptions.hpp>
 
+
+#ifdef NNUE
 #define INPUT hive::X * hive::Y * 2 * 5 + 16
 
 Controller::Controller() noexcept : fc1(INPUT, 8), fc2(8, 8), fc3(8, 1), relu1(16.0f), relu2(256.0f) {
 
-    this->model = Sequential<float, nd2array<float>>(
+    this->model = Sequential<float>(
         &fc1, &relu1, &fc2, &relu2, &fc3
     );
 
-    this->loss_fn = MSE<float, nd2array<float>>();
+#ifndef LEARN
+    this->model.load_weights("/home/dominik/PraceDyplomowe/Hive-engine/model1.nnue");
+#endif
 
+#ifdef LEARN
+    this->loss_fn = MSE<float>();
+#endif
+    this->accumulator = Accumulator(&fc1);
     this->accumulator._input() = nd2array<float>(1, INPUT);
 
     this->prepare_pieces();
 }
+    
+#endif
 
+#ifndef NNUE
+Controller::Controller() noexcept {this->prepare_pieces();}
+#endif
 
 const Color &Controller::get_player() const noexcept {
     return this->current;
@@ -162,7 +175,9 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         this->board.add_piece(p, to);
         this->hands.erase(piece);
         this->hash.Xor(piece, to.x, to.y, to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, to.x, to.y, to.z);
+#endif
     } else {
         if (this->insects.find(piece) == this->insects.end()) throw PieceNotExisting(piece);
         auto from = this->insects.at(piece);  // może wywalić index_out_of_range
@@ -173,8 +188,10 @@ void Controller::move(const std::string &piece, const Coords &to) {  // tylko dl
         this->board.move(from, to);
         this->hash.Xor(piece, from.x, from.y, from.z);
         this->hash.Xor(piece, to.x, to.y, to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, from.x, from.y, from.z);
         this->accumulator.change_input(piece, to.x, to.y, to.z);
+#endif
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -187,14 +204,18 @@ void Controller::engine_move(const std::string &piece, const Coords &to) noexcep
         this->board.add_piece(p, to);
         this->hands.erase(piece);
         this->hash.Xor(piece, to.x, to.y, to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, to.x, to.y, to.z);
+#endif
     } else {
         auto from = this->insects[piece];
         this->board.move(from, to);
         this->hash.Xor(piece, from.x, from.y, from.z);
         this->hash.Xor(piece, to.x, to.y, to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, from.x, from.y, from.z);
         this->accumulator.change_input(piece, to.x, to.y, to.z);
+#endif
     }
     this->insects[piece] = to;
     this->switch_turn();
@@ -208,13 +229,17 @@ void Controller::undo_move() noexcept {
         this->hands.insert(piece);
         this->insects.erase(piece);
         this->hash.Xor(piece, m.to.x, m.to.y, m.to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, m.to.x, m.to.y, m.to.z);
+#endif
     } else if (!m.pass) {
         this->insects[piece] = m.from;
         this->hash.Xor(piece, m.from.x, m.from.y, m.from.z);
         this->hash.Xor(piece, m.to.x, m.to.y, m.to.z);
+#ifdef NNUE
         this->accumulator.change_input(piece, m.from.x, m.from.y, m.from.z);
         this->accumulator.change_input(piece, m.to.x, m.to.y, m.to.z);
+#endif
     }
     this->board.unmove();
     this->switch_turn();
@@ -257,7 +282,6 @@ void Controller::prepare_pieces() {
             this->hands.insert("b"+piece+std::to_string(i+1));
         }
     }
-    // this->accumulator._input() = nd2array<float>(1, hive::X * hive::Y * 2 * 5 + 16);
 }
 
 

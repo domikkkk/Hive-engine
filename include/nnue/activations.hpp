@@ -6,9 +6,10 @@
 #include <functional>
 
 
-template<class T, class ArrayType>
-class Activation : public Layer<T, ArrayType> {
+template<class T>
+class Activation : public Layer<T> {
 public:
+    using ArrayType = nd2array<T>;
     using Func = std::function<ArrayType(const ArrayType&)>;
 
     Activation(Func func, Func deriv)
@@ -36,11 +37,12 @@ private:
 };
 
 
-template<class T, class ArrayType>
-class ReLU : public Activation<T, ArrayType> {
+template<class T>
+class ReLU : public Activation<T> {
 public:
+    using ArrayType = nd2array<T>;
     ReLU()
-        : Activation<T, ArrayType>(
+        : Activation<T>(
             [](const ArrayType& x) {
                 ArrayType y = x;
                 for (size_t i = 0; i < y.size(); ++i)
@@ -57,11 +59,12 @@ public:
 };
 
 
-template<class T, class ArrayType>
-class ClippedReLU : public Activation<T, ArrayType> {
+template<class T>
+class ClippedReLU : public Activation<T> {
 public:
+    using ArrayType = nd2array<T>;
     ClippedReLU(const T& limit)
-        : Activation<T, ArrayType>(
+        : Activation<T>(
             [limit](const ArrayType& x) {
                 ArrayType y = x;
                 for (size_t i = 0; i < y.size(); ++i)

@@ -4,3 +4,5 @@ hive_engine*
 tests*
 *.o
 nnue_network
+model1.nnue
+trained_nnue

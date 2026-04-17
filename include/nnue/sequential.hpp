@@ -4,12 +4,13 @@
 
 #include <nnue/layer.hpp>
 #include <memory>
+#include <fstream>
 
 
-template <class T, class ArrayType>
+template <class T>
 class Sequential {
 public:
-    Sequential() = default;
+    using ArrayType = nd2array<T>;
 
     template <typename... Layers>
     Sequential(Layers*... args) : layers{args...} {}
@@ -35,12 +36,43 @@ public:
         return grad;
     }
 
-    void step(const float&) {};
-    void zero_grad() {};
+    void save_weights(const std::string& filename) const {
+        std::ofstream file(filename, std::ios::binary);
+
+        if (!file)
+            throw std::runtime_error("Cannot open file");
+        
+        size_t count = this->layers.size();
+        file.write(reinterpret_cast<const char*>(&count),
+            sizeof(size_t));
+
+        for (const auto* layer : this->layers) {
+            layer->save(file);
+        }
+    }
+
+
+    void load_weights(const std::string& filename) {
+        std::ifstream file(filename, std::ios::binary);
+
+        if (!file)
+            throw std::runtime_error("Cannot open file");
+
+        size_t count;
+        file.read(reinterpret_cast<char*>(&count),
+                sizeof(size_t));
+
+        if (count != this->layers.size())
+            throw std::runtime_error("Layer count mismatch");
+
+        for (auto* layer : this->layers) {
+            layer->load(file);
+        }
+    }
 
 
 private:
-    std::vector<Layer<T, ArrayType>*> layers;
+    std::vector<Layer<T>*> layers;
 };
 
 

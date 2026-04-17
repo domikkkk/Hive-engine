@@ -9,17 +9,21 @@
 template<class T>
 class Accumulator {
 public:
+    Accumulator() = default;
+
+    Accumulator(Layer<T> *firstlayer) noexcept : first_layer(firstlayer) {};
+
     nd2array<T>& _input() {return this->input;}
 
     void change_input(const size_t &pos) {this->input(0, pos) = static_cast<T>(1) - this->input(0, pos);}
     void change_input(const std::string &piece, const int &x, const int &y, const int &z) {
         int insect_type = 0;
         switch(piece[1]) {
-            case 'Q': insect_type = 0; break;
-            case 'S': insect_type = 1; break;
-            case 'B': insect_type = 2; break;
-            case 'G': insect_type = 3; break;
-            case 'A': insect_type = 4; break;
+            case Insect::bee: insect_type = 0; break;
+            case Insect::spider: insect_type = 1; break;
+            case Insect::beetle: insect_type = 2; break;
+            case Insect::grasshopper: insect_type = 3; break;
+            case Insect::ant: insect_type = 4; break;
         }
         const int color_offset = piece[0] == 'w' ? 0 : 1;
         const int layer = (color_offset * 5) + insect_type;
@@ -37,6 +41,7 @@ public:
 
 
 private:
+    Layer<T> *first_layer;
     nd2array<T> input;
 };
 

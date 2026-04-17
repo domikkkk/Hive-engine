@@ -72,18 +72,31 @@ int zliczacz(nd2array<float> array) {
 float total_loss = 0.0f;
 int counter = 0;
 
-float learn_nnue(Controller &controller) {
+
+#ifdef NNUE
+float heuristic_nnue(Controller &controller) {
+    #ifdef LEARN
     nd2array<float> output(1, 1);
     output(0, 0) = heuristic3(controller);
+
     auto& loss_fn = controller.get_loss_fn();
+    #endif
+
     auto *model = controller.get_model();
     auto& input = controller.get_accumulator()._input();
     auto pred = model->forward(input);
 
+    #ifndef LEARN
+    return static_cast<float>(pred(0, 0));
+    #endif
+
+    #ifdef LEARN
     auto loss = loss_fn(pred, output);
     auto grad = loss_fn.backward(pred, output);
     model->backward(grad, 0.001);
     total_loss += loss;
     counter++;
     return static_cast<float>(output(0, 0));
+    #endif
 }
+#endif

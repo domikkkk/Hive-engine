@@ -7,6 +7,7 @@
 #include <random>
 #include <ctime>
 #include <exceptions.hpp>
+#include <iostream>
 
 
 template<class T>
@@ -17,88 +18,10 @@ struct narray {
     virtual const T& operator[](size_t i) const = 0;
     
     virtual void randomize(const T &min = T(-1), const T &max = T(1)) = 0;
+
+    virtual void save(std::ostream& os) const = 0;
+    virtual void load(std::istream& is) = 0;
 };
-
-
-// template <class T>
-// struct ndarray : public narray<T> {
-//     std::vector<size_t> shape;
-//     std::vector<T> data;
-
-//     size_t size() const override { return data.size(); }
-//     T& operator[](size_t i) override { return data[i]; }
-//     const T& operator[](size_t i) const override { return data[i]; }
-
-//     ndarray() = default;
-
-//     template <class... Args>
-//     ndarray(Args... dims) : shape{static_cast<size_t>(dims)...} {
-//         size_t total = 1;
-//         ((total *= dims), ...);
-//         this->data.resize(total);
-//     }
-
-//     explicit ndarray(const std::vector<size_t>& shape_) : shape(shape_), data(1) {
-//         size_t total = 1;
-//         for (auto dim : this->shape) total *= dim;
-//         this->data.resize(total);
-//     }
-
-//     template <class... Args>
-//     T& operator()(Args... idxs) {
-//         std::vector<size_t> _idxs{static_cast<size_t>(idxs)...};
-//         if (_idxs.size() != shape.size()) {
-//             throw std::invalid_argument("Invalid number of indices");
-//         }
-
-//         size_t idx = 0;
-//         size_t stride = 1;
-
-//         // liczymy indeks liniowy w row-major order
-//         for (int i = shape.size(); i > 0; --i) {
-//             if (_idxs[i] >= shape[i]) throw std::out_of_range("Index out of bounds");
-//             idx += _idxs[i] * stride;
-//             stride *= shape[i];
-//         }
-
-//         return data[idx];
-//     }
-
-//     template <class... Args>
-//     const T& operator()(Args... idxs) const {
-//         std::vector<size_t> _idxs{static_cast<size_t>(idxs)...};
-//         if (_idxs.size() != shape.size()) {
-//             throw std::invalid_argument("Invalid number of indices");
-//         }
-
-//         size_t idx = 0;
-//         size_t stride = 1;
-
-//         for (int i = shape.size(); i > 0; --i) {
-//             if (_idxs[i] >= shape[i]) throw std::out_of_range("Index out of bounds");
-//             idx += _idxs[i] * stride;
-//             stride *= shape[i];
-//         }
-
-//         return data[idx];
-//     }
-
-//     template <class... Args>
-//     ndarray& reshape(Args... dims) {
-//         size_t total = 1;
-//         for (size_t d : {static_cast<size_t>(dims)...}) total *= d;
-//         if (total != data.size()) throw std::invalid_argument("Wrong total size for reshape");
-//         shape = {static_cast<size_t>(dims)...};
-//         return *this;
-//     }
-
-//     ndarray operator*(const T& a) const;
-//     ndarray operator/(const T& a) const;
-//     ndarray operator+(const T& a) const;
-//     ndarray operator-(const T& a) const;
-
-//     void randomize(const T &min = T(-1), const T &max = T(1)) override;
-// };
 
 
 template <class T>
@@ -118,14 +41,6 @@ struct nd2array : public narray<T> {
         for (const auto& dim : this->shape) total *= dim;
         this->data.resize(total);
     }
-
-    // nd2array& operator=(const nd2array& other) {
-    //     if (this != &other) {
-    //         shape = other.shape;
-    //         data = other.data; // <- std::vector robi deep copy, więc ok
-    //     }
-    //     return *this;
-    // }
 
     T& operator()(const size_t &r, const size_t &c) {
         if (r >= this->shape[0] || c >= this->shape[1]){
@@ -199,7 +114,7 @@ struct nd2array : public narray<T> {
     }
     nd2array _T() const { return this->transpose(); };
 
-    void randomize(const T &min = T(-1), const T &max = T(1)) {
+    void randomize(const T &min = T(-1), const T &max = T(1)) override {
         std::random_device rd;
         std::mt19937 gen(rd());
 
@@ -210,6 +125,38 @@ struct nd2array : public narray<T> {
             std::uniform_real_distribution<T> dist(min, max);
             for (size_t i = 0; i < this->size(); ++i) this->data[i] = dist(gen);
         }
+    }
+
+
+    void save(std::ostream& os) const override {
+        size_t dims = 2;
+        // os.write(reinterpret_cast<const char*>(&dims), sizeof(size_t));
+
+        os.write(reinterpret_cast<const char*>(this->shape.data()),
+             dims * sizeof(size_t));
+            
+        size_t size = this->data.size();
+        os.write(reinterpret_cast<const char*>(&size), sizeof(size_t));
+
+        os.write(reinterpret_cast<const char*>(this->data.data()),
+             size * sizeof(T));
+    }
+
+
+    void load(std::istream& is) {
+        size_t dims = 2;
+        // is.read(reinterpret_cast<char*>(&dims), sizeof(size_t));
+
+        this->shape.resize(dims);
+        is.read(reinterpret_cast<char*>(this->shape.data()),
+                dims * sizeof(size_t));
+
+        size_t size;
+        is.read(reinterpret_cast<char*>(&size), sizeof(size_t));
+
+        this->data.resize(size);
+        is.read(reinterpret_cast<char*>(this->data.data()),
+                size * sizeof(T));
     }
 };
 

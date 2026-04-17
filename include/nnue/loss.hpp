@@ -6,9 +6,11 @@
 #include <exceptions.hpp>
 
 
-template <class T, class ArrayType=narray<T>>
+template <class T>
 class Loss {
 public:
+    using ArrayType = nd2array<T>;
+
     T operator()(const ArrayType& y_pred, const ArrayType& y_true) { return this->forward(y_pred, y_true); };
     virtual T forward(const ArrayType& y_pred, const ArrayType& y_true) = 0;
     virtual ArrayType backward(const ArrayType& y_pred, const ArrayType& y_true) = 0;
@@ -16,9 +18,10 @@ public:
 
 
 
-template <class T, class ArrayType=narray<T>>
-class MSE : public Loss<T, ArrayType> {
+template <class T>
+class MSE : public Loss<T> {
 public:
+    using ArrayType = nd2array<T>;
     MSE() = default;
     T forward(const ArrayType& y_pred, const ArrayType& y_true) {
         if (y_pred.size() != y_true.size()) {

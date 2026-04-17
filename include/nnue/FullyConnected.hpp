@@ -5,10 +5,11 @@
 #include <nnue/layer.hpp>
 #include <nnue/ndarray.hpp>
 #include <cstddef>
+#include <iostream>
 
 
 template <class T>
-class FullyConnected : public Layer<T, nd2array<T>> {
+class FullyConnected : public Layer<T> {
 public:
     size_t input, output;
     nd2array<T> weights, bias;
@@ -57,6 +58,18 @@ public:
     void zero_grad() override {
         std::fill(this->dW.data.begin(), this->dW.data.end(), 0);
         std::fill(this->db.data.begin(), this->db.data.end(), 0);
+    }
+
+
+    void save(std::ostream& os) const override {
+        weights.save(os);
+        bias.save(os);
+    }
+
+
+    void load(std::istream& is) override {
+        weights.load(is);
+        bias.load(is);
     }
 
 private:

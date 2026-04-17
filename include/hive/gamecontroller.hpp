@@ -66,19 +66,21 @@ public:
         return this->hash.value();
     }
 
-// #ifdef LEARN
-    inline Sequential<float, nd2array<float>>* get_model() noexcept {
+#ifdef NNUE
+    inline Sequential<float>* get_model() noexcept {
         return &this->model;
     }
 
-    inline MSE<float, nd2array<float>>& get_loss_fn() noexcept {
+    #ifdef LEARN
+    inline MSE<float>& get_loss_fn() noexcept {
         return this->loss_fn;
     }
+    #endif
 
     inline Accumulator<float>& get_accumulator() noexcept {
         return this->accumulator;
     }
-// #endif
+#endif
 
     int count_surrounded_fields_of_queen(const Color &c) noexcept;
 
@@ -112,11 +114,16 @@ private:
         {Insect::grasshopper, 2.0}
     };
 
-    Sequential<float, nd2array<float>> model;
+#ifdef NNUE
+    #ifdef LEARN
+        MSE<float> loss_fn;
+    #endif
+    Sequential<float> model;
     FullyConnected<float> fc1, fc2, fc3;
-    ClippedReLU<float, nd2array<float>> relu1, relu2;
-    MSE<float, nd2array<float>> loss_fn;
+    ClippedReLU<float> relu1, relu2;
     Accumulator<float> accumulator;
+#endif
+
 };
 
 
