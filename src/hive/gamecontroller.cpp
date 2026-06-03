@@ -13,6 +13,7 @@ Controller::Controller() noexcept : fc1(INPUT, 8), fc2(8, 8), fc3(8, 1), relu1(1
 
 #ifndef LEARN
     this->model.load_weights("/home/dominik/PraceDyplomowe/Hive-engine/model1.nnue");
+    printf("Załadowano:\n");
 #endif
 
 #ifdef LEARN
@@ -29,6 +30,7 @@ Controller::Controller() noexcept : fc1(INPUT, 8), fc2(8, 8), fc3(8, 1), relu1(1
 #ifndef NNUE
 Controller::Controller() noexcept {this->prepare_pieces();}
 #endif
+
 
 const Color &Controller::get_player() const noexcept {
     return this->current;

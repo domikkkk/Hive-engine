@@ -24,7 +24,7 @@ public:
     void move(const struct Move_parameters &move);
     void unmove(const int &n) noexcept;
     void pass() noexcept;
-    const std::string get_notation(const std::string &piece, const Coords &where) noexcept;
+
     const std::string get_valid_moves() noexcept;
     const std::string get_best_move(const _BestMove_Arguments &arg) noexcept;
 
@@ -46,6 +46,7 @@ typedef struct Command {
     friend std::istream &operator>>(std::istream &is, Command &command);
 } Command;
 
+const std::string get_notation(Game& game, const std::string &piece, const Coords &where) noexcept;
 
 Move_parameters create_move(const std::string &parameters) noexcept;
 

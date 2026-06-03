@@ -14,12 +14,12 @@ float heuristic2(Controller &controller);
 float heuristic3(Controller &controller);
 
 #ifdef LEARN
-extern float total_loss;
-extern int counter;
+    extern float total_loss;
+    extern int counter;
 #endif
 
 #ifdef NNUE
-float heuristic_nnue(Controller &controller);
+    float heuristic_nnue(Controller &controller);
 #endif
 
 #endif

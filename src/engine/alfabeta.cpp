@@ -18,7 +18,7 @@ const std::string &AlfaBeta::_version() const noexcept {
 }
 
 
-void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves, bool maximazing) noexcept {
+void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coords>> &all_moves, std::vector<PossibleBestMove> &sorted_moves) noexcept {
     auto hash = this->game->get_controller().__key();
     auto entry = this->transpositiontable.find(hash);
     int was = 0;
@@ -42,7 +42,7 @@ void AlfaBeta::order_moves(const std::unordered_map<std::string, std::vector<Coo
     }
     if (sorted_moves.size() > 2) {
         std::sort(sorted_moves.begin() + was, sorted_moves.end(), [&](const PossibleBestMove &a, const PossibleBestMove &b) {
-            return maximazing? a.value > b.value : a.value < b.value;
+            return a.value < b.value;
         });
     }
 }
@@ -113,6 +113,7 @@ PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const stru
         return color == Color::WHITE? eval: -eval;
     }
 
+#ifndef LEARN
     auto hash = this->game->get_controller().__key();
     auto entry = this->transpositiontable.find(hash);
 
@@ -128,20 +129,23 @@ PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const stru
         }
     }
 
+    float old_alfa = alfa;
+#endif
+
     PossibleBestMove possible_move(-infinity);
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
     this->game->set_valid_moves(valid_moves);
     std::vector<PossibleBestMove> moves;
-    this->order_moves(valid_moves, moves, Color::WHITE);
-
-    float old_alfa = alfa;
+    this->order_moves(valid_moves, moves);
 
     for (const auto &move: moves) {
         if (token.defined && token.is_end()) break;
         possible_move.found = true;
         this->game->get_controller().engine_move(move.bestmove.piece, move.bestmove.where);
         auto result = this->negamax(depth - 1, -beta, -alfa, token);
+
         result.value = -result.value;
+
         this->game->get_controller().undo_move();
 
         if (result.value <= possible_move.value)
@@ -163,11 +167,13 @@ PossibleBestMove AlfaBeta::negamax(int depth, float alfa, float beta, const stru
         return possible_move;
     }
 
+#ifndef LEARN
     this->transpositiontable[hash] = TranspositionTableEntry(
         possible_move.value, depth, possible_move.bestmove,
         possible_move.value <= old_alfa   ? EntryType::UpperBound
         : possible_move.value >= beta ? EntryType::LowerBound
                                       : EntryType::Exact);
+#endif
 
     return possible_move;
 }

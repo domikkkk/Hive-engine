@@ -84,42 +84,6 @@ void Protocol::pass() noexcept {
 }
 
 
-const std::string Protocol::get_notation(const std::string &piece, const Coords &where) noexcept {
-    if (piece == "") return Instrucions::pass;
-    std::string to_display = piece + " ";
-    auto adjacent = this->game.get_controller().find_adjacent(where);
-    switch (adjacent.second)
-    {
-    case Directions::NE:
-        to_display += adjacent.first + "/";
-        break;
-    case Directions::E:
-        to_display += adjacent.first + "-";
-        break;
-    case Directions::S:
-        to_display += adjacent.first + "\\";
-        break;
-    case Directions::SW:
-        to_display += "/" + adjacent.first;
-        break;
-    case Directions::W:
-        to_display += "-" + adjacent.first;
-        break;
-    case Directions::N:
-        to_display += "\\" + adjacent.first;
-        break;
-    case Directions::UP:
-        to_display += adjacent.first;
-        break;
-    case Directions::DEFAULT:
-        to_display.erase(to_display.size()-1);
-    default:
-        break;
-    }
-    return to_display;
-}
-
-
 const std::string Protocol::get_valid_moves() noexcept {
     std::string to_display = "";
     std::unordered_map<std::string, std::vector<Coords>> valid_moves;
@@ -128,7 +92,7 @@ const std::string Protocol::get_valid_moves() noexcept {
     for (const auto &move: valid_moves) {
         for (const auto &where: move.second) {
             is_valid = true;
-            to_display += this->get_notation(move.first, where) + ";";
+            to_display += get_notation(this->game, move.first, where) + ";";
         }
     }
     if (!is_valid) {
@@ -145,7 +109,7 @@ const std::string Protocol::get_best_move(const _BestMove_Arguments &arg) noexce
     } else {
         best_move = this->engine.get_best_move(arg.depth);
     }
-    return this->get_notation(best_move.piece, best_move.where);
+    return get_notation(this->game, best_move.piece, best_move.where);
 }
 
 
@@ -213,6 +177,42 @@ void Command::execute(Protocol &protocol) {
         std::cerr << e.what();
     }
     std::cout << "\nok\n";
+}
+
+
+const std::string get_notation(Game& game, const std::string &piece, const Coords &where) noexcept {
+    if (piece == "") return Instrucions::pass;
+    std::string to_display = piece + " ";
+    auto adjacent = game.get_controller().find_adjacent(where);
+    switch (adjacent.second)
+    {
+    case Directions::NE:
+        to_display += adjacent.first + "/";
+        break;
+    case Directions::E:
+        to_display += adjacent.first + "-";
+        break;
+    case Directions::S:
+        to_display += adjacent.first + "\\";
+        break;
+    case Directions::SW:
+        to_display += "/" + adjacent.first;
+        break;
+    case Directions::W:
+        to_display += "-" + adjacent.first;
+        break;
+    case Directions::N:
+        to_display += "\\" + adjacent.first;
+        break;
+    case Directions::UP:
+        to_display += adjacent.first;
+        break;
+    case Directions::DEFAULT:
+        to_display.erase(to_display.size()-1);
+    default:
+        break;
+    }
+    return to_display;
 }
 
 

@@ -35,8 +35,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC Hive AlfaBeta)
 if(${LEARN})
     # add_compile_definitions(LEARN)
 
-    add_executable(nnue_network src/nnue.cpp)
-    target_link_libraries(nnue_network PUBLIC AlfaBeta Hive)
+    add_executable(learn_nnue src/nnue.cpp)
+    target_link_libraries(learn_nnue PUBLIC AlfaBeta Hive)
 
     add_executable(trained_nnue src/trained_nnue.cpp)
     target_link_libraries(trained_nnue PUBLIC AlfaBeta Hive)

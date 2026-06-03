@@ -9,12 +9,14 @@
 #include <unordered_set>
 #include <hive/zobrist.hpp>
 
+#ifdef NNUE
 #include <nnue/ndarray.hpp>
 #include <nnue/activations.hpp>
 #include <nnue/FullyConnected.hpp>
 #include <nnue/loss.hpp>
 #include <nnue/sequential.hpp>
 #include <nnue/accumulator.hpp>
+#endif
 
 
 class Controller {

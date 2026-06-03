@@ -49,7 +49,7 @@ cmake --build .
 mv hive_engine ..
 
 if [ "$LEARN_FLAG" == "-DLEARN=1" ]; then
-    mv nnue_network ..
+    mv learn_nnue ..
     mv trained_nnue ..
 fi
 
