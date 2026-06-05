@@ -39,19 +39,17 @@ to run test:
 
 ```md
 <project root>
-├── CMakeLists.txt
-├── README.md
-├── Trainer.py
 ├── build.sh
+├── CMakeLists.txt
+├── hive_engine
 ├── include
-│   ├── Hive
-│   ├── HiveAI
 │   ├── decorators.hpp
 │   ├── engine
 │   │   ├── alfabeta.hpp
 │   │   ├── bestmove.hpp
 │   │   ├── evaluations.hpp
 │   │   └── transpositionTable.hpp
+│   ├── exceptions.hpp
 │   ├── hive
 │   │   ├── board.hpp
 │   │   ├── coordinates.hpp
@@ -61,23 +59,38 @@ to run test:
 │   │   ├── namespaces.hpp
 │   │   ├── protocol.hpp
 │   │   └── zobrist.hpp
+│   ├── Hive.h
+│   ├── HiveAI
+│   ├── nnue
+│   │   ├── accumulator.hpp
+│   │   ├── activations.hpp
+│   │   ├── FullyConnected.hpp
+│   │   ├── layer.hpp
+│   │   ├── loss.hpp
+│   │   ├── ndarray.hpp
+│   │   └── sequential.hpp
+│   ├── nnue.h
 │   └── version.h
+├── README.md
 ├── src
 │   ├── engine
-│   │   ├── CMakeLists.txt
 │   │   ├── alfabeta.cpp
+│   │   ├── CMakeLists.txt
 │   │   ├── evaluations.cpp
 │   │   └── transpositionTable.cpp
 │   ├── hive
-│   │   ├── CMakeLists.txt
 │   │   ├── board.cpp
+│   │   ├── CMakeLists.txt
 │   │   ├── coordinates.cpp
 │   │   ├── game.cpp
 │   │   ├── gamecontroller.cpp
 │   │   ├── moves.cpp
 │   │   ├── protocol.cpp
 │   │   └── zobrist.cpp
-│   └── main.cpp
-└── test
-    └── test.cpp
+│   ├── main.cpp
+│   ├── nnue.cpp
+│   └── trained_nnue.cpp
+├── test
+│   └── test.cpp
+└── Trainer.py
 ```
